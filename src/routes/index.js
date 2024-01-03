@@ -3,6 +3,8 @@ import Root from '../root/';
 
 import Main from '../pages/Main/';
 import Login from '../pages/Login';
+import Statistics from '../pages/Statistics';
+import Attendance from '../pages/Attendance';
 
 export const routes = [
     {
@@ -16,6 +18,14 @@ export const routes = [
             {
                 element: <Login />,
                 path: '/login'
+            },
+            {
+                element: <Statistics />,
+                path: '/statistics'
+            },
+            {
+                element: <Attendance />,
+                path: '/attendance'
             }
 
         ]
