@@ -12,12 +12,12 @@ export const routes = [
         path: '/',
         children: [
             {
-                element: <Main />,
+                element: <Login />,
                 path: '/'
             },
             {
-                element: <Login />,
-                path: '/login'
+                element: <Main />,
+                path: '/asosiy'
             },
             {
                 element: <Statistics />,
