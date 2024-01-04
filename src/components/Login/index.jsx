@@ -8,24 +8,13 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleLogin = () => {
-        // Implement your authentication logic here
-        // For simplicity, let's assume a hardcoded admin and user credentials
-        const admins = [
-            { username: 'admin', password: 'admin123', role: 'admin' },
-            { username: 'manager', password: 'manager123', role: 'manager' },
-        ];
-
+        const admin = { username: 'admin', password: 'admin123', role: 'admin' };
         const user = { username: 'user', password: 'user123', role: 'user' };
 
-        const foundAdmin = admins.find(admin => admin.username === username && admin.password === password);
-
-        if (foundAdmin) {
-            // Redirect to the admin panel based on the role
-            const redirectPath = `/${foundAdmin.role}`;
-            navigate(redirectPath);
-        } else if (username === user.username && password === user.password) {
-            // Redirect to the user panel
+        if (username === admin.username && password === admin.password) {
             navigate('/asosiy');
+        } else if (username === user.username && password === user.password) {
+            navigate('/azo');
         } else {
             alert('Foydalanuvchi nomi yoki parol xato!');
         }
