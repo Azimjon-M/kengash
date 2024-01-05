@@ -98,9 +98,9 @@ const Navbar = ({ outside }) => {
                             </NavLink>
                         </li>
                     </ul>
-                    <button className="text-[16px] btn btn-success bg-[#05B967] font-medium text-white px-8">
+                    <NavLink to='/' className="text-[16px] btn btn-success bg-[#05B967] font-medium text-white px-8">
                         {isExitOrAccess}
-                    </button>
+                    </NavLink>
                 </div>
             </div>
 
