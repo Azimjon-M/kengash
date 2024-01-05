@@ -18,7 +18,7 @@ const Navbar = ({ outside }) => {
     }, [outside]);
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col sticky top-0 left-0">
             <div className="flex justify-between items-center bg-white text-black px-6 py-3">
                 <Link to="/asosiy">
                     <div className="flex justify-start items-center">
@@ -107,7 +107,7 @@ const Navbar = ({ outside }) => {
             <div
                 className={` style-transition overflow-hidden ${
                     isOpenMeni ? "h-[200px] py-2" : "h-[0px]"
-                } bg-white`}
+                } bg-white fixed top-[72px] left-0 w-full`}
             >
                 <ul className="flex flex-col items-center gap-y-3 font-semibold text-black">
                     <li>
