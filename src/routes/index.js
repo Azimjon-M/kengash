@@ -6,6 +6,7 @@ import Login from '../pages/Login';
 import Statistika from '../pages/Statistika';
 import Azolar from '../pages/Azolar';
 import Davomat from '../pages/Davomat';
+import Takliflar from '../pages/Takliflar';
 
 export const routes = [
     {
@@ -29,8 +30,13 @@ export const routes = [
                 path: '/davomat'
             },
             {
+                element: <Takliflar />,
+                path: "/takliflar"
+                
+            },
+            {
                 element: <Statistika />,
-                path: '/statistics'
+                path: '/statistika'
             },
         ]
     }
