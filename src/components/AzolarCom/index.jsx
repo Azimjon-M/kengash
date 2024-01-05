@@ -3,7 +3,7 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 
 const AzolarCom = () => {
     return (
-        <div className='bg-gray-200 min-h-[100vh] p-5'>
+        <div className='bg-gray-100 min-h-[calc(100vh-77px)] p-5'>
             <h2 className='text-2xl font-semibold text-center'>A'zolar</h2>
             <div>
                 <div className='flex items-center justify-between max-w-3xl mx-auto'>
