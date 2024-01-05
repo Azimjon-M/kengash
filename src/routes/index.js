@@ -2,10 +2,10 @@ import React from 'react';
 import Root from '../root/';
 
 import Main from '../pages/Main/';
-import Azo from '../pages/Azo/';
 import Login from '../pages/Login';
-import Statistics from '../pages/Statistics';
-import Attendance from '../pages/Attendance';
+import Statistika from '../pages/Statistika';
+import Azolar from '../pages/Azolar';
+import Davomat from '../pages/Davomat';
 
 export const routes = [
     {
@@ -21,18 +21,17 @@ export const routes = [
                 path: '/asosiy'
             },
             {
-                element: <Azo />,
-                path: '/azo'
+                element: <Azolar />,
+                path: '/azolar'
             },
             {
-                element: <Statistics />,
+                element: <Davomat />,
+                path: '/davomat'
+            },
+            {
+                element: <Statistika />,
                 path: '/statistics'
             },
-            {
-                element: <Attendance />,
-                path: '/attendance'
-            }
-
         ]
     }
 ]

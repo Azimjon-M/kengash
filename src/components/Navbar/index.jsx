@@ -3,7 +3,7 @@ import kspiIcon from "../../assets/icons/logo_kspi.png";
 import { Link, NavLink } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 
-// isExit 
+// isExit
 const Navbar = ({ outside }) => {
     // Values
     const [isExitOrAccess, setIsExitOrAccess] = useState("KIRISH");
@@ -20,15 +20,21 @@ const Navbar = ({ outside }) => {
     return (
         <div className="flex flex-col">
             <div className="flex justify-between items-center bg-white text-black px-6 py-3">
-                <Link to="/">
+                <Link to="/asosiy">
                     <div className="flex justify-start items-center">
-                        <div className={`${outside ? "hidden" : " lg:hidden"} `}>
+                        <div
+                            className={`${outside ? "hidden" : " lg:hidden"} `}
+                        >
                             <FiMenu
                                 onClick={() => setIsOpenMeni(!isOpenMeni)}
                                 className="text-[30px]"
                             />
                         </div>
-                        <div className={`${outside ? "flex" : "hidden lg:flex "} items-center gap-x-3`}>
+                        <div
+                            className={`${
+                                outside ? "flex" : "hidden lg:flex "
+                            } items-center gap-x-3`}
+                        >
                             <div className="w-[40px] h-auto">
                                 <img
                                     className="w-full h-auto"
@@ -43,33 +49,34 @@ const Navbar = ({ outside }) => {
                     </div>
                 </Link>
                 <div className="flex items-center gap-x-20">
-                    <ul className={`${outside ? "hidden" : "hidden lg:flex lg:gap-x-3 font-semibold"}`}>
+                    <ul
+                        className={`${
+                            outside
+                                ? "hidden"
+                                : "hidden lg:flex lg:gap-x-3 font-semibold"
+                        }`}
+                    >
                         <li>
                             <NavLink
-                                to="/"
-                                className={(isActive) =>
-                                    `${isActive ? "underline" : ""}`
-                                }
+                                to="/asosiy"
+                                className={({ isActive }) => `${isActive ? "underline" : ""} `}
+                                
                             >
                                 Asosiy
                             </NavLink>
                         </li>
                         <li>
                             <NavLink
-                                to="/dwas"
-                                className={(isActive) =>
-                                    `${isActive ? "underline" : ""}`
-                                }
+                                to="/azolar"
+                                className={({ isActive }) => `${isActive ? "underline" : ""} `}
                             >
                                 A'zolar
                             </NavLink>
                         </li>
                         <li>
                             <NavLink
-                                to="/wdas"
-                                className={(isActive) =>
-                                    `${isActive ? "underline" : ""}`
-                                }
+                                to="/davomat"
+                                className={({ isActive }) => `${isActive ? "underline" : ""} `}
                             >
                                 Davomat
                             </NavLink>
@@ -77,9 +84,7 @@ const Navbar = ({ outside }) => {
                         <li>
                             <NavLink
                                 to="/sdlapdlsap"
-                                className={(isActive) =>
-                                    `${isActive ? "underline" : ""}`
-                                }
+                                className={({ isActive }) => `${isActive ? "underline" : ""} `}
                             >
                                 Takliflar
                             </NavLink>
@@ -87,9 +92,7 @@ const Navbar = ({ outside }) => {
                         <li>
                             <NavLink
                                 to="/adsaiki"
-                                className={(isActive) =>
-                                    `${isActive ? "underline" : ""}`
-                                }
+                                className={({ isActive }) => `${isActive ? "underline" : ""} `}
                             >
                                 Statistika
                             </NavLink>
@@ -110,9 +113,7 @@ const Navbar = ({ outside }) => {
                     <li>
                         <NavLink
                             to="/"
-                            className={(isActive) =>
-                                `${isActive ? "underline" : ""}`
-                            }
+                            className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             Asosiy
                         </NavLink>
@@ -120,9 +121,7 @@ const Navbar = ({ outside }) => {
                     <li>
                         <NavLink
                             to="/dwas"
-                            className={(isActive) =>
-                                `${isActive ? "underline" : ""}`
-                            }
+                            className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             A'zolar
                         </NavLink>
@@ -130,9 +129,7 @@ const Navbar = ({ outside }) => {
                     <li>
                         <NavLink
                             to="/wdas"
-                            className={(isActive) =>
-                                `${isActive ? "underline" : ""}`
-                            }
+                            className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             Davomat
                         </NavLink>
@@ -140,9 +137,7 @@ const Navbar = ({ outside }) => {
                     <li>
                         <NavLink
                             to="/sdlapdlsap"
-                            className={(isActive) =>
-                                `${isActive ? "underline" : ""}`
-                            }
+                            className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             Takliflar
                         </NavLink>
@@ -150,9 +145,7 @@ const Navbar = ({ outside }) => {
                     <li>
                         <NavLink
                             to="/adsaiki"
-                            className={(isActive) =>
-                                `${isActive ? "underline" : ""}`
-                            }
+                            className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             Statistika
                         </NavLink>

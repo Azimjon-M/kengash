@@ -1,10 +1,10 @@
 import React from 'react';
-import Navbar from '../../components/Navbar';
+import MainCom from '../../components/MainCom';
 
 const Main = () => {
     return (
         <div>
-            <Navbar />
+            <MainCom />
         </div>
     )
 }
