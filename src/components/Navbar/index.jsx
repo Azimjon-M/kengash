@@ -83,7 +83,7 @@ const Navbar = ({ outside }) => {
                         </li>
                         <li>
                             <NavLink
-                                to="/sdlapdlsap"
+                                to="/takliflar"
                                 className={({ isActive }) => `${isActive ? "underline" : ""} `}
                             >
                                 Takliflar
@@ -91,7 +91,7 @@ const Navbar = ({ outside }) => {
                         </li>
                         <li>
                             <NavLink
-                                to="/adsaiki"
+                                to="/statistika"
                                 className={({ isActive }) => `${isActive ? "underline" : ""} `}
                             >
                                 Statistika
@@ -112,7 +112,7 @@ const Navbar = ({ outside }) => {
                 <ul className="flex flex-col items-center gap-y-3 font-semibold text-black">
                     <li>
                         <NavLink
-                            to="/"
+                            to="/asosiy"
                             className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             Asosiy
@@ -120,7 +120,7 @@ const Navbar = ({ outside }) => {
                     </li>
                     <li>
                         <NavLink
-                            to="/dwas"
+                            to="/azolar"
                             className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             A'zolar
@@ -128,7 +128,7 @@ const Navbar = ({ outside }) => {
                     </li>
                     <li>
                         <NavLink
-                            to="/wdas"
+                            to="/davomat"
                             className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             Davomat
@@ -136,7 +136,7 @@ const Navbar = ({ outside }) => {
                     </li>
                     <li>
                         <NavLink
-                            to="/sdlapdlsap"
+                            to="/takliflar"
                             className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             Takliflar
@@ -144,7 +144,7 @@ const Navbar = ({ outside }) => {
                     </li>
                     <li>
                         <NavLink
-                            to="/adsaiki"
+                            to="/statistika"
                             className={({ isActive }) => `${isActive ? "underline" : ""} `}
                         >
                             Statistika
