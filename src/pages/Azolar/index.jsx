@@ -1,5 +1,5 @@
-import React from 'react'
-import AzolarCom from '../../components/AzolarCom'
+import React from 'react';
+import AzolarCom from '../../components/AzolarCom';
 
 const Azolar = () => {
     return (
@@ -9,4 +9,4 @@ const Azolar = () => {
     )
 }
 
-export default Azolar
+export default Azolar;
