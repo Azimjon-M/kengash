@@ -18,7 +18,7 @@ const Navbar = ({ outside }) => {
     }, [outside]);
 
     return (
-        <div className="flex flex-col sticky top-0 left-0">
+        <div className="flex flex-col sticky top-0 left-0 shadow-lg">
             <div className="flex justify-between items-center bg-white text-black px-6 py-3">
                 <Link to="/asosiy">
                     <div className="flex justify-start items-center">

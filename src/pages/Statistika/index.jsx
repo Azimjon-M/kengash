@@ -1,8 +1,11 @@
 import React from 'react'
+import StatistikaCom from '../../components/SatatistikaCom'
 
-function Statistika() {
+const Statistika = () => {
   return (
-    <div>Statistika</div>
+    <div>
+      <StatistikaCom />
+    </div>
   )
 }
 
