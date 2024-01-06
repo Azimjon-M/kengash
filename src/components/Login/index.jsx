@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/logo_kspi.png'
-
+//for
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -33,13 +33,13 @@ const Login = () => {
                 </h2>
                 <form className="mt-6">
                     <div className="mb-2">
-                        <label for="username" className="block text-sm font-semibold text-gray-800">
+                        <label htmlFor="username" className="block text-sm font-semibold text-gray-800">
                             Foydalanuvchi nomi
                         </label>
                         <input type="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder='Foydalanuvchi nomi' className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40"/>
                     </div>
                     <div className="mb-2">
-                        <label for="password" className="block text-sm font-semibold text-gray-800">
+                        <label htmlFor="password" className="block text-sm font-semibold text-gray-800">
                             Parol
                         </label>
                         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Parol' className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40"/>
