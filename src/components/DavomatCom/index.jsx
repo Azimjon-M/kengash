@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 
 const DavomatCom = () => {
     return (
-        <div className='max-w-8xl mx-5'>
+        <div className='max-w-7xl mx-auto px-5 '>
             <div>
                 <h4>Kengash a'zolari</h4>
                 <button>Yangilash</button>
