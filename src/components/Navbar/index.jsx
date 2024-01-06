@@ -1,39 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import kspiIcon from "../../assets/icons/logo_kspi.png";
 import { Link, NavLink } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
+import { GrClose } from 'react-icons/gr'
 
 // isExit
-const Navbar = ({ outside }) => {
+const Navbar = () => {
     // Values
-    const [isExitOrAccess, setIsExitOrAccess] = useState("KIRISH");
-    const [isOpenMeni, setIsOpenMeni] = useState(false);
+    const [isOpenMeni, setIsOpenMenu] = useState(false);
+    console.log(isOpenMeni);
     // Funtions
-    useEffect(() => {
-        if (outside) {
-            setIsExitOrAccess("KIRISH");
-        } else {
-            setIsExitOrAccess("CHIQISH");
-        }
-    }, [outside]);
+    const handleClickMenuOpen = (e) => {
+        e.preventDefault();
+        setIsOpenMenu(true);
+    }
+    const handleClickMenuClose = (e) => {
+        e.preventDefault();
+        setIsOpenMenu(false);
+    }
 
     return (
-        <div className="flex flex-col sticky top-0 left-0 shadow-lg">
+        <div className="flex flex-col sticky top-0 left-0 shadow-lg z-50">
             <div className="flex justify-between items-center bg-white text-black px-6 py-3">
                 <Link to="/asosiy">
                     <div className="flex justify-start items-center">
-                        <div
-                            className={`${outside ? "hidden" : " lg:hidden"} `}
-                        >
-                            <FiMenu
-                                onClick={() => setIsOpenMeni(!isOpenMeni)}
-                                className="text-[30px]"
-                            />
+                        <div>
+                            {
+                                isOpenMeni ?
+                                    <GrClose 
+                                        onClick={handleClickMenuClose}
+                                        className="text-[30px]"
+                                    />
+                                :
+                                    <FiMenu
+                                        onClick={handleClickMenuOpen}
+                                        className="text-[30px]"
+                                    />
+                            }
                         </div>
                         <div
-                            className={`${
-                                outside ? "flex" : "hidden lg:flex "
-                            } items-center gap-x-3`}
+                            className="hidden lg:flex items-center gap-x-3"
                         >
                             <div className="w-[40px] h-auto">
                                 <img
@@ -49,13 +55,7 @@ const Navbar = ({ outside }) => {
                     </div>
                 </Link>
                 <div className="flex items-center gap-x-20">
-                    <ul
-                        className={`${
-                            outside
-                                ? "hidden"
-                                : "hidden lg:flex lg:gap-x-3 font-semibold"
-                        }`}
-                    >
+                    <ul className="hidden lg:flex lg:gap-x-3 font-semibold">
                         <li>
                             <NavLink
                                 to="/asosiy"
@@ -99,7 +99,7 @@ const Navbar = ({ outside }) => {
                         </li>
                     </ul>
                     <NavLink to='/' className="text-[16px] btn btn-success bg-[#05B967] font-medium text-white px-8">
-                        {isExitOrAccess}
+                        CHIQISH
                     </NavLink>
                 </div>
             </div>
@@ -107,7 +107,7 @@ const Navbar = ({ outside }) => {
             <div
                 className={` style-transition overflow-hidden ${
                     isOpenMeni ? "h-[200px] py-2" : "h-[0px]"
-                } bg-white fixed top-[72px] left-0 w-full`}
+                } bg-white fixed top-[72px] left-0 w-full shadow-lg`}
             >
                 <ul className="flex flex-col items-center gap-y-3 font-semibold text-black">
                     <li>
