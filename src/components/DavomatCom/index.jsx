@@ -1,49 +1,49 @@
 import React from 'react'
-import { Link } from "react-router-dom";
+import { FaCheck } from "react-icons/fa6";
+import { FaXmark } from "react-icons/fa6";
+import { RxUpdate } from "react-icons/rx";
 
 const DavomatCom = () => {
     return (
         <div className='max-w-7xl mx-auto px-5 '>
-            <div>
-                <h4>Kengash a'zolari</h4>
-                <button>Yangilash</button>
+            <div className='flex justify-between items-center py-8'>
+                <h2 className='text-xl font-medium text-gray-600'>Kengash a'zolari</h2>
+                <button className='font-medium text-gray-600 hover:text-green-600 hover:border-green-600 border py-1 px-3 rounded-lg'>Yangilash <RxUpdate className='inline hover:animate-spin' /></button>
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-            <div class="relative overflow-x-auto shadow-md">
-                    <table class="w-full text-sm sm:text-base rtl:text-right text-gray-500 dark:text-gray-400 text-center">
-                        <thead class="text-xs sm:text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <div className="relative overflow-x-auto shadow-md">
+                    <table className="w-full text-sm sm:text-base rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead className="text-xs sm:text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-2 py-3">
+                                <th scope="col" className="px-2 py-3">
                                     №
                                 </th>
-                                <th scope="col" class="py-3">
+                                <th scope="col" className="py-3 text-left">
                                     Familiya
                                 </th>
-                                <th scope="col" class="py-3">
+                                <th scope="col" className="py-3 text-left">
                                     Ism
                                 </th>
-                                <th scope="col" class="py-3">
+                                <th scope="col" className="py-3">
                                     Davomat
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     1
                                 </th>
-                                <td class="py-4">
+                                <td className="py-4">
                                     Nurmamatov
                                 </td>
-                                <td class="py-4">
+                                <td className="py-4">
                                     Nodirbek
                                 </td>
-                                <td class="py-4 flex justify-center items-center">
-                                    <Link>
-                                        <svg className="w-5 h-5 hover:w-8 text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                                        </svg>
-                                    </Link>
+                                <td className="py-4 text-center">
+                                    <button className='border border-white hover:border-green-600 p-1 rounded-full'>
+                                        <FaCheck className='text-green-600' />
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -52,41 +52,39 @@ const DavomatCom = () => {
 
 
 
-                <div class="relative overflow-x-auto shadow-md">
-                    <table class="w-full text-sm sm:text-base rtl:text-right text-gray-500 dark:text-gray-400 text-center">
-                        <thead class="text-xs sm:text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <div className="relative overflow-x-auto shadow-md">
+                    <table className="w-full text-sm sm:text-base rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead className="text-xs sm:text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-2 py-3">
+                                <th scope="col" className="px-2 py-3">
                                     №
                                 </th>
-                                <th scope="col" class="py-3">
+                                <th scope="col" className="py-3 text-left">
                                     Familiya
                                 </th>
-                                <th scope="col" class="py-3">
+                                <th scope="col" className="py-3 text-left">
                                     Ism
                                 </th>
-                                <th scope="col" class="py-3">
+                                <th scope="col" className="py-3">
                                     Davomat
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     1
                                 </th>
-                                <td class="py-4">
+                                <td className="py-4">
                                     Nurmamatov
                                 </td>
-                                <td class="py-4">
+                                <td className="py-4">
                                     Nodirbek
                                 </td>
-                                <td class="py-4 flex justify-center items-center">
-                                    <Link>
-                                        <svg className="w-4 h-4 hover:w-8 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                        </svg>
-                                    </Link>
+                                <td className="py-4 text-center">
+                                    <button className='border border-white hover:border-red-600 p-1 rounded-full'>
+                                        <FaXmark className='text-red-600' />
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
