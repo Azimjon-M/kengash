@@ -7,6 +7,7 @@ import Statistika from '../pages/Statistika';
 import Azolar from '../pages/Azolar';
 import Davomat from '../pages/Davomat';
 import Takliflar from '../pages/Takliflar';
+import AddAzoCom from '../components/AddAzoCom';
 
 export const routes = [
     {
@@ -24,6 +25,10 @@ export const routes = [
             {
                 element: <Azolar />,
                 path: '/azolar'
+            },
+            {
+                element: <AddAzoCom />,
+                path: '/addAzo'
             },
             {
                 element: <Davomat />,
