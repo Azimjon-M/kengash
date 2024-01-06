@@ -3,6 +3,7 @@ import { useRoutes, useLocation } from 'react-router-dom';
 import { routes } from '../../routes';
 import './style.css';
 import Navbar from '../Navbar';
+import Footer from '../Footer';
 
 const App = () => {
 
@@ -10,14 +11,16 @@ const App = () => {
 
     const noNavLink = ['/'];
 
-    const hideNavbar = noNavLink.includes(location.pathname);
+    const hideNavbarFooter = noNavLink.includes(location.pathname);
 
     const content = useRoutes(routes);
     
     return (
-        <div>
-            {!hideNavbar && <Navbar />}
+        <div> 
+            {!hideNavbarFooter && <Navbar />}
             {content}
+            {!hideNavbarFooter && <Footer />}
+            
         </div>
     )
 }
