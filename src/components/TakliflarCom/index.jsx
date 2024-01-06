@@ -1,8 +1,14 @@
 import React from 'react';
+import Breadcrumb from '../Breadcrumb';
 
 const TakliflarCom = () => {
     return (
-        <div>TakliflarCom</div>
+        <div>
+            <Breadcrumb />
+            <div>
+                Main
+            </div>
+        </div>
     )
 }
 
