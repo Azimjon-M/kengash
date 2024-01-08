@@ -43,7 +43,7 @@ const AddAzoCom = () => {
 
     return (
         <div>
-            <Breadcrumb locationPage="A'zo qo'shish" />
+            <Breadcrumb locationPage="A'zolar" locationPageTwo="A'zo qo'shish" />
             <div className='p-5'>
                 <h2 className='text-center text-2xl font-bold mb-5'>A'zo qo'shish</h2>
                 <div>

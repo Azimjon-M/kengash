@@ -1,9 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MdDeleteOutline } from "react-icons/md";
 import Breadcrumb from '../Breadcrumb';
 import { Link } from 'react-router-dom';
 
 const AzolarCom = () => {
+
+    const [users, setUsers] = useState([
+        { id: 1, username: 'Akbar18', name: 'Akbarjon', surname: 'Boborahimov' },
+        { id: 2, username: 'Akbar19', name: 'Akbarbek', surname: 'Boborahimov' },
+        { id: 3, username: 'Akbar20', name: 'Akbarxon', surname: 'Bobo' },
+        { id: 4, username: 'Akbar21', name: 'Dilshod', surname: 'Boborahimov' },
+        { id: 5, username: 'Akbar22', name: 'Dilshodbek', surname: 'Bobo' },
+    ]);
+
+    const handleDelete = (id) => {
+        setUsers((prevUsers) => prevUsers.filter(user => user.id !== id));
+    };
+
     return (
         <div>
             <Breadcrumb locationPage="A'zolar" />
@@ -28,38 +41,17 @@ const AzolarCom = () => {
                                         </tr>
                                     </thead>
                                     <tbody className='text-sm lg:text-base'>
-                                        <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                            <td className="whitespace-nowrap font-semibold px-2 py-3">1</td>
-                                            <td className="whitespace-nowrap font-medium px-2 py-3">Akbar18</td>
-                                            <td className="whitespace-nowrap font-medium px-2 py-3">Akbarjon</td>
-                                            <td className="whitespace-nowrap font-medium px-2 py-3">Boborahimov</td>
-                                            <td className="whitespace-nowrap font-medium py-3 flex justify-center"><button><MdDeleteOutline className='text-red-700 cursor-pointer w-5 md:w-6 h-auto' /></button></td>
-                                        </tr>
-                                        <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                            <td className="whitespace-nowrap font-semibold px-2 py-3">2</td>
-                                            <td className="whitespace-nowrap font-medium px-2 py-3">Akbar18</td>
-                                            <td className="whitespace-nowrap font-medium px-2 py-3">Akbarjon</td>
-                                            <td className="whitespace-nowrap font-medium px-2 py-3">Boborahimov</td>
-                                            <td className="whitespace-nowrap font-medium py-3 flex justify-center"><button><MdDeleteOutline className='text-red-700 cursor-pointer w-5 md:w-6 h-auto' /></button></td>
-                                        </tr>
-                                        <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                            <td className="whitespace-nowrap font-semibold px-2 py-3">3</td>
-                                            <td className="whitespace-nowrap font-medium px-2 py-3">Akbar18</td>
-                                            <td className="whitespace-nowrap font-medium px-2 py-3">Akbarjon</td>
-                                            <td className="whitespace-nowrap font-medium px-2 py-3">Boborahimov</td>
-                                            <td className="whitespace-nowrap font-medium py-3 flex justify-center"><button><MdDeleteOutline className='text-red-700 cursor-pointer w-5 md:w-6 h-auto' /></button></td>
-                                        </tr>
-                                        {/* {data.map((val, key) => {
+                                        {users.map((user, key) => {
                                             return (
                                                 <tr key={key} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                                    <td className="whitespace-nowrap font-semibold px-2 py-3">3</td>
-                                                    <td className="whitespace-nowrap font-medium px-2 py-3">{val.username}</td>
-                                                    <td className="whitespace-nowrap font-medium px-2 py-3">{val.name}</td>
-                                                    <td className="whitespace-nowrap font-medium px-2 py-3">{val.surname}</td>
-                                                    <td className="whitespace-nowrap font-medium py-3 flex justify-center"><MdDeleteOutline className='text-red-700 cursor-pointer w-5 md:w-6 h-auto' /></td>
+                                                    <td className="whitespace-nowrap font-semibold px-2 py-3">{user.id}</td>
+                                                    <td className="whitespace-nowrap font-medium px-2 py-3">{user.username}</td>
+                                                    <td className="whitespace-nowrap font-medium px-2 py-3">{user.name}</td>
+                                                    <td className="whitespace-nowrap font-medium px-2 py-3">{user.surname}</td>
+                                                    <td className="whitespace-nowrap font-medium py-3 flex justify-center"><button onClick={() => handleDelete(user.id)} className='btnDelete'><MdDeleteOutline className='text-red-700 cursor-pointer w-5 md:w-6 h-auto' /></button></td>
                                                 </tr>
                                             )
-                                        })} */}
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
