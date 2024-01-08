@@ -28,7 +28,7 @@ export const routes = [
             },
             {
                 element: <AddAzoCom />,
-                path: '/addAzo'
+                path: '/azolar/addAzo'
             },
             {
                 element: <Davomat />,
