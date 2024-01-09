@@ -25,7 +25,7 @@ const AzolarCom = () => {
                 <div className='flex items-center justify-between max-w-7xl mx-auto mb-5'>
                     <h2 className='text-lg font-semibold'>Kengash a'zolari</h2>
                     <Link to='/azolar/addAzo' className='btn bg-[#05B967] hover:bg-[#07b867] text-white'>A'zo qo'shish</Link>
-                </div>
+                </div> 
                 <div className="flex flex-col max-w-7xl mx-auto">
                     <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
