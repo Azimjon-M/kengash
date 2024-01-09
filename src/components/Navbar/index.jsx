@@ -120,6 +120,7 @@ const Navbar = () => {
                 <ul className="flex flex-col items-center gap-y-3 font-semibold text-black">
                     <li>
                         <NavLink
+                            onClick={() => setIsOpenMenu(false)}
                             to="/asosiy"
                             className={({ isActive }) =>
                                 `${isActive ? "underline" : ""} `
@@ -130,6 +131,7 @@ const Navbar = () => {
                     </li>
                     <li>
                         <NavLink
+                            onClick={() => setIsOpenMenu(false)}
                             to="/azolar"
                             className={({ isActive }) =>
                                 `${isActive ? "underline" : ""} `
@@ -140,6 +142,7 @@ const Navbar = () => {
                     </li>
                     <li>
                         <NavLink
+                            onClick={() => setIsOpenMenu(false)}
                             to="/davomat"
                             className={({ isActive }) =>
                                 `${isActive ? "underline" : ""} `
@@ -150,6 +153,7 @@ const Navbar = () => {
                     </li>
                     <li>
                         <NavLink
+                            onClick={() => setIsOpenMenu(false)}
                             to="/takliflar"
                             className={({ isActive }) =>
                                 `${isActive ? "underline" : ""} `
@@ -160,6 +164,7 @@ const Navbar = () => {
                     </li>
                     <li>
                         <NavLink
+                            onClick={() => setIsOpenMenu(false)}
                             to="/statistika"
                             className={({ isActive }) =>
                                 `${isActive ? "underline" : ""} `
