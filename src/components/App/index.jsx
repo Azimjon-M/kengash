@@ -1,14 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { useRoutes, useLocation } from 'react-router-dom';
 import { routes } from '../../routes';
 import './style.css';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
-import Main from '../../pages/Main';
 
 const App = () => {
-
-    const [ token, setToken ] = useState(window.localStorage.getItem('token'))
 
     const location = useLocation();
 
@@ -20,18 +17,9 @@ const App = () => {
 
     return (
         <div>
-            {
-                token ? (
-                    <Main />
-                ) : (
-                    < div >
-                        {!hideNavbarFooter && <Navbar />}
-                        {content}
-                        {!hideNavbarFooter && <Footer />}
-                    </div>
-                )
-
-            }
+            {!hideNavbarFooter && <Navbar />}
+            {content}
+            {!hideNavbarFooter && <Footer />}
         </div >
     )
 }
