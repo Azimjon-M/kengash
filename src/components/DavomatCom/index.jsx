@@ -8,7 +8,7 @@ const DavomatCom = () => {
         <div className='max-w-7xl mx-auto px-5 '>
             <div className='flex justify-between items-center py-8'>
                 <h2 className='text-md md:text-xl font-medium text-gray-600'>Kengash a'zolari</h2>
-                <button className='font-medium text-sm md:text-base text-gray-600 hover:text-green-600 hover:border-green-600 border py-1 px-3 rounded-lg group/edit'>Yangilash <RxUpdate className='inline group-hover/edit:animate-spin' /></button>
+                <button className='font-medium text-sm md:text-base text-gray-600 hover:text-green-600 hover:border-green-600 active:bg-green-100 border py-1 px-3 rounded-lg group/edit'>Yangilash <RxUpdate className='inline group-hover/edit:animate-spin' /></button>
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
             <div className="relative overflow-x-auto shadow-md">
