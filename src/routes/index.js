@@ -8,6 +8,7 @@ import Azolar from '../pages/Azolar';
 import Davomat from '../pages/Davomat';
 import Takliflar from '../pages/Takliflar';
 import AddAzoCom from '../components/AddAzoCom';
+import AddTaklif from '../pages/AddTaklif';
 
 export const routes = [
     {
@@ -28,7 +29,7 @@ export const routes = [
             },
             {
                 element: <AddAzoCom />,
-                path: '/addAzo'
+                path: '/azolar/addAzo'
             },
             {
                 element: <Davomat />,
@@ -37,6 +38,11 @@ export const routes = [
             {
                 element: <Takliflar />,
                 path: "/takliflar"
+                
+            },
+            {
+                element: <AddTaklif />,
+                path: "/takliflar/add-taklif"
                 
             },
             {

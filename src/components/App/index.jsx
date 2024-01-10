@@ -14,14 +14,13 @@ const App = () => {
     const hideNavbarFooter = noNavLink.includes(location.pathname);
 
     const content = useRoutes(routes);
-    
+
     return (
-        <div> 
+        <div>
             {!hideNavbarFooter && <Navbar />}
             {content}
             {!hideNavbarFooter && <Footer />}
-            
-        </div>
+        </div >
     )
 }
 
