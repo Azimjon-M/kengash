@@ -50,7 +50,7 @@ const renderActiveShape = (props) => {
 
 const StatistikaCom = () => {
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto min-h-[calc(100vh-189px)]">
       <h1 className="md:text-4xl font-bold text-green-700 text-center mt-10 md:my-16">Statistika bo'limi</h1>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10 px-5">
         <div className="shadow-lg rounded-xl border p-4">
