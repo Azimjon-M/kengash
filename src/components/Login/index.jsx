@@ -31,21 +31,21 @@ const Login = () => {
                 <h2 className="text-lg font-semibold text-center text-black">
                     Institut ichki kengashiga kirish
                 </h2>
-                <form className="mt-6">
+                <form onSubmit={handleLogin} className="mt-6" id='loginForm'>
                     <div className="mb-2">
                         <label htmlFor="username" className="block text-sm font-semibold text-gray-800">
                             Foydalanuvchi nomi
                         </label>
-                        <input type="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder='Foydalanuvchi nomi' className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40"/>
+                        <input type="username" id='username' name='username' value={username} onChange={(e) => setUsername(e.target.value)} placeholder='Foydalanuvchi nomi' className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40"/>
                     </div>
                     <div className="mb-2">
                         <label htmlFor="password" className="block text-sm font-semibold text-gray-800">
                             Parol
                         </label>
-                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Parol' className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40"/>
+                        <input type="password" id='password' name='password' value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Parol' className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40"/>
                     </div>
                     <div className="mt-6">
-                        <button onClick={handleLogin} className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-[#28a745] rounded-md hover:bg-[#25a620] focus:outline-none">
+                        <button type='submit' className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-[#28a745] rounded-md hover:bg-[#25a620] focus:outline-none">
                             Kirish
                         </button>
                     </div>
