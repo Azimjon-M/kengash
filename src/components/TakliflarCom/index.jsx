@@ -33,7 +33,7 @@ const TakliflarCom = () => {
                 <div className="text-center text-2xl font-semibold py-6">
                     Barcha takliflar
                 </div>
-                <div className="flex flex-col items-center gap-y-4 py-4">
+                <div className="flex flex-col sm:flex-row sm:justify-end items-center gap-y-4 sm:gap-x-4 py-4 sm:px-4">
                     <NavLink
                         to="/takliflar/add-taklif"
                         className="text-[16px] btn btn-success bg-[#05B967] font-medium text-white"
