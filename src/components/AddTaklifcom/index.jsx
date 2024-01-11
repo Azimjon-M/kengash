@@ -4,6 +4,11 @@ import { useFormik } from 'formik';
 
 const AddTaklifCom = () => {
     const [showFirstForm, setShowFirstForm] = useState(true);
+    const [isActiveTwoo, setIsActiveTwoo] = useState(false);
+    const [isActiveThree, setIsActiveThree] = useState(false);
+    const [isActiveFour, setIsActiveFour] = useState(false);
+    const [isActiveFive, setIsActiveFive] = useState(false);
+    const [isActiveSix, setIsActiveSix] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -40,11 +45,6 @@ const AddTaklifCom = () => {
         setNum(result);
         formik.handleChange(result);
     };
-
-    // Nomzod qo'shish
-    const handleClick = () => {
-        console.log('salom');
-    }
 
     return (
         <div className="bg-[#F3F7FA] min-h-[calc(100vh-125px)]">
@@ -139,7 +139,51 @@ const AddTaklifCom = () => {
                                 </label>
                                 <div className='flex justify-between gap-3'>
                                     <input onChange={formik.handleChange} value={formik.values.nomzod2} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod2" type="text" placeholder="Nomzod" />
-                                    <button type="button" onClick = {() => handleClick()} className="px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight">+</button>
+                                    <button type="button" onClick = {() => setIsActiveTwoo(true)} className={`${isActiveTwoo && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`${isActiveTwoo ? "" : "hidden"} mb-4`}>
+                            <div className=''>
+                                <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod3">
+                                    3-Nomzod
+                                </label>
+                                <div className='flex justify-between gap-3'>
+                                    <input onChange={formik.handleChange} value={formik.values.nomzod3} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod3" type="text" placeholder="Nomzod" />
+                                    <button type="button" onClick = {() => setIsActiveThree(true)} className={`${isActiveThree && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`${isActiveThree ? "" : "hidden"} mb-4`}>
+                            <div className=''>
+                                <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod4">
+                                    4-Nomzod
+                                </label>
+                                <div className='flex justify-between gap-3'>
+                                    <input onChange={formik.handleChange} value={formik.values.nomzod4} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod4" type="text" placeholder="Nomzod" />
+                                    <button type="button" onClick = {() => setIsActiveFour(true)} className={`${isActiveFour && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`${isActiveFour ? "" : "hidden"} mb-4`}>
+                            <div className=''>
+                                <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod5">
+                                    5-Nomzod
+                                </label>
+                                <div className='flex justify-between gap-3'>
+                                    <input onChange={formik.handleChange} value={formik.values.nomzod5} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod5" type="text" placeholder="Nomzod" />
+                                    <button type="button" onClick = {() => setIsActiveFive(true)} className={`${isActiveFive && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`${isActiveFive ? "" : "hidden"} mb-4`}>
+                            <div className=''>
+                                <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod6">
+                                    6-Nomzod
+                                </label>
+                                <div className='flex justify-between gap-3'>
+                                    <input onChange={formik.handleChange} value={formik.values.nomzod6} className={` shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline`} id="nomzod6" type="text" placeholder="Nomzod" />
+                                    <button type="button" onClick = {() => setIsActiveSix(true)} className={`${isActiveSix && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
                                 </div>
                             </div>
                         </div>
