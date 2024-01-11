@@ -18,7 +18,7 @@ const AzolarCom = () => {
     };
 
     return (
-        <div>
+        <div className='bg-[#F3F7FA] min-h-[calc(100vh-125px)]'>
             <Breadcrumb locationPage="A'zolar" />
             <h2 className='text-2xl font-semibold text-center my-5'>Barcha a'zolar</h2>
             <div className='px-5'>

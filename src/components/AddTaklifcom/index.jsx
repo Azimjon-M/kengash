@@ -8,7 +8,6 @@ const AddTaklifCom = () => {
     const [isActiveThree, setIsActiveThree] = useState(false);
     const [isActiveFour, setIsActiveFour] = useState(false);
     const [isActiveFive, setIsActiveFive] = useState(false);
-    const [isActiveSix, setIsActiveSix] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -183,7 +182,6 @@ const AddTaklifCom = () => {
                                 </label>
                                 <div className='flex justify-between gap-3'>
                                     <input onChange={formik.handleChange} value={formik.values.nomzod6} className={` shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline`} id="nomzod6" type="text" placeholder="Nomzod" />
-                                    <button type="button" onClick = {() => setIsActiveSix(true)} className={`${isActiveSix && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
                                 </div>
                             </div>
                         </div>

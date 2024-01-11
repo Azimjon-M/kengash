@@ -42,7 +42,7 @@ const AddAzoCom = () => {
     };
 
     return (
-        <div>
+        <div className='bg-[#F3F7FA] min-h-[calc(100vh-125px)]'>
             <Breadcrumb locationPage="A'zolar" locationPageTwo="A'zo qo'shish" />
             <div className='p-5'>
                 <h2 className='text-center text-2xl font-bold mb-5'>A'zo qo'shish</h2>
