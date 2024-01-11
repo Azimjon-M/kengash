@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../assets/img/logo_kspi.png";
 import { useFormik } from "formik";
 import axios from "axios";
-import Paswords from "../../passwords.json";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -16,127 +15,53 @@ const Login = () => {
             password: "",
         },
         onSubmit: async (values) => {
-            try {
-                const loggedInUser = Paswords.find(
-                    (item) =>
-                        item.username === values.username &&
-                        item.password === values.password
-                );
-                if (loggedInUser) {
-                    switch (loggedInUser.username) {
-                        case "admin":
-                            navigate("/asosiy");
-                            break;
-                        case "admin1":
-                            console.log(values);
-                            await axios({
-                                method: "POST",
-                                url: "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/",
-                                data: values,
-                            })
-                                .then((res) => {
-                                    localStorage.setItem(
-                                        `${loggedInUser.username}`,
-                                        `${res.data.key}`
-                                    );
-                                    navigate("/asosiy");
-                                })
-                                .catch((err) => {
-                                    setErrContent(
-                                        "Internet bilan bog'lanishda xatolik!"
-                                    );
-                                    setTimeout(() => {
-                                        setErrContent("");
-                                    }, 4000);
-                                });
-                            break;
-                        case "azo1":
-                            console.log(values);
-                            await axios({
-                                method: "POST",
-                                url: "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/",
-                                data: values,
-                            })
-                                .then((res) => {
-                                    localStorage.setItem(
-                                        `${loggedInUser.username}`,
-                                        `${res.data.key}`
-                                    );
-                                    navigate("/asosiy");
-                                })
-                                .catch((err) => {
-                                    setErrContent(
-                                        "Internet bilan bog'lanishda xatolik!"
-                                    );
-                                    setTimeout(() => {
-                                        setErrContent("");
-                                    }, 4000);
-                                });
-                            navigate("/asosiy");
-                            break;
-                        case "azo2":
-                            console.log(values);
-                            await axios({
-                                method: "POST",
-                                url: "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/",
-                                data: values,
-                            })
-                                .then((res) => {
-                                    localStorage.setItem(
-                                        `${loggedInUser.username}`,
-                                        `${res.data.key}`
-                                    );
-                                    navigate("/asosiy");
-                                })
-                                .catch((err) => {
-                                    setErrContent(
-                                        "Internet bilan bog'lanishda xatolik!"
-                                    );
-                                    setTimeout(() => {
-                                        setErrContent("");
-                                    }, 4000);
-                                });
-                            break;
-                        case "azo3":
-                            console.log(values);
-                            await axios({
-                                method: "POST",
-                                url: "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/",
-                                data: values,
-                            })
-                                .then((res) => {
-                                    localStorage.setItem(
-                                        `${loggedInUser.username}`,
-                                        `${res.data.key}`
-                                    );
-                                    navigate("/asosiy");
-                                })
-                                .catch((err) => {
-                                    setErrContent(
-                                        "Internet bilan bog'lanishda xatolik!"
-                                    );
-                                    setTimeout(() => {
-                                        setErrContent("");
-                                    }, 4000);
-                                });
-                            break;
-                        default:
-                            setErrContent("Bunday ma'lumotlar topilmadi");
-                            setTimeout(() => {
-                                setErrContent("");
-                            }, 4000);
+            axios({
+                method: "POST",
+                url: "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/",
+                data: values,
+            })
+                .then((res) => {
+                    if (res.status === 2000 && res.statusText === "OK") {
+                        
+                    } else {
+
                     }
-                } else {
-                    setErrContent("Bunday ma'lumotlar topilmadi");
+                    console.log(res);
+                    // localStorage.setItem(
+                    //     `${loggedInUser.username}`,
+                    //     `${res.data.key}`
+                    // );
+                    // navigate("/asosiy");
+                })
+                .catch((err) => {
+                    setErrContent("Internet bilan bog'lanishda xatolik!");
                     setTimeout(() => {
                         setErrContent("");
                     }, 4000);
-                }
-            } catch (error) {
-                console.error(error);
-            }
+                });
         },
     });
+
+    // axios({
+    //     method: "POST",
+    //     url: "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/",
+    //     data: values,
+    // })
+    //     .then((res) => {
+    //         localStorage.setItem(
+    //             `${loggedInUser.username}`,
+    //             `${res.data.key}`
+    //         );
+    //         navigate("/asosiy");
+    //     })
+    //     .catch((err) => {
+    //         setErrContent(
+    //             "Internet bilan bog'lanishda xatolik!"
+    //         );
+    //         setTimeout(() => {
+    //             setErrContent("");
+    //         }, 4000);
+    //     });
 
     return (
         <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
@@ -169,7 +94,9 @@ const Login = () => {
                             onChange={formik.handleChange}
                             value={formik.values.username}
                             placeholder="Foydalanuvchi nomi"
-                            className={`${errContent && "border-red-600"} block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
+                            className={`${
+                                errContent && "border-red-600"
+                            } block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
                         />
                     </div>
                     <div className="mb-2">
@@ -186,10 +113,18 @@ const Login = () => {
                             onChange={formik.handleChange}
                             value={formik.values.password}
                             placeholder="Parol"
-                            className={`${errContent && "border-red-600"} block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
+                            className={`${
+                                errContent && "border-red-600"
+                            } block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
                         />
                     </div>
-                    <h1 className={`${errContent ? "bg-red-600 p-2": "hidden"} rounded-md text-center text-white font-bold`}>{errContent}</h1>
+                    <h1
+                        className={`${
+                            errContent ? "bg-red-600 p-2" : "hidden"
+                        } rounded-md text-center text-white font-bold`}
+                    >
+                        {errContent}
+                    </h1>
                     <div className="mt-6">
                         <button
                             type="submit"
