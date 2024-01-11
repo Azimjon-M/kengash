@@ -58,12 +58,11 @@ const Login = () => {
                                 data: values,
                             })
                                 .then((res) => {
-                                    // localStorage.setItem(
-                                    //     "token",
-                                    //     `${res.data.key}`
-                                    // );
-                                    console.log(res);
-                                    // navigate("/asosiy");
+                                    localStorage.setItem(
+                                        `${loggedInUser.username}`,
+                                        `${res.data.key}`
+                                    );
+                                    navigate("/asosiy");
                                 })
                                 .catch((err) => {
                                     setErrContent(
@@ -83,12 +82,11 @@ const Login = () => {
                                 data: values,
                             })
                                 .then((res) => {
-                                    // localStorage.setItem(
-                                    //     "token",
-                                    //     `${res.data.key}`
-                                    // );
-                                    console.log(res);
-                                    // navigate("/asosiy");
+                                    localStorage.setItem(
+                                        `${loggedInUser.username}`,
+                                        `${res.data.key}`
+                                    );
+                                    navigate("/asosiy");
                                 })
                                 .catch((err) => {
                                     setErrContent(
@@ -107,12 +105,11 @@ const Login = () => {
                                 data: values,
                             })
                                 .then((res) => {
-                                    // localStorage.setItem(
-                                    //     "token",
-                                    //     `${res.data.key}`
-                                    // );
-                                    console.log(res);
-                                    // navigate("/asosiy");
+                                    localStorage.setItem(
+                                        `${loggedInUser.username}`,
+                                        `${res.data.key}`
+                                    );
+                                    navigate("/asosiy");
                                 })
                                 .catch((err) => {
                                     setErrContent(
@@ -172,7 +169,7 @@ const Login = () => {
                             onChange={formik.handleChange}
                             value={formik.values.username}
                             placeholder="Foydalanuvchi nomi"
-                            className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40"
+                            className={`${errContent && "border-red-600"} block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
                         />
                     </div>
                     <div className="mb-2">
@@ -189,9 +186,10 @@ const Login = () => {
                             onChange={formik.handleChange}
                             value={formik.values.password}
                             placeholder="Parol"
-                            className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40"
+                            className={`${errContent && "border-red-600"} block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
                         />
                     </div>
+                    <h1 className={`${errContent ? "bg-red-600 p-2": "hidden"} rounded-md text-center text-white font-bold`}>{errContent}</h1>
                     <div className="mt-6">
                         <button
                             type="submit"
