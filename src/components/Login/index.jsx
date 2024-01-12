@@ -7,6 +7,10 @@ import axios from "axios";
 const Login = () => {
     const navigate = useNavigate();
     const [errContent, setErrContent] = useState("");
+    //https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/
+    //https://kengash.pythonanywhere.com/api/v1/users/
+    const URLlogin = "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/";
+    const URLusers = "https://kengash.pythonanywhere.com/api/v1/users/";
 
     const formik = useFormik({
         initialValues: {
@@ -15,18 +19,25 @@ const Login = () => {
             password: "",
         },
         onSubmit: async (values) => {
-            axios({
+            await axios({
                 method: "POST",
-                url: "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/",
+                url: URLlogin,
                 data: values,
             })
                 .then((res) => {
-                    if (res.status === 2000 && res.statusText === "OK") {
-                        
+                    if (res.status === 200 && res.statusText === "OK") {
+                        console.log("Token olindi");
+                        axios({
+                            method: "GET",
+                            url: `${URLusers}${formik.values.username}`,
+                            // cancelToken: `${res.data.key}`,
+                            auth: `Token ${res.data.key}`
+                        })
+                        .then(res => console.log(res)).catch(err => console.log(err))
                     } else {
-
+                        console.log("Token olinmadi");
                     }
-                    console.log(res);
+                    // console.log(res.statusText === "OK");
                     // localStorage.setItem(
                     //     `${loggedInUser.username}`,
                     //     `${res.data.key}`
