@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import kspiIcon from "../../assets/icons/logo_kspi.png";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { GrClose } from "react-icons/gr";
 
 // isExit
 const Navbar = () => {
+    const navigate = useNavigate()
+    const CurrentLavozim = Object.keys(localStorage)[0]
+    console.log(CurrentLavozim);
+    // const superAdmin = "superadmin";
+    // const admin = "admin"
+    // const azo = "azo"
     // Values
     const [isOpenMeni, setIsOpenMenu] = useState(false);
     // Funtions
@@ -17,6 +23,11 @@ const Navbar = () => {
         e.preventDefault();
         setIsOpenMenu(false);
     };
+    // Logout
+    const handleClicklogout = () => {
+        localStorage.removeItem(CurrentLavozim)
+        navigate('/')
+    }
 
     return (
         <div className="flex flex-col sticky top-0 left-0 shadow-lg z-50">
@@ -105,6 +116,7 @@ const Navbar = () => {
                     </ul>
                     <NavLink
                         to="/"
+                        onClick={() => handleClicklogout()}
                         className="text-[16px] btn btn-success bg-[#05B967] font-medium text-white px-8"
                     >
                         CHIQISH

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/img/logo_kspi.png";
 import { useFormik } from "formik";
@@ -7,9 +7,9 @@ import axios from "axios";
 const Login = () => {
     const navigate = useNavigate();
     const [errContent, setErrContent] = useState("");
-    //https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/
-    //https://kengash.pythonanywhere.com/api/v1/users/
-    const URLlogin = "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/";
+    const [isLoading, setIsLoading] = useState(false);
+    const URLlogin =
+        "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/";
     const URLusers = "https://kengash.pythonanywhere.com/api/v1/users/";
 
     const formik = useFormik({
@@ -19,60 +19,63 @@ const Login = () => {
             password: "",
         },
         onSubmit: async (values) => {
-            await axios({
-                method: "POST",
-                url: URLlogin,
-                data: values,
-            })
-                .then((res) => {
-                    if (res.status === 200 && res.statusText === "OK") {
-                        console.log("Token olindi");
-                        axios({
-                            method: "GET",
-                            url: `${URLusers}${formik.values.username}`,
-                            // cancelToken: `${res.data.key}`,
-                            auth: `Token ${res.data.key}`
+            try {
+                if (!isLoading) {
+                    setIsLoading(true);
+                    await axios({
+                        method: "POST",
+                        url: URLlogin,
+                        data: values,
+                    })
+                        .then((res) => {
+                            if (res.status === 200 && res.statusText === "OK") {
+                                axios(URLusers, {
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Token ${res.data.key}`,
+                                    },
+                                })
+                                    .then((response) => {
+                                        const user = response.data.find(
+                                            (item) =>
+                                                item.username === values.username
+                                        );
+                                        localStorage.setItem(
+                                            user.lavozim,
+                                            res.data.key
+                                        );
+                                        navigate(`/asosiy`);
+                                    })
+                                    .catch((err) => console.log(err));
+                            } else {
+                                errContent || setErrContent("Bunday klyuch mavjud emas !");
+                                setTimeout(() => {
+                                    setErrContent("");
+                                }, 4000);
+                            }
                         })
-                        .then(res => console.log(res)).catch(err => console.log(err))
-                    } else {
-                        console.log("Token olinmadi");
-                    }
-                    // console.log(res.statusText === "OK");
-                    // localStorage.setItem(
-                    //     `${loggedInUser.username}`,
-                    //     `${res.data.key}`
-                    // );
-                    // navigate("/asosiy");
-                })
-                .catch((err) => {
-                    setErrContent("Internet bilan bog'lanishda xatolik!");
+                        .catch((err) => {
+                            errContent || setErrContent("Bunday ma'lumotlar topilmadi !");
+                            setTimeout(() => {
+                                setErrContent("");
+                            }, 4000);
+                        });
+                    setIsLoading(false);
+                } else {
+                }
+            } catch (err) {
+                errContent || setErrContent("Bunday ma'lumotlar topilmadi !");
                     setTimeout(() => {
                         setErrContent("");
                     }, 4000);
-                });
+            }
         },
     });
 
-    // axios({
-    //     method: "POST",
-    //     url: "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/",
-    //     data: values,
-    // })
-    //     .then((res) => {
-    //         localStorage.setItem(
-    //             `${loggedInUser.username}`,
-    //             `${res.data.key}`
-    //         );
-    //         navigate("/asosiy");
-    //     })
-    //     .catch((err) => {
-    //         setErrContent(
-    //             "Internet bilan bog'lanishda xatolik!"
-    //         );
-    //         setTimeout(() => {
-    //             setErrContent("");
-    //         }, 4000);
-    //     });
+    useEffect(() => {
+        var keys = Object.keys(localStorage)[0];
+        keys && navigate('/asosiy');
+    }, [navigate]);
 
     return (
         <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
