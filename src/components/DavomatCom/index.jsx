@@ -14,6 +14,7 @@ const DavomatCom = () => {
       const response = await axios(url, {
         method: "GET",
         headers: {
+          'Content-Type': 'application/json',
           "www-authenticate": token,
         },
       });
