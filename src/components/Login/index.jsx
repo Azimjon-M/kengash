@@ -9,7 +9,8 @@ const Login = () => {
     const [errContent, setErrContent] = useState("");
     //https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/
     //https://kengash.pythonanywhere.com/api/v1/users/
-    const URLlogin = "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/";
+    const URLlogin =
+        "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/";
     const URLusers = "https://kengash.pythonanywhere.com/api/v1/users/";
 
     const formik = useFormik({
@@ -27,13 +28,19 @@ const Login = () => {
                 .then((res) => {
                     if (res.status === 200 && res.statusText === "OK") {
                         console.log("Token olindi");
-                        axios({
-                            method: "GET",
-                            url: `${URLusers}${formik.values.username}`,
-                            // cancelToken: `${res.data.key}`,
-                            auth: `Token ${res.data.key}`
+                        console.log(res.data.key);
+                        axios(URLusers, {
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Token ${res.data.key}`,
+                            },
                         })
-                        .then(res => console.log(res)).catch(err => console.log(err))
+                            .then((response) => { 
+                                const user = response.data.find(item => item.username === values.username)
+                                localStorage.setItem(user.username, res.data.key)
+                                navigate(`/${user.lavozim}`)
+                            })
+                            .catch((err) => console.log(err));
                     } else {
                         console.log("Token olinmadi");
                     }
