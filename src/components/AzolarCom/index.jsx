@@ -20,10 +20,29 @@ const AzolarCom = () => {
                 .then(response => response.json())
                 .then(data => setData(data))
                 .catch(error => console.error('Xatolik:', error));
-        }, []); 
+        }, []);
 
+    // DELETE STEP BY STEP DATA
     const handleDelete = (id) => {
-        // setUsers((prevUsers) => prevUsers.filter(user => user.id !== id));
+        const apiUrl = `https://kengash.pythonanywhere.com/api/v1/users/${id}/`;
+        const getToken = Object.keys(localStorage)[0];
+        const token = localStorage.getItem(`${getToken}`);
+
+        fetch(apiUrl, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    setData((prevData) => prevData.filter(item => item.id !== id));
+                } else {
+                    console.error('Error deleting item:', response.statusText);
+                }
+            })
+            .catch(error => console.error('Xatolik:', error));
     };
 
     return (

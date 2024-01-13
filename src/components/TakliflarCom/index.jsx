@@ -26,7 +26,7 @@ const TakliflarCom = () => {
             .catch(error => console.error('Xatolik:', error));
     }, []);
 
-    // DELETE STEP BY STEP DATA
+    // DELETE ONE BY ONE DATA
     const handleDelete = (id) => {
         const apiUrl = `https://kengash.pythonanywhere.com/api/v1/taklif/${id}/`;
         const getToken = Object.keys(localStorage)[0];
@@ -81,7 +81,6 @@ const TakliflarCom = () => {
         }
     };
 
-    
     return (
         <div className="bg-[#F3F7FA] min-h-[calc(100vh-125px)]">
             <Breadcrumb locationPage="Takliflar" />
@@ -111,6 +110,9 @@ const TakliflarCom = () => {
                         <div data-aos="fade-left" key={item.id} className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-gray-50 to-gray-400 p-2">
                             <div className="line-clamp-1"><b>Taklif nomi:</b> {item.name}</div>
                             <div><b>Nomzod:</b> {item.nomzod}</div>
+                            <div><b>Nomzod:</b> {item.nomzod1}</div>
+                            <div><b>Nomzod:</b> {item.nomzod2}</div>
+                            <div><b>Nomzod:</b> {item.nomzod3}</div>
                             <div><b>Berilgan vaqt:</b> {item.vaqt} daqiqa</div>
                             <div className="flex justify-end">
                                 <button className="btn btn-sm btn-success bg-[#05B967] font-medium text-white mb-4" >Faollashtirish</button>
