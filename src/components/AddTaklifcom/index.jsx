@@ -6,30 +6,63 @@ const AddTaklifCom = () => {
     const [showFirstForm, setShowFirstForm] = useState(true);
     const [isActiveTwoo, setIsActiveTwoo] = useState(false);
     const [isActiveThree, setIsActiveThree] = useState(false);
-    const [isActiveFour, setIsActiveFour] = useState(false);
-    const [isActiveFive, setIsActiveFive] = useState(false);
+
+    const apiURL = 'https://kengash.pythonanywhere.com/api/v1/taklif/';
+    const getToken = Object.keys(localStorage)[0];
+    const token = localStorage.getItem(`${getToken}`);
 
     const formik = useFormik({
         initialValues: {
-            taklif: "",
+            name: "",
             vaqt: "",
             nomzod: "",
         },
         onSubmit: values => {
-            console.log(JSON.stringify(values));
+            fetch(apiURL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    formik.resetForm();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
         }
     });
 
     const formik2 = useFormik({
         initialValues: {
-            taklif: "",
+            name: "",
             vaqt: "",
+            nomzod: "",
             nomzod1: "",
             nomzod2: "",
             nomzod3: "",
         },
         onSubmit: values => {
-            console.log(values);
+            fetch(apiURL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    formik.resetForm();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
         }
     });
 
@@ -37,13 +70,6 @@ const AddTaklifCom = () => {
         setShowFirstForm(event.target.id === "one");
     };
 
-    // Only numbers
-    const [num, setNum] = useState('');
-    const changeToNumbers = event => {
-        const result = event.target.value.replace(/\D/g, '');
-        setNum(result);
-        formik.handleChange(result);
-    };
 
     return (
         <div className="bg-[#F3F7FA] min-h-[calc(100vh-125px)]">
@@ -86,16 +112,16 @@ const AddTaklifCom = () => {
                 {showFirstForm && (
                     <form className="bg-white shadow-md rounded px-4 md:px-8 pt-6 pb-8 mb-4" onSubmit={formik.handleSubmit}>
                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="taklif">
+                            <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="name">
                                 Taklif nomi
                             </label>
-                            <textarea onChange={formik.handleChange} value={formik.values.taklif} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="taklif" placeholder="Taklif" required />
+                            <textarea onChange={formik.handleChange} value={formik.values.name} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="name" placeholder="Taklif" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="vaqt">
                                 Berilgan vaqt (daqiqa)
                             </label>
-                            <input onChange={changeToNumbers} values={formik.values.vaqt} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="vaqt" value={num} type="text" placeholder="Vaqt" required />
+                            <input onChange={formik.handleChange} value={formik.values.vaqt} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="vaqt" type="number" placeholder="Vaqt" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod">
@@ -114,75 +140,47 @@ const AddTaklifCom = () => {
                 {!showFirstForm && (
                     <form className="bg-white shadow-md rounded px-4 md:px-8 pt-6 pb-8 mb-4" onSubmit={formik2.handleSubmit}>
                         <div className="mb-4">
-                            <label className="  block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="taklif">
+                            <label className="  block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="name">
                                 Taklif nomi
                             </label>
-                            <textarea onChange={formik.handleChange} value={formik.values.taklif} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="taklif" placeholder="Taklif" required />
+                            <textarea onChange={formik2.handleChange} value={formik2.values.name} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="name" placeholder="Taklif" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="vaqt">
                                 Berilgan vaqt (daqiqa)
                             </label>
-                            <input onChange={changeToNumbers} value={formik.values.vaqt} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="vaqt" type="text" placeholder="Vaqt" required />
+                            <input onChange={formik2.handleChange} value={formik2.values.vaqt} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="vaqt" type="number" placeholder="Vaqt" required />
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod">
                                 1-Nomzod
                             </label>
-                            <input onChange={formik.handleChange} value={formik.values.nomzod1} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod" type="text" placeholder="Nomzod" required />
+                            <input onChange={formik2.handleChange} value={formik2.values.nomzod} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod" type="text" placeholder="Nomzod" required />
                         </div>
                         <div className="mb-4">
-                            <div className=''>
-                                <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod2">
-                                    2-Nomzod
-                                </label>
-                                <div className='flex justify-between gap-3'>
-                                    <input onChange={formik.handleChange} value={formik.values.nomzod2} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod2" type="text" placeholder="Nomzod" />
-                                    <button type="button" onClick = {() => setIsActiveTwoo(true)} className={`${isActiveTwoo && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
-                                </div>
+                            <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod1">
+                                2-Nomzod
+                            </label>
+                            <div className='flex justify-between gap-3'>
+                                <input onChange={formik2.handleChange} value={formik2.values.nomzod1} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod1" type="text" placeholder="Nomzod" />
+                                <button type="button" onClick={() => setIsActiveTwoo(true)} className={`${isActiveTwoo && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
                             </div>
                         </div>
                         <div className={`${isActiveTwoo ? "" : "hidden"} mb-4`}>
-                            <div className=''>
-                                <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod3">
-                                    3-Nomzod
-                                </label>
-                                <div className='flex justify-between gap-3'>
-                                    <input onChange={formik.handleChange} value={formik.values.nomzod3} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod3" type="text" placeholder="Nomzod" />
-                                    <button type="button" onClick = {() => setIsActiveThree(true)} className={`${isActiveThree && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
-                                </div>
+                            <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod2">
+                                3-Nomzod
+                            </label>
+                            <div className='flex justify-between gap-3'>
+                                <input onChange={formik2.handleChange} value={formik2.values.nomzod2} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod2" type="text" placeholder="Nomzod" />
+                                <button type="button" onClick={() => setIsActiveThree(true)} className={`${isActiveThree && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
                             </div>
                         </div>
                         <div className={`${isActiveThree ? "" : "hidden"} mb-4`}>
-                            <div className=''>
-                                <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod4">
-                                    4-Nomzod
-                                </label>
-                                <div className='flex justify-between gap-3'>
-                                    <input onChange={formik.handleChange} value={formik.values.nomzod4} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod4" type="text" placeholder="Nomzod" />
-                                    <button type="button" onClick = {() => setIsActiveFour(true)} className={`${isActiveFour && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={`${isActiveFour ? "" : "hidden"} mb-4`}>
-                            <div className=''>
-                                <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod5">
-                                    5-Nomzod
-                                </label>
-                                <div className='flex justify-between gap-3'>
-                                    <input onChange={formik.handleChange} value={formik.values.nomzod5} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline" id="nomzod5" type="text" placeholder="Nomzod" />
-                                    <button type="button" onClick = {() => setIsActiveFive(true)} className={`${isActiveFive && "hidden"} px-3 font-bold shadow appearance-none border rounded text-2xl text-gray-700 mb-3 leading-tight`}>+</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={`${isActiveFive ? "" : "hidden"} mb-4`}>
-                            <div className=''>
-                                <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod6">
-                                    6-Nomzod
-                                </label>
-                                <div className='flex justify-between gap-3'>
-                                    <input onChange={formik.handleChange} value={formik.values.nomzod6} className={` shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline`} id="nomzod6" type="text" placeholder="Nomzod" />
-                                </div>
+                            <label className="block text-gray-700 text-sm lg:text-xl font-semibold mb-2" htmlFor="nomzod3">
+                                4-Nomzod
+                            </label>
+                            <div className='flex justify-between gap-3'>
+                                <input onChange={formik2.handleChange} value={formik2.values.nomzod3} className={` shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline`} id="nomzod3" type="text" placeholder="Nomzod" />
                             </div>
                         </div>
                         <div className="flex items-center justify-end">
