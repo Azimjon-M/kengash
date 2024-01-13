@@ -9,9 +9,9 @@ import Davomat from '../pages/Davomat';
 import Takliflar from '../pages/Takliflar';
 import AddAzoCom from '../pages/AddAzo';
 import AddTaklif from '../pages/AddTaklif';
-// import SuperadminPage from '../pages/SuperadminPage';
 import AdminPage from '../pages/AdminPage';
 import AzoPage from '../pages/AzoPage';
+import SuperadminPage from '../pages/SuperadminPage';
 
 export const routes = [
     {
@@ -53,8 +53,8 @@ export const routes = [
                 path: '/statistika'
             },
             {
-                element: <Main />,
-                path: '/superadmin'
+                element: <SuperadminPage />,
+                path: '/superadmin/asosiy'
             },
             {
                 element: <AdminPage />,
