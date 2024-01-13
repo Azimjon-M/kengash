@@ -8,7 +8,6 @@ import { GrClose } from "react-icons/gr";
 const Navbar = () => {
     const navigate = useNavigate();
     const superAdmin = "superadmin";
-    const admin = "admin";
     const azo = "azo";
     // Values
     const CurrentLavozim = Object.keys(localStorage)[0];
