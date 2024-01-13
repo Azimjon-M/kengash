@@ -9,7 +9,7 @@ import Davomat from '../pages/Davomat';
 import Takliflar from '../pages/Takliflar';
 import AddAzoCom from '../pages/AddAzo';
 import AddTaklif from '../pages/AddTaklif';
-import SuperadminPage from '../pages/SuperadminPage';
+// import SuperadminPage from '../pages/SuperadminPage';
 import AdminPage from '../pages/AdminPage';
 import AzoPage from '../pages/AzoPage';
 
@@ -53,7 +53,7 @@ export const routes = [
                 path: '/statistika'
             },
             {
-                element: <SuperadminPage />,
+                element: <Main />,
                 path: '/superadmin'
             },
             {
