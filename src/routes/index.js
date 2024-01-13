@@ -7,8 +7,11 @@ import Statistika from '../pages/Statistika';
 import Azolar from '../pages/Azolar';
 import Davomat from '../pages/Davomat';
 import Takliflar from '../pages/Takliflar';
-import AddAzoCom from '../components/AddAzoCom';
+import AddAzoCom from '../pages/AddAzo';
 import AddTaklif from '../pages/AddTaklif';
+import SuperadminPage from '../pages/SuperadminPage';
+import AdminPage from '../pages/AdminPage';
+import AzoPage from '../pages/AzoPage';
 
 export const routes = [
     {
@@ -48,6 +51,18 @@ export const routes = [
             {
                 element: <Statistika />,
                 path: '/statistika'
+            },
+            {
+                element: <SuperadminPage />,
+                path: '/superadmin'
+            },
+            {
+                element: <AdminPage />,
+                path: '/admin'
+            },
+            {
+                element: <AzoPage />,
+                path: '/azo'
             },
         ]
     }

@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import Breadcrumb from '../Breadcrumb';
 
 const AddAzoCom = () => {
+
+    const apiUrl = 'https://kengash.pythonanywhere.com/api/v1/users/';
+    const token = window.localStorage.getItem('token');
+
+
     const [formData, setFormData] = useState({
         username: '',
-        name: '',
-        surname: '',
-        role: '',
+        first_name: '',
+        last_name: '',
+        lavozim: '',
         password: '',
         confirmPassword: '',
     });
@@ -15,9 +20,10 @@ const AddAzoCom = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('API_URL', {
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
+                    'Authorization': `Token ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
@@ -54,17 +60,17 @@ const AddAzoCom = () => {
                         </div>
                         <div className='grid lg:grid-cols-2 lg:gap-4'>
                             <div className="mb-5">
-                                <label htmlFor="name" className="block mb-2 text-sm md:text-lg font-medium text-gray-900 dark:text-white">Ismi</label>
-                                <input type="text" id="name" value={formData.name} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ismi" required />
+                                <label htmlFor="first_name" className="block mb-2 text-sm md:text-lg font-medium text-gray-900 dark:text-white">Ismi</label>
+                                <input type="text" id="first_name" value={formData.first_name} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ismi" required />
                             </div>
                             <div className="mb-5">
-                                <label htmlFor="surname" className="block mb-2 text-sm md:text-lg font-medium text-gray-900 dark:text-white">Familiyasi</label>
-                                <input type="text" id="surname" value={formData.surname} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Familiyasi" required />
+                                <label htmlFor="last_name" className="block mb-2 text-sm md:text-lg font-medium text-gray-900 dark:text-white">Familiyasi</label>
+                                <input type="text" id="last_name" value={formData.last_name} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Familiyasi" required />
                             </div>
                         </div>
                         <div className="mb-5">
-                            <label htmlFor="huquq" className="block mb-2 text-sm md:text-lg font-medium text-gray-900 dark:text-white">Huquq</label>
-                            <select id="huquq" value={formData.huquq} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <label htmlFor="lavozim" className="block mb-2 text-sm md:text-lg font-medium text-gray-900 dark:text-white">Huquq</label>
+                            <select id="lavozim" value={formData.lavozim} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option disabled>Huquqni tanlang</option>
                                 <option>Admin</option>
                                 <option>A'zo</option>
