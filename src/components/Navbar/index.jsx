@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import kspiIcon from "../../assets/icons/logo_kspi.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
@@ -6,14 +6,14 @@ import { GrClose } from "react-icons/gr";
 
 // isExit
 const Navbar = () => {
-    const navigate = useNavigate()
-    const CurrentLavozim = Object.keys(localStorage)[0]
-    console.log(CurrentLavozim);
-    // const superAdmin = "superadmin";
-    // const admin = "admin"
-    // const azo = "azo"
+    const navigate = useNavigate();
+    const superAdmin = "superadmin";
+    const admin = "admin";
+    const azo = "azo";
     // Values
+    const CurrentLavozim = Object.keys(localStorage)[0];
     const [isOpenMeni, setIsOpenMenu] = useState(false);
+    const [isLavozim, setIsLavozim] = useState("");
     // Funtions
     const handleClickMenuOpen = (e) => {
         e.preventDefault();
@@ -25,9 +25,14 @@ const Navbar = () => {
     };
     // Logout
     const handleClicklogout = () => {
-        localStorage.removeItem(CurrentLavozim)
-        navigate('/')
-    }
+        localStorage.removeItem(CurrentLavozim);
+        navigate("/");
+    };
+
+    useEffect(() => {
+        var lavozim = Object.keys(localStorage)[0];
+        setIsLavozim(`${lavozim}`);
+    }, []);
 
     return (
         <div className="flex flex-col sticky top-0 left-0 shadow-lg z-50">
@@ -73,46 +78,63 @@ const Navbar = () => {
                                 Asosiy
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink
-                                to="/azolar"
-                                className={({ isActive }) =>
-                                    `${isActive ? "underline" : ""} `
-                                }
-                            >
-                                A'zolar
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
-                                to="/davomat"
-                                className={({ isActive }) =>
-                                    `${isActive ? "underline" : ""} `
-                                }
-                            >
-                                Davomat
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
-                                to="/takliflar"
-                                className={({ isActive }) =>
-                                    `${isActive ? "underline" : ""} `
-                                }
-                            >
-                                Takliflar
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
-                                to="/statistika"
-                                className={({ isActive }) =>
-                                    `${isActive ? "underline" : ""} `
-                                }
-                            >
-                                Statistika
-                            </NavLink>
-                        </li>
+                        {isLavozim === superAdmin && (
+                            <li>
+                                <NavLink
+                                    to="/azolar"
+                                    className={({ isActive }) =>
+                                        `${isActive ? "underline" : ""} `
+                                    }
+                                >
+                                    A'zolar
+                                </NavLink>
+                            </li>
+                        )}
+                        {isLavozim === azo ? (
+                            <li>
+                                <NavLink
+                                    to="/azo-takliflar"
+                                    className={({ isActive }) =>
+                                        `${isActive ? "underline" : ""} `
+                                    }
+                                >
+                                    Takliflar
+                                </NavLink>
+                            </li>
+                        ) : (
+                            <>
+                                <li>
+                                    <NavLink
+                                        to="/takliflar"
+                                        className={({ isActive }) =>
+                                            `${isActive ? "underline" : ""} `
+                                        }
+                                    >
+                                        Takliflar
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to="/davomat"
+                                        className={({ isActive }) =>
+                                            `${isActive ? "underline" : ""} `
+                                        }
+                                    >
+                                        Davomat
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to="/statistika"
+                                        className={({ isActive }) =>
+                                            `${isActive ? "underline" : ""} `
+                                        }
+                                    >
+                                        Statistika
+                                    </NavLink>
+                                </li>
+                            </>
+                        )}
                     </ul>
                     <NavLink
                         to="/"

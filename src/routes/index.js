@@ -12,6 +12,7 @@ import AddTaklif from '../pages/AddTaklif';
 import AdminPage from '../pages/AdminPage';
 import AzoPage from '../pages/AzoPage';
 import SuperadminPage from '../pages/SuperadminPage';
+import AzoTakliflarPage from '../pages/AzoTakliflarPage';
 
 export const routes = [
     {
@@ -64,6 +65,10 @@ export const routes = [
                 element: <AzoPage />,
                 path: '/azo'
             },
+            {
+                element: <AzoTakliflarPage />,
+                path: "azo-takliflar"
+            }
         ]
     }
 ]
