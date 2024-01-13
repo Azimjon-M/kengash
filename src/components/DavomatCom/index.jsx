@@ -6,28 +6,32 @@ import { FaXmark } from "react-icons/fa6";
 import { RxUpdate } from "react-icons/rx";
 
 const DavomatCom = () => {
-  const url = "https://kengash.pythonanywhere.com/api/v1/davomat/";
-  const token = "aadba973597b5840b5fbfab4f0039736e4e6f4c9";
+  const url = "http://192.168.0.29/api/v1/davomat/";
+  const token = "b35641eca19ae9a60154d33f2fc4511640bbb8ba";
+
+  // Values
+  // const [isData, setIsData] = useState([])
 
   const fetchData = async () => {
     try {
       const response = await axios(url, {
-        method: "GET",
         headers: {
           'Content-Type': 'application/json',
-          "www-authenticate": token,
+          'Authorization': `Token ${token}`
         },
       });
       console.log(response);
-    } catch (error) {
+      
+    }
+    catch (error) {
       console.log(error.respnse);
     }
   };
-
+  
   useEffect(() => {
     fetchData();
   }, []);
-
+  
   return (
     <div className="min-h-[calc(100vh-125px)] bg-[#F3F7FA]">
       <Breadcrumb locationPage="Davomat" />
@@ -37,11 +41,19 @@ const DavomatCom = () => {
             Kengash a'zolari
           </h2>
           <button className="font-medium text-sm md:text-base text-gray-600 hover:text-green-600 hover:border-green-600 active:bg-green-100 border py-1 px-3 rounded-lg group/edit">
-            Yangilash{" "}
-            <RxUpdate className="inline group-hover/edit:animate-spin" />
+            Yangilash
+             <RxUpdate className="inline group-hover/edit:animate-spin ml-1" />
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          {/* {data && data.filter(users => users.aktiv == true).map(filteredUser => {
+            return (
+              <div>aaaaaaa</div>
+            )
+          }
+          )} */}
+          {/* Kengashda qatnashmayotganlar */}
           <div className="relative overflow-x-auto shadow-md">
             <table className="w-full text-sm sm:text-base rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs sm:text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -79,6 +91,8 @@ const DavomatCom = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Kengashda qatnashmayotganlar */}
 
           <div className="relative overflow-x-auto shadow-md">
             <table className="w-full text-sm sm:text-base rtl:text-right text-gray-500 dark:text-gray-400">
