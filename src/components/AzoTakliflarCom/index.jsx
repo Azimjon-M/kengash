@@ -47,9 +47,9 @@ const AzoTakliflarCom = () => {
                                                 <div className='mb-5 md:text-lg xl:text-xl'><b>Nomzod: </b>{taklif.nomzod}</div>
                                                 {/* BUTTONS */}
                                                 <div className='flex items-center justify-between md:justify-end'>
-                                                    <button className='btn btn-sm md:btn md:text-white rounded bg-green-600 md:bg-green-600 w-[100px] md:w-[120px] lg:text-lg md:mx-3 text-white'>Roziman</button>
-                                                    <button className='btn btn-sm md:btn md:text-white rounded bg-red-600 md:bg-red-600 w-[100px] md:w-[120px] lg:text-lg md:mx-3 text-white'>Qarshiman</button>
-                                                    <button className='btn btn-sm md:btn md:text-white rounded bg-yellow-600 md:bg-yellow-600 w-[100px] md:w-[120px] lg:text-lg md:ml-3 text-white'>Betarafman</button>
+                                                    <button className='btn btn-sm md:btn md:text-white rounded bg-green-600 hover:bg-green-500 md:bg-green-600 w-[100px] md:w-[120px] lg:text-lg md:mx-3 text-white'>Roziman</button>
+                                                    <button className='btn btn-sm md:btn md:text-white rounded bg-red-600 hover:bg-red-500 md:bg-red-600 w-[100px] md:w-[120px] lg:text-lg md:mx-3 text-white'>Qarshiman</button>
+                                                    <button className='btn btn-sm md:btn md:text-white rounded bg-yellow-600 hover:bg-yellow-500 md:bg-yellow-600 w-[100px] md:w-[120px] lg:text-lg md:ml-3 text-white'>Betarafman</button>
                                                 </div>
                                             </div>
                                             :
@@ -66,11 +66,11 @@ const AzoTakliflarCom = () => {
                                                 <div className='mb-5 md:text-lg xl:text-xl'><b>Taklif: </b>{taklif.name}</div>
                                                 {/* NOMZOD */}
                                                 <h3 className='text-2xl font-semibold text-center mb-5'>Nomzodlar</h3>
-                                                <div className='text-center md:flex md:items-center md:justify-around md:flex-wrap'>
-                                                    <div className='mb-5 md:text-lg xl:text-xl'><button className='btn'>{taklif.nomzod}</button></div>
-                                                    <div className='mb-5 md:text-lg xl:text-xl'><button className='btn'>{taklif.nomzod1}</button></div>
-                                                    <div className='mb-5 md:text-lg xl:text-xl'><button className='btn'>{taklif.nomzod2}</button></div>
-                                                    <div className='mb-5 md:text-lg xl:text-xl'><button className='btn'>{taklif.nomzod3}</button></div>
+                                                <div className='text-center md:flex md:items-center md:justify-evenly md:flex-wrap'>
+                                                    <div className='mb-5 md:text-lg xl:text-xl'><button className='btn bg-blue-600 hover:bg-blue-500 text-white'>{taklif.nomzod}</button></div>
+                                                    <div className='mb-5 md:text-lg xl:text-xl'><button className='btn bg-blue-600 hover:bg-blue-500 text-white'>{taklif.nomzod1}</button></div>
+                                                    <div className={`${taklif.nomzod2 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button className='btn bg-blue-600 hover:bg-blue-500 text-white'>{taklif.nomzod2}</button></div>
+                                                    <div className={`${taklif.nomzod3 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button className='btn bg-blue-600 hover:bg-blue-500 text-white'>{taklif.nomzod3}</button></div>
                                                 </div>
                                             </div>
                                         }
