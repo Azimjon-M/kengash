@@ -82,6 +82,8 @@ const TakliflarCom = () => {
         }
     };
 
+    // FAOLLASHTIRISH
+
     return (
         <div className="bg-[#F3F7FA] min-h-[calc(100vh-125px)]">
             <Breadcrumb locationPage="Takliflar" />
