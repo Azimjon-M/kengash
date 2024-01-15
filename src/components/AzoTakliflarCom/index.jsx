@@ -31,7 +31,7 @@ const AzoTakliflarCom = () => {
                             data.map((taklif, idx) => {
                                 return (
                                     <div key={idx}>
-                                        {!taklif.bitalik_taklif ?
+                                        {taklif.bitalik_taklif ?
                                             <div className='border-2 rounded p-2 lg:px-8 mb-5 shadow-md'>
                                                 {/* VAQT */}
                                                 <div className='flex items-center justify-between mb-5'>

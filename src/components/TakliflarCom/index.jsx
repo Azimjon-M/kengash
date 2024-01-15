@@ -115,11 +115,10 @@ const TakliflarCom = () => {
                                     <div><b>Nomzod:</b> {item.nomzod}</div>
                                 :
                                     <>
-                                        <div><b>Nomzod:</b> {item.nomzod}</div>
                                         <div><b>Nomzod 1:</b> {item.nomzod}</div>
                                         <div><b>Nomzod 2:</b> {item.nomzod1}</div>
-                                        <div><b>Nomzod 3:</b> {item.nomzod2}</div>
-                                        <div><b>Nomzod 4:</b> {item.nomzod3}</div>
+                                        <div className={` ${item.nomzod2 ? "" : "hidden"}`}><b>Nomzod 3:</b> {item.nomzod2}</div>
+                                        <div className={` ${item.nomzod3 ? "" : "hidden"}`}><b>Nomzod 4:</b> {item.nomzod3}</div>
                                     </>
                             }
                             <div><b>Berilgan vaqt:</b> {item.vaqt} daqiqa</div>

@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 const AddTaklifCom = () => {
     const [isActiveTwoo, setIsActiveTwoo] = useState(false);
     const [isActiveThree, setIsActiveThree] = useState(false);
-    const [isNomzodOne, setIsNomzodOne] = useState(null);
+    const [isNomzodOne, setIsNomzodOne] = useState(true);
 
     const apiURL = "https://kengash.pythonanywhere.com/api/v1/taklif/";
     const getToken = Object.keys(localStorage)[0];
@@ -26,9 +26,11 @@ const AddTaklifCom = () => {
             name: "",
             nomzod: "",
             vaqt: "",
-            bittalik_taklif: false
+            bitalik_taklif: true,
+            yoqish: true
         },
         onSubmit: (values) => {
+            console.log(values);
             fetch(apiURL, {
                 method: "POST",
                 headers: {
@@ -49,7 +51,7 @@ const AddTaklifCom = () => {
             nomzod1: "",
             nomzod2: "",
             nomzod3: "",
-            bittalik_taklif: false
+            bitalik_taklif: false
         },
         onSubmit: (values) => {
             console.log(values);
@@ -84,8 +86,9 @@ const AddTaklifCom = () => {
                                 id="formik_bittalik_true"
                                 type="radio"
                                 name="bitalik_taklif"
-                                value={formik.values.bittalik_taklif}
+                                value={formik.values.bitalik_taklif}
                                 onChange={() => setIsNomzodOne(true)}
+                                defaultChecked
                             />
                             <label
                                 htmlFor="formik_bittalik_true"
@@ -101,7 +104,7 @@ const AddTaklifCom = () => {
                                 id="formik_bittalik_false"
                                 type="radio"
                                 name="bitalik_taklif"
-                                value={formik2.values.bittalik_taklif}
+                                value={formik2.values.bitalik_taklif}
                                 onChange={() => setIsNomzodOne(false)}
                             />
                             <label
@@ -273,7 +276,7 @@ const AddTaklifCom = () => {
                                 <input
                                     onChange={formik2.handleChange}
                                     value={formik2.values.nomzod2}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline"
+                                    className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline'
                                     id="nomzod2"
                                     type="text"
                                     placeholder="Nomzod"
