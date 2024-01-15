@@ -18,7 +18,7 @@ const AzolarCom = () => {
                 },
             })
                 .then(response => response.json())
-                .then(data => setData(data))
+                .then(data => setData(data.filter(obj => obj.lavozim !== "superadmin")))
                 .catch(error => console.error('Xatolik:', error));
         }, []);
 

@@ -8,6 +8,7 @@ import { MdDeleteOutline } from 'react-icons/md';
 const TakliflarCom = () => {
 
     const [data, setData] = useState([]);
+    console.log(data);
 
     // GET DATA
     useEffect(() => {
@@ -105,14 +106,22 @@ const TakliflarCom = () => {
                     </button>
                 </div>
                 <div className='text-xl font-semibold text-center mt-4'>Kengashga qo'yilmagan takliflar:</div>
-                <div className="flex flex-col items-center gap-y-4 px-3 overflow-hidden">
+                <div className="flex flex-col-reverse items-center gap-y-4 px-3 overflow-hidden">
                     {data.map((item) => (
                         <div data-aos="fade-left" key={item.id} className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-gray-50 to-gray-400 p-2">
                             <div className="line-clamp-1"><b>Taklif nomi:</b> {item.name}</div>
-                            <div><b>Nomzod:</b> {item.nomzod}</div>
-                            <div><b>Nomzod:</b> {item.nomzod1}</div>
-                            <div><b>Nomzod:</b> {item.nomzod2}</div>
-                            <div><b>Nomzod:</b> {item.nomzod3}</div>
+                            {
+                                item.bitalik_taklif ?
+                                    <div><b>Nomzod:</b> {item.nomzod}</div>
+                                :
+                                    <>
+                                        <div><b>Nomzod:</b> {item.nomzod}</div>
+                                        <div><b>Nomzod 1:</b> {item.nomzod}</div>
+                                        <div><b>Nomzod 2:</b> {item.nomzod1}</div>
+                                        <div><b>Nomzod 3:</b> {item.nomzod2}</div>
+                                        <div><b>Nomzod 4:</b> {item.nomzod3}</div>
+                                    </>
+                            }
                             <div><b>Berilgan vaqt:</b> {item.vaqt} daqiqa</div>
                             <div className="flex justify-end">
                                 <button className="btn btn-sm btn-success bg-[#05B967] font-medium text-white mb-4" >Faollashtirish</button>
