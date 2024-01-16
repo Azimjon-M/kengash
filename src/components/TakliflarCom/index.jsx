@@ -2,116 +2,195 @@ import React, { useState, useEffect } from "react";
 import Breadcrumb from "../Breadcrumb";
 import { NavLink } from "react-router-dom";
 import { FaXmark, FaPlus } from "react-icons/fa6";
-import { BiEditAlt } from 'react-icons/bi';
-import { MdDeleteOutline } from 'react-icons/md';
+import { BiEditAlt } from "react-icons/bi";
+import { MdDeleteOutline } from "react-icons/md";
 
 const TakliflarCom = () => {
-
+    const apiUrlDefault = "https://kengash.pythonanywhere.com/api/v1/taklif/";
     const [data, setData] = useState([]);
     console.log(data);
 
     // GET DATA
-    useEffect(() => {
-        const apiUrl = 'https://kengash.pythonanywhere.com/api/v1/taklif/';
+    const GetDataFromAPI = () => {
         const getToken = Object.keys(localStorage)[0];
         const token = localStorage.getItem(`${getToken}`);
-
-        fetch(apiUrl, {
+        fetch(apiUrlDefault, {
             headers: {
-                'Authorization': `Token ${token}`,
-                'Content-Type': 'application/json'
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
             },
         })
-            .then(response => response.json())
-            .then(data => setData(data))
-            .catch(error => console.error('Xatolik:', error));
+            .then((response) => response.json())
+            .then((data) => setData(data))
+            .catch((error) => console.error("Xatolik:", error));
+    };
+    useEffect(() => {
+        GetDataFromAPI();
     }, []);
 
     // DELETE ONE BY ONE DATA
     const handleDelete = (id) => {
-        const apiUrl = `https://kengash.pythonanywhere.com/api/v1/taklif/${id}/`;
         const getToken = Object.keys(localStorage)[0];
         const token = localStorage.getItem(`${getToken}`);
 
-        fetch(apiUrl, {
-            method: 'DELETE',
+        fetch(`${apiUrlDefault}${id}/`, {
+            method: "DELETE",
             headers: {
-                'Authorization': `Token ${token}`,
-                'Content-Type': 'application/json'
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
             },
         })
-            .then(response => {
+            .then((response) => {
                 if (response.ok) {
-                    setData((prevData) => prevData.filter(item => item.id !== id));
+                    setData((prevData) =>
+                        prevData.filter((item) => item.id !== id)
+                    );
                 } else {
-                    console.error('Error deleting item:', response.statusText);
+                    console.error("Error deleting item:", response.statusText);
                 }
             })
-            .catch(error => console.error('Xatolik:', error));
+            .catch((error) => console.error("Xatolik:", error));
     };
 
     // DELETE ALL DATA
     const handleClearData = () => {
-        const isConfirmed = window.confirm("Barcha ma'lumotlarni o'chirishni hohlaysizmi?");
+        const isConfirmed = window.confirm(
+            "Barcha ma'lumotlarni o'chirishni hohlaysizmi?"
+        );
 
         if (isConfirmed) {
-            const apiUrl = 'https://kengash.pythonanywhere.com/api/v1/taklif/';
             const getToken = Object.keys(localStorage)[0];
             const token = localStorage.getItem(`${getToken}`);
 
-            Promise.all(data.map(item => {
-                const itemUrl = `${apiUrl}${item.id}/`;
+            Promise.all(
+                data.map((item) => {
+                    const itemUrl = `${apiUrlDefault}${item.id}/`;
 
-                return fetch(itemUrl, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Token ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            console.error(`Error deleting item with ID ${item.id}:`, response.statusText);
-                        }
+                    return fetch(itemUrl, {
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Token ${token}`,
+                            "Content-Type": "application/json",
+                        },
                     })
-                    .catch(error => console.error('Xatolik:', error));
-            }))
-                .then(() => {
-                    setData([]);
-                });
+                        .then((response) => {
+                            if (!response.ok) {
+                                console.error(
+                                    `Error deleting item with ID ${item.id}:`,
+                                    response.statusText
+                                );
+                            }
+                        })
+                        .catch((error) => console.error("Xatolik:", error));
+                })
+            ).then(() => {
+                setData([]);
+            });
         }
     };
 
     // FAOLLASHTIRISH
-    const handleChange = (id) => {
-        const apiUrl = `https://kengash.pythonanywhere.com/api/v1/taklif/${id}/`;
+    const handleChangeActive = ({
+        id,
+        name,
+        nomzod,
+        bitalik_taklif,
+        vaqt,
+        nomzod1,
+        nomzod2,
+        nomzod3,
+    }) => {
         const getToken = Object.keys(localStorage)[0];
         const token = localStorage.getItem(`${getToken}`);
 
-        fetch(apiUrl, {
-            method: 'PUT',
+        const nowDataTime = new Date();
+        const nowHover = nowDataTime.getHours();
+        const nowMinutes = nowDataTime.getMinutes();
+
+        const convertToMinute = nowHover * 60 + nowMinutes + vaqt;
+        const newVaqt = `${Math.floor(convertToMinute / 60)}:${
+            convertToMinute % 60
+        }`;
+
+        fetch(`${apiUrlDefault}${id}/`, {
+            method: "PUT",
             headers: {
-                'Authorization': `Token ${token}`,
-                'Content-Type': 'application/json'
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({yoqish: true})
+            body: JSON.stringify({
+                bitalik_taklif: bitalik_taklif,
+                id: id,
+                name: name,
+                nomzod: nomzod,
+                nomzod1: nomzod1,
+                nomzod2: nomzod2,
+                nomzod3: nomzod3,
+                tugash_vaqti: newVaqt,
+                vaqt: vaqt,
+                yoqish: true,
+            }),
         })
-            // .then(response => {
-            //     if (response.ok) {
-            //         setData((prevData) =>
-            //             prevData.map(item =>
-            //                 item.id === id ? { ...item, yoqish: true } : item
-            //             )
-            //         );
-            //         console.log('Ma\'lumotlar muvaffaqiyatli o\'zgartirildi:', id);
-            //     } else {
-            //         console.error('Error updating item:', response.statusText);
-            //     }
-            // })
-            // .catch(error => console.error('Xatolik:', error));
+            .then((response) => {
+                if (response.ok) {
+                    console.log(
+                        "Ma'lumotlar muvaffaqiyatli o'zgartirildi:",
+                        id
+                    );
+                    GetDataFromAPI();
+                } else {
+                    console.error("Error updating item:", response.statusText);
+                }
+            })
+            .catch((error) => console.error("Xatolik:", error));
     };
 
+    // FAOLSIZLASHTIRISH
+    const handleChangeNoActive = ({
+        id,
+        name,
+        nomzod,
+        bitalik_taklif,
+        vaqt,
+        nomzod1,
+        nomzod2,
+        nomzod3,
+    }) => {
+        const getToken = Object.keys(localStorage)[0];
+        const token = localStorage.getItem(`${getToken}`);
 
+        fetch(`${apiUrlDefault}${id}/`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                bitalik_taklif: bitalik_taklif,
+                id: id,
+                name: name,
+                nomzod: nomzod,
+                nomzod1: nomzod1,
+                nomzod2: nomzod2,
+                nomzod3: nomzod3,
+                tugash_vaqti: "",
+                vaqt: vaqt,
+                yoqish: false,
+            }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    console.log(
+                        "Ma'lumotlar muvaffaqiyatli o'zgartirildi:",
+                        id
+                    );
+                    GetDataFromAPI();
+                } else {
+                    console.error("Error updating item:", response.statusText);
+                }
+            })
+            .catch((error) => console.error("Xatolik:", error));
+    };
 
     return (
         <div className="bg-[#F3F7FA] min-h-[calc(100vh-125px)]">
@@ -136,45 +215,109 @@ const TakliflarCom = () => {
                         Barcha takliflarni o'chirish <FaXmark />
                     </button>
                 </div>
-                <div className='text-xl font-semibold text-center mt-4'>Kengashga qo'yilmagan takliflar:</div>
+                <div className="text-xl font-semibold text-center mt-4">
+                    Kengashga qo'yilmagan takliflar:
+                </div>
                 <div className="flex flex-col-reverse items-center gap-y-4 px-3 overflow-hidden">
-                    {data.map((item) => (!item.yoqish &&
-                        <div data-aos="fade-left" key={item.id} className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-gray-50 to-gray-400 p-2">
-                            <div className="line-clamp-1"><b>Taklif nomi:</b> {item.name}</div>
-                            {
-                                item.bitalik_taklif ?
-                                    <div><b>Nomzod:</b> {item.nomzod}</div>
-                                    :
-                                    <>
-                                        <div><b>Nomzod 1:</b> {item.nomzod}</div>
-                                        <div><b>Nomzod 2:</b> {item.nomzod1}</div>
-                                        <div className={` ${item.nomzod2 ? "" : "hidden"}`}><b>Nomzod 3:</b> {item.nomzod2}</div>
-                                        <div className={` ${item.nomzod3 ? "" : "hidden"}`}><b>Nomzod 4:</b> {item.nomzod3}</div>
-                                    </>
-                            }
-                            <div><b>Berilgan vaqt:</b> {item.vaqt} daqiqa</div>
-                            <div className="flex justify-end">
-                                <button className="btn btn-sm btn-success bg-[#05B967] font-medium text-white mb-4" onClick={() => handleChange(item.id)} >Faollashtirish</button>
-                            </div>
-                            <div className="flex justify-end items-center gap-x-2">
-                                <BiEditAlt className="cursor-pointer text-[24px] text-[#05B967]" /> <MdDeleteOutline onClick={() => handleDelete(item.id)} className="cursor-pointer text-[24px] text-red-600" />
-                            </div>
-                        </div>
-                    ))}
+                    {data.map(
+                        (item) =>
+                            !item.yoqish && (
+                                <div
+                                    data-aos="fade-left"
+                                    key={item.id}
+                                    className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-gray-50 to-gray-400 p-2"
+                                >
+                                    <div className="line-clamp-1">
+                                        <b>Taklif nomi:</b> {item.name}
+                                    </div>
+                                    {item.bitalik_taklif ? (
+                                        <div>
+                                            <b>Nomzod:</b> {item.nomzod}
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div>
+                                                <b>Nomzod 1:</b> {item.nomzod}
+                                            </div>
+                                            <div>
+                                                <b>Nomzod 2:</b> {item.nomzod1}
+                                            </div>
+                                            <div
+                                                className={` ${
+                                                    item.nomzod2 ? "" : "hidden"
+                                                }`}
+                                            >
+                                                <b>Nomzod 3:</b> {item.nomzod2}
+                                            </div>
+                                            <div
+                                                className={` ${
+                                                    item.nomzod3 ? "" : "hidden"
+                                                }`}
+                                            >
+                                                <b>Nomzod 4:</b> {item.nomzod3}
+                                            </div>
+                                            <div>{item.yoqish}</div>
+                                        </>
+                                    )}
+                                    <div>
+                                        <b>Berilgan vaqt:</b> {item.vaqt} daqiqa
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <button
+                                            className="btn btn-sm btn-success bg-[#05B967] font-medium text-white mb-4"
+                                            onClick={() =>
+                                                handleChangeActive(item)
+                                            }
+                                        >
+                                            Faollashtirish
+                                        </button>
+                                    </div>
+                                    <div className="flex justify-end items-center gap-x-2">
+                                        <BiEditAlt className="cursor-pointer text-[24px] text-[#05B967]" />{" "}
+                                        <MdDeleteOutline
+                                            onClick={() =>
+                                                handleDelete(item.id)
+                                            }
+                                            className="cursor-pointer text-[24px] text-red-600"
+                                        />
+                                    </div>
+                                </div>
+                            )
+                    )}
                 </div>
 
-                <div className='text-xl font-semibold text-center mt-8'>Kengashga qo'yilgan takliflar:</div>
+                <div className="text-xl font-semibold text-center mt-8">
+                    Kengashga qo'yilgan takliflar:
+                </div>
                 <div className="flex flex-col items-center gap-y-4 px-3 mb-6 overflow-hidden">
-                    {data.map((item) => (item.yoqish &&
-                        <div data-aos="fade-right" key={item.id} className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-green-500 to-green-200 p-2">
-                            <div className="line-clamp-1"><b>Taklif nomi:</b> {item.name}</div>
-                            <div><b>Nomzod:</b> {item.nomzod}</div>
-                            <div><b>Berilgan vaqt:</b> {item.vaqt} daqiqa</div>
-                            <div className="flex justify-end">
-                                <button className="btn btn-sm btn-error bg-red-600 font-medium text-white" >Faolsizlashtirish</button>
-                            </div>
-                        </div>
-                    ))}
+                    {data.map(
+                        (item) =>
+                            item.yoqish && (
+                                <div
+                                    data-aos="fade-right"
+                                    key={item.id}
+                                    className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-green-500 to-green-200 p-2"
+                                >
+                                    <div className="line-clamp-1">
+                                        <b>Taklif nomi:</b> {item.name}
+                                    </div>
+                                    <div>
+                                        <b>Nomzod:</b> {item.nomzod}
+                                    </div>
+                                    <div>
+                                        <b>Berilgan vaqt:</b> {item.vaqt} daqiqa
+                                    </div>
+                                    <div>
+                                        <b>Tugash vaqti:</b> {item.tugash_vaqti}
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <button onClick={() => handleChangeNoActive(item)} className="btn btn-sm btn-error bg-red-600 font-medium text-white">
+                                            Faolsizlashtirish
+                                        </button>
+                                    </div>
+                                </div>
+                            )
+                    )}
                 </div>
             </div>
         </div>

@@ -27,7 +27,7 @@ const AddTaklifCom = () => {
             nomzod: "",
             vaqt: "",
             bitalik_taklif: true,
-            yoqish: true
+            yoqish: false
         },
         onSubmit: (values) => {
             console.log(values);
