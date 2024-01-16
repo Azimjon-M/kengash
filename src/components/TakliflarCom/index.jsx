@@ -83,6 +83,35 @@ const TakliflarCom = () => {
     };
 
     // FAOLLASHTIRISH
+    const handleChange = (id) => {
+        const apiUrl = `https://kengash.pythonanywhere.com/api/v1/taklif/${id}/`;
+        const getToken = Object.keys(localStorage)[0];
+        const token = localStorage.getItem(`${getToken}`);
+
+        fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({yoqish: true})
+        })
+            // .then(response => {
+            //     if (response.ok) {
+            //         setData((prevData) =>
+            //             prevData.map(item =>
+            //                 item.id === id ? { ...item, yoqish: true } : item
+            //             )
+            //         );
+            //         console.log('Ma\'lumotlar muvaffaqiyatli o\'zgartirildi:', id);
+            //     } else {
+            //         console.error('Error updating item:', response.statusText);
+            //     }
+            // })
+            // .catch(error => console.error('Xatolik:', error));
+    };
+
+
 
     return (
         <div className="bg-[#F3F7FA] min-h-[calc(100vh-125px)]">
@@ -109,13 +138,13 @@ const TakliflarCom = () => {
                 </div>
                 <div className='text-xl font-semibold text-center mt-4'>Kengashga qo'yilmagan takliflar:</div>
                 <div className="flex flex-col-reverse items-center gap-y-4 px-3 overflow-hidden">
-                    {data.map((item) => (
+                    {data.map((item) => (!item.yoqish &&
                         <div data-aos="fade-left" key={item.id} className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-gray-50 to-gray-400 p-2">
                             <div className="line-clamp-1"><b>Taklif nomi:</b> {item.name}</div>
                             {
                                 item.bitalik_taklif ?
                                     <div><b>Nomzod:</b> {item.nomzod}</div>
-                                :
+                                    :
                                     <>
                                         <div><b>Nomzod 1:</b> {item.nomzod}</div>
                                         <div><b>Nomzod 2:</b> {item.nomzod1}</div>
@@ -125,7 +154,7 @@ const TakliflarCom = () => {
                             }
                             <div><b>Berilgan vaqt:</b> {item.vaqt} daqiqa</div>
                             <div className="flex justify-end">
-                                <button className="btn btn-sm btn-success bg-[#05B967] font-medium text-white mb-4" >Faollashtirish</button>
+                                <button className="btn btn-sm btn-success bg-[#05B967] font-medium text-white mb-4" onClick={() => handleChange(item.id)} >Faollashtirish</button>
                             </div>
                             <div className="flex justify-end items-center gap-x-2">
                                 <BiEditAlt className="cursor-pointer text-[24px] text-[#05B967]" /> <MdDeleteOutline onClick={() => handleDelete(item.id)} className="cursor-pointer text-[24px] text-red-600" />
@@ -136,7 +165,7 @@ const TakliflarCom = () => {
 
                 <div className='text-xl font-semibold text-center mt-8'>Kengashga qo'yilgan takliflar:</div>
                 <div className="flex flex-col items-center gap-y-4 px-3 mb-6 overflow-hidden">
-                    {data.map((item) => (
+                    {data.map((item) => (item.yoqish &&
                         <div data-aos="fade-right" key={item.id} className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-green-500 to-green-200 p-2">
                             <div className="line-clamp-1"><b>Taklif nomi:</b> {item.name}</div>
                             <div><b>Nomzod:</b> {item.nomzod}</div>
