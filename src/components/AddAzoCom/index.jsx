@@ -20,20 +20,20 @@ const AddAzoCom = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch(apiUrl, {
+            await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Token ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                console.log("Ma'lumotlar muvaffaqiyatli yuborildi");
-            } else {
-                console.error("Ma'lumotlar yuborishda xatolik yuz berdi");
-            }
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    console.error("Xatolik", response);
+                }
+            })
+            .catch(err => console.error(err))
         } catch (error) {
             console.error('Xatolik:', error);
         }

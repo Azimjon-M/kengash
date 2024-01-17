@@ -29,7 +29,6 @@ const AddTaklifCom = () => {
             yoqish: false
         },
         onSubmit: (values) => {
-            console.log(values);
             fetch(apiURL, {
                 method: "POST",
                 headers: {
@@ -53,7 +52,6 @@ const AddTaklifCom = () => {
             bitalik_taklif: false
         },
         onSubmit: (values) => {
-            console.log(values);
             fetch(apiURL, {
                 method: "POST",
                 headers: {

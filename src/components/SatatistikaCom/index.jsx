@@ -55,7 +55,6 @@ const StatistikaCom = () => {
         },
     ];
 
-    console.log(faceData);
 
     useEffect(() => {
         axios({
@@ -66,7 +65,7 @@ const StatistikaCom = () => {
             },
         })
             .then((res) => setIsData(res.data))
-            .catch((err) => console.log(err));
+            .catch((err) => console.error(err));
     }, [token]);
 
     // TOTAL: 1000

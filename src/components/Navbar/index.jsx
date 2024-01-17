@@ -12,7 +12,6 @@ const Navbar = () => {
     // Values
     const [isOpenMeni, setIsOpenMenu] = useState(false);
     const [isLavozim, setIsLavozim] = useState("");
-    console.log(isLavozim);
     // Funtions
     const handleClickMenuOpen = (e) => {
         e.preventDefault();
@@ -26,12 +25,12 @@ const Navbar = () => {
     const handleClicklogout = () => {
         localStorage.removeItem("lavozim");
         localStorage.removeItem("token");
-        localStorage.removeItem('user_id')
+        localStorage.removeItem("user_id");
         navigate("/");
     };
 
     useEffect(() => {
-        const lavozim = localStorage.getItem('lavozim');
+        const lavozim = localStorage.getItem("lavozim");
         setIsLavozim(`${lavozim}`);
     }, [isLavozim]);
 
@@ -164,51 +163,67 @@ const Navbar = () => {
                             Asosiy
                         </NavLink>
                     </li>
-                    
-                    <li>
-                        <NavLink
-                            onClick={() => setIsOpenMenu(false)}
-                            to="/azolar"
-                            className={({ isActive }) =>
-                                `${isActive ? "underline" : ""} `
-                            }
-                        >
-                            A'zolar
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            onClick={() => setIsOpenMenu(false)}
-                            to="/davomat"
-                            className={({ isActive }) =>
-                                `${isActive ? "underline" : ""} `
-                            }
-                        >
-                            Davomat
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            onClick={() => setIsOpenMenu(false)}
-                            to="/takliflar"
-                            className={({ isActive }) =>
-                                `${isActive ? "underline" : ""} `
-                            }
-                        >
-                            Takliflar
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            onClick={() => setIsOpenMenu(false)}
-                            to="/statistika"
-                            className={({ isActive }) =>
-                                `${isActive ? "underline" : ""} `
-                            }
-                        >
-                            Statistika
-                        </NavLink>
-                    </li>
+                    {isLavozim === superAdmin && (
+                        <li>
+                            <NavLink
+                                onClick={() => setIsOpenMenu(false)}
+                                to="/azolar"
+                                className={({ isActive }) =>
+                                    `${isActive ? "underline" : ""} `
+                                }
+                            >
+                                A'zolar
+                            </NavLink>
+                        </li>
+                    )}
+                    {isLavozim === azo ? (
+                        <li>
+                            <NavLink
+                                to="/azo-takliflar"
+                                className={({ isActive }) =>
+                                    `${isActive ? "underline" : ""} `
+                                }
+                            >
+                                Takliflar
+                            </NavLink>
+                        </li>
+                    ) : (
+                        <>
+                            <li>
+                                <NavLink
+                                    onClick={() => setIsOpenMenu(false)}
+                                    to="/takliflar"
+                                    className={({ isActive }) =>
+                                        `${isActive ? "underline" : ""} `
+                                    }
+                                >
+                                    Takliflar
+                                </NavLink>
+                            </li>
+                            <li>
+                                    <NavLink
+                                        onClick={() => setIsOpenMenu(false)}
+                                        to="/davomat"
+                                        className={({ isActive }) =>
+                                            `${isActive ? "underline" : ""} `
+                                        }
+                                    >
+                                        Davomat
+                                    </NavLink>
+                                </li>
+                            <li>
+                                <NavLink
+                                    onClick={() => setIsOpenMenu(false)}
+                                    to="/statistika"
+                                    className={({ isActive }) =>
+                                        `${isActive ? "underline" : ""} `
+                                    }
+                                >
+                                    Statistika
+                                </NavLink>
+                            </li>
+                        </>
+                    )}
                 </ul>
             </div>
         </div>

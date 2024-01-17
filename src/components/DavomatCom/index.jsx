@@ -7,7 +7,6 @@ import { RxUpdate } from "react-icons/rx";
 const DavomatCom = () => {
   const apiUrlDefault = "https://kengash.pythonanywhere.com/api/v1/davomat/";
   const [data, setData] = useState([]);
-  console.log(data);
 
   // GET DATA
   const GetDataFromAPI = () => {

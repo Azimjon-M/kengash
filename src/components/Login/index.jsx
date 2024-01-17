@@ -55,7 +55,7 @@ const Login = () => {
                                         );
                                         navigate(`/asosiy`);
                                     })
-                                    .catch((err) => console.log(err));
+                                    .catch((err) => console.error(err));
                             } else {
                                 errContent ||
                                     setErrContent(
