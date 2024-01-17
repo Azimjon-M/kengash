@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import Breadcrumb from "../Breadcrumb";
 import { NavLink } from "react-router-dom";
 import { FaXmark, FaPlus } from "react-icons/fa6";
-import { BiEditAlt } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 
 const TakliflarCom = () => {
     const apiUrlDefault = "https://kengash.pythonanywhere.com/api/v1/taklif/";
     const [data, setData] = useState([]);
-    console.log(data);
+    const [isPendingDel, setIsPendingDel] = useState(false);
 
     // GET DATA
     const GetDataFromAPI = () => {
@@ -30,26 +29,33 @@ const TakliflarCom = () => {
 
     // DELETE ONE BY ONE DATA
     const handleDelete = (id) => {
+        setIsPendingDel(true);            
         const getToken = Object.keys(localStorage)[0];
         const token = localStorage.getItem(`${getToken}`);
 
-        fetch(`${apiUrlDefault}${id}/`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Token ${token}`,
-                "Content-Type": "application/json",
-            },
-        })
-            .then((response) => {
-                if (response.ok) {
-                    setData((prevData) =>
-                        prevData.filter((item) => item.id !== id)
-                    );
-                } else {
-                    console.error("Error deleting item:", response.statusText);
-                }
+        if (isPendingDel) {
+            fetch(`${apiUrlDefault}${id}/`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Token ${token}`,
+                    "Content-Type": "application/json",
+                },
             })
-            .catch((error) => console.error("Xatolik:", error));
+                .then((response) => {
+                    if (response.ok) {
+                        setData((prevData) =>
+                            prevData.filter((item) => item.id !== id)
+                        );
+                    } else {
+                        console.error(
+                            "Error deleting item:",
+                            response.statusText
+                        );
+                    }
+                })
+                .catch((error) => console.error("Xatolik:", error));
+        } else {
+        }
     };
 
     // DELETE ALL DATA
@@ -133,10 +139,6 @@ const TakliflarCom = () => {
         })
             .then((response) => {
                 if (response.ok) {
-                    console.log(
-                        "Ma'lumotlar muvaffaqiyatli o'zgartirildi:",
-                        id
-                    );
                     GetDataFromAPI();
                 } else {
                     console.error("Error updating item:", response.statusText);
@@ -180,10 +182,6 @@ const TakliflarCom = () => {
         })
             .then((response) => {
                 if (response.ok) {
-                    console.log(
-                        "Ma'lumotlar muvaffaqiyatli o'zgartirildi:",
-                        id
-                    );
                     GetDataFromAPI();
                 } else {
                     console.error("Error updating item:", response.statusText);
@@ -273,7 +271,6 @@ const TakliflarCom = () => {
                                         </button>
                                     </div>
                                     <div className="flex justify-end items-center gap-x-2">
-                                        <BiEditAlt className="cursor-pointer text-[24px] text-[#05B967]" />{" "}
                                         <MdDeleteOutline
                                             onClick={() =>
                                                 handleDelete(item.id)
@@ -311,7 +308,12 @@ const TakliflarCom = () => {
                                         <b>Tugash vaqti:</b> {item.tugash_vaqti}
                                     </div>
                                     <div className="flex justify-end">
-                                        <button onClick={() => handleChangeNoActive(item)} className="btn btn-sm btn-error bg-red-600 font-medium text-white">
+                                        <button
+                                            onClick={() =>
+                                                handleChangeNoActive(item)
+                                            }
+                                            className="btn btn-sm btn-error bg-red-600 font-medium text-white"
+                                        >
                                             Faolsizlashtirish
                                         </button>
                                     </div>
