@@ -10,8 +10,7 @@ const AzoTakliflarCom = () => {
 
     // GET DATA
     const GetDataFromAPI = () => {
-        const getToken = Object.keys(localStorage)[0];
-        const token = localStorage.getItem(`${getToken}`);
+        const token = localStorage.getItem('token');
         fetch(apiUrlDefault, {
             headers: {
                 Authorization: `Token ${token}`,
