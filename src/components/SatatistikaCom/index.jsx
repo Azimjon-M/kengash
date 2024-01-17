@@ -6,7 +6,7 @@ import axios from "axios";
 const StatistikaCom = () => {
     const apiUrlDefault =
         "https://kengash.pythonanywhere.com/api/v1/statistika/";
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     const [isData, setIsData] = useState();
 
@@ -54,7 +54,6 @@ const StatistikaCom = () => {
             qatnashmaganlar: 12,
         },
     ];
-
 
     useEffect(() => {
         axios({
