@@ -179,6 +179,7 @@ const Navbar = () => {
                     {isLavozim === azo ? (
                         <li>
                             <NavLink
+                                onClick={() => setIsOpenMenu(false)}
                                 to="/azo-takliflar"
                                 className={({ isActive }) =>
                                     `${isActive ? "underline" : ""} `
