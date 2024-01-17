@@ -11,8 +11,8 @@ const TakliflarCom = () => {
 
     // GET DATA
     const GetDataFromAPI = () => {
-        const getToken = Object.keys(localStorage)[0];
-        const token = localStorage.getItem(`${getToken}`);
+        
+        const token = localStorage.getItem('token');
         fetch(apiUrlDefault, {
             headers: {
                 Authorization: `Token ${token}`,
@@ -30,8 +30,8 @@ const TakliflarCom = () => {
     // DELETE ONE BY ONE DATA
     const handleDelete = (id) => {
         setIsPendingDel(true);            
-        const getToken = Object.keys(localStorage)[0];
-        const token = localStorage.getItem(`${getToken}`);
+        
+        const token = localStorage.getItem('token');
 
         if (isPendingDel) {
             fetch(`${apiUrlDefault}${id}/`, {
@@ -65,8 +65,8 @@ const TakliflarCom = () => {
         );
 
         if (isConfirmed) {
-            const getToken = Object.keys(localStorage)[0];
-            const token = localStorage.getItem(`${getToken}`);
+            
+            const token = localStorage.getItem('token');
 
             Promise.all(
                 data.map((item) => {
@@ -106,8 +106,8 @@ const TakliflarCom = () => {
         nomzod2,
         nomzod3,
     }) => {
-        const getToken = Object.keys(localStorage)[0];
-        const token = localStorage.getItem(`${getToken}`);
+        
+        const token = localStorage.getItem('token');
 
         const nowDataTime = new Date();
         const nowHover = nowDataTime.getHours();
@@ -158,8 +158,8 @@ const TakliflarCom = () => {
         nomzod2,
         nomzod3,
     }) => {
-        const getToken = Object.keys(localStorage)[0];
-        const token = localStorage.getItem(`${getToken}`);
+        
+        const token = localStorage.getItem('token');
 
         fetch(`${apiUrlDefault}${id}/`, {
             method: "PUT",

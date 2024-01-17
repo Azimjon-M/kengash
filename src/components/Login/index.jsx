@@ -38,12 +38,16 @@ const Login = () => {
                                     .then((response) => {
                                         const user = response.data.find(
                                             (item) =>
-                                                item.username ===
-                                                values.username
+                                            item.username ===
+                                            values.username
+                                            );
+                                        localStorage.setItem(
+                                            "token",
+                                            res.data.key
                                         );
                                         localStorage.setItem(
-                                            user.lavozim,
-                                            res.data.key
+                                            "lavozim",
+                                            user.lavozim
                                         );
                                         localStorage.setItem(
                                             "user_id",
@@ -82,8 +86,12 @@ const Login = () => {
     });
 
     useEffect(() => {
-        var keys = Object.keys(localStorage)[0];
-        keys && navigate("/asosiy");
+        const token = localStorage.getItem('token');
+        const user_id = localStorage.getItem('user_id');
+        const lavozim = localStorage.getItem('lavozim');
+        if (token && user_id && lavozim) {
+            navigate('/asosiy')
+        }
     }, [navigate]);
 
     return (

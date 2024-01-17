@@ -8,8 +8,7 @@ const AddTaklifCom = () => {
     const [isNomzodOne, setIsNomzodOne] = useState(true);
 
     const apiURL = "https://kengash.pythonanywhere.com/api/v1/taklif/";
-    const getToken = Object.keys(localStorage)[0];
-    const token = localStorage.getItem(`${getToken}`);
+    const token = localStorage.getItem('token');
 
     // Get Data Time .log
     // const currentDateTime = new Date(); 

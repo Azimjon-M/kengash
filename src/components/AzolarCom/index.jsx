@@ -25,8 +25,7 @@ const AzolarCom = () => {
     // DELETE STEP BY STEP DATA
     const handleDelete = (id) => {
         const apiUrl = `https://kengash.pythonanywhere.com/api/v1/users/${id}/`;
-        const getToken = Object.keys(localStorage)[0];
-        const token = localStorage.getItem(`${getToken}`);
+        const token = localStorage.getItem('token');
 
         fetch(apiUrl, {
             method: 'DELETE',

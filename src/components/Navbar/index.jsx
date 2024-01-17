@@ -10,9 +10,9 @@ const Navbar = () => {
     const superAdmin = "superadmin";
     const azo = "azo";
     // Values
-    const CurrentLavozim = Object.keys(localStorage)[0];
     const [isOpenMeni, setIsOpenMenu] = useState(false);
     const [isLavozim, setIsLavozim] = useState("");
+    console.log(isLavozim);
     // Funtions
     const handleClickMenuOpen = (e) => {
         e.preventDefault();
@@ -24,15 +24,16 @@ const Navbar = () => {
     };
     // Logout
     const handleClicklogout = () => {
-        localStorage.removeItem(CurrentLavozim);
+        localStorage.removeItem("lavozim");
+        localStorage.removeItem("token");
         localStorage.removeItem('user_id')
         navigate("/");
     };
 
     useEffect(() => {
-        var lavozim = Object.keys(localStorage)[0];
+        const lavozim = localStorage.getItem('lavozim');
         setIsLavozim(`${lavozim}`);
-    }, []);
+    }, [isLavozim]);
 
     return (
         <div className="flex flex-col sticky top-0 left-0 shadow-lg z-50">
@@ -163,6 +164,7 @@ const Navbar = () => {
                             Asosiy
                         </NavLink>
                     </li>
+                    
                     <li>
                         <NavLink
                             onClick={() => setIsOpenMenu(false)}

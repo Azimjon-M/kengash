@@ -5,8 +5,7 @@ const AzoTakliflarCom = () => {
 
     const apiUrlDefault = 'https://kengash.pythonanywhere.com/api/v1/taklif/';
     const apiUrlPost = 'https://kengash.pythonanywhere.com/api/v1/taklif/baxo/'
-    const getToken = Object.keys(localStorage)[0];
-    const token = localStorage.getItem(`${getToken}`);
+    const token = localStorage.getItem('token');
 
     const [data, setData] = useState([]);
 

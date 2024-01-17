@@ -11,8 +11,7 @@ const DavomatCom = () => {
 
   // GET DATA
   const GetDataFromAPI = () => {
-    const getToken = Object.keys(localStorage)[0];
-    const token = localStorage.getItem(`${getToken}`);
+    const token = localStorage.getItem('token');
     fetch(apiUrlDefault, {
       headers: {
         Authorization: `Token ${token}`,
@@ -29,8 +28,7 @@ const DavomatCom = () => {
 
   // UPDATE ALL DATA
   const handleUpdateData = () => {
-    const getToken = Object.keys(localStorage)[0];
-    const token = localStorage.getItem(`${getToken}`);
+    const token = localStorage.getItem('token')
 
     Promise.all(
       data.map((item) => {
@@ -68,8 +66,7 @@ const DavomatCom = () => {
     familya,
     ism,
   }) => {
-    const getToken = Object.keys(localStorage)[0];
-    const token = localStorage.getItem(`${getToken}`);
+    const token = localStorage.getItem('token');
 
     fetch(`${apiUrlDefault}${id}/`, {
       method: "PUT",
@@ -102,8 +99,7 @@ const DavomatCom = () => {
     familya,
     ism,
   }) => {
-    const getToken = Object.keys(localStorage)[0];
-    const token = localStorage.getItem(`${getToken}`);
+    const token = localStorage.getItem('token');
 
     fetch(`${apiUrlDefault}${id}/`, {
       method: "PUT",

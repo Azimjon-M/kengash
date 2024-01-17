@@ -6,8 +6,7 @@ import axios from "axios";
 const StatistikaCom = () => {
     const apiUrlDefault =
         "https://kengash.pythonanywhere.com/api/v1/statistika/";
-    const getToken = Object.keys(localStorage)[0];
-    const token = localStorage.getItem(getToken);
+    const token = localStorage.getItem('token');
 
     const [isData, setIsData] = useState();
 
