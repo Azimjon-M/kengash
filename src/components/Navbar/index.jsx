@@ -25,6 +25,7 @@ const Navbar = () => {
     // Logout
     const handleClicklogout = () => {
         localStorage.removeItem(CurrentLavozim);
+        localStorage.removeItem('user_id')
         navigate("/");
     };
 

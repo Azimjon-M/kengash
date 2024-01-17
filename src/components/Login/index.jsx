@@ -38,24 +38,33 @@ const Login = () => {
                                     .then((response) => {
                                         const user = response.data.find(
                                             (item) =>
-                                                item.username === values.username
+                                                item.username ===
+                                                values.username
                                         );
                                         localStorage.setItem(
                                             user.lavozim,
                                             res.data.key
                                         );
+                                        localStorage.setItem(
+                                            "user_id",
+                                            user.id
+                                        );
                                         navigate(`/asosiy`);
                                     })
                                     .catch((err) => console.log(err));
                             } else {
-                                errContent || setErrContent("Bunday klyuch mavjud emas !");
+                                errContent ||
+                                    setErrContent(
+                                        "Bunday klyuch mavjud emas !"
+                                    );
                                 setTimeout(() => {
                                     setErrContent("");
                                 }, 4000);
                             }
                         })
                         .catch((err) => {
-                            errContent || setErrContent("Bunday ma'lumotlar topilmadi !");
+                            errContent ||
+                                setErrContent("Bunday ma'lumotlar topilmadi !");
                             setTimeout(() => {
                                 setErrContent("");
                             }, 4000);
@@ -65,16 +74,16 @@ const Login = () => {
                 }
             } catch (err) {
                 errContent || setErrContent("Bunday ma'lumotlar topilmadi !");
-                    setTimeout(() => {
-                        setErrContent("");
-                    }, 4000);
+                setTimeout(() => {
+                    setErrContent("");
+                }, 4000);
             }
         },
     });
 
     useEffect(() => {
         var keys = Object.keys(localStorage)[0];
-        keys && navigate('/asosiy');
+        keys && navigate("/asosiy");
     }, [navigate]);
 
     return (
