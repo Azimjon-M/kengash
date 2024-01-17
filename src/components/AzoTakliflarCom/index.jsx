@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom';
 
 const AzoTakliflarCom = () => {
 
-    const apiUrl = 'https://kengash.pythonanywhere.com/api/v1/taklif/';
-    const token = '6ce7e827abb14f77b14015d0dd778b0fef76b53e';
+    const apiUrlDefault = 'https://kengash.pythonanywhere.com/api/v1/taklif/';
+    const apiUrlPost = 'https://kengash.pythonanywhere.com/api/v1/taklif/baxo/'
+    const getToken = Object.keys(localStorage)[0];
+    const token = localStorage.getItem(`${getToken}`);
 
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch(apiUrl, {
+        fetch(apiUrlDefault, {
             headers: {
                 'Authorization': `Token ${token}`,
                 'Content-Type': 'application/json'
@@ -19,7 +21,35 @@ const AzoTakliflarCom = () => {
             .then(data => setData(data))
             .catch(error => console.error('Xatolik:', error));
     }, []);
-    // console.log(Date.now());
+
+    // POST DATA
+    const handleVote = (user_id, taklif_id, nomzod, action) => {
+        const postData = {
+            user_id: user_id,
+            taklif_id: taklif_id,
+            bitalik_taklif: true,
+            nomzod: nomzod,
+            rozilar: action === 'roziman',
+            qarshilar: action === 'qarshiman',
+            betaraflar: action === 'betarafman',
+        };
+    
+        fetch(`${apiUrlPost}${user_id}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`,
+            },
+            body: JSON.stringify(postData),
+        })
+            .then(response => response.json())
+            .then(result => {
+                // Handle the result as needed
+                console.log('Post Result:', result);
+            })
+            .catch(error => console.error('Xatolik:', error));
+    };
+
 
     return (
         <div className='bg-[#F3F7FA] min-h-[calc(100vh-125px)] px-2'>
@@ -47,9 +77,9 @@ const AzoTakliflarCom = () => {
                                                 <div className='mb-5 md:text-lg xl:text-xl'><b>Nomzod: </b>{taklif.nomzod}</div>
                                                 {/* BUTTONS */}
                                                 <div className='flex items-center justify-between md:justify-end'>
-                                                    <button className='btn btn-sm md:btn md:text-white rounded bg-green-600 hover:bg-green-500 md:bg-green-600 w-[100px] md:w-[120px] lg:text-lg md:mx-3 text-white'>Roziman</button>
-                                                    <button className='btn btn-sm md:btn md:text-white rounded bg-red-600 hover:bg-red-500 md:bg-red-600 w-[100px] md:w-[120px] lg:text-lg md:mx-3 text-white'>Qarshiman</button>
-                                                    <button className='btn btn-sm md:btn md:text-white rounded bg-yellow-600 hover:bg-yellow-500 md:bg-yellow-600 w-[100px] md:w-[120px] lg:text-lg md:ml-3 text-white'>Betarafman</button>
+                                                    <button onClick={() => handleVote(taklif.id, 'roziman')} className='btn btn-sm md:btn md:text-white rounded bg-green-600 hover:bg-green-500 md:bg-green-600 w-[100px] md:w-[120px] lg:text-lg md:mx-3 text-white'>Roziman</button>
+                                                    <button onClick={() => handleVote(taklif.id, 'qarshiman')} className='btn btn-sm md:btn md:text-white rounded bg-red-600 hover:bg-red-500 md:bg-red-600 w-[100px] md:w-[120px] lg:text-lg md:mx-3 text-white'>Qarshiman</button>
+                                                    <button onClick={() => handleVote(taklif.id, 'betarafman')} className='btn btn-sm md:btn md:text-white rounded bg-yellow-600 hover:bg-yellow-500 md:bg-yellow-600 w-[100px] md:w-[120px] lg:text-lg md:ml-3 text-white'>Betarafman</button>
                                                 </div>
                                             </div>
                                             :
