@@ -12,8 +12,7 @@ const AzoTakliflarCom = () => {
 
     // GET DATA
     const GetDataFromAPI = () => {
-        const getToken = Object.keys(localStorage)[0];
-        const token = localStorage.getItem(`${getToken}`);
+        const token = localStorage.getItem('token');
         fetch(apiUrlDefault, {
             headers: {
                 Authorization: `Token ${token}`,
@@ -28,7 +27,6 @@ const AzoTakliflarCom = () => {
         GetDataFromAPI();
     }, []);
 
-    console.log(data);
 
     // POST DATA
     const handleVote = ({ id, name, bitalik_taklif }, action) => {
@@ -85,7 +83,7 @@ const AzoTakliflarCom = () => {
                 taklif_id: id,
                 name: name,
                 bitalik_taklif: bitalik_taklif,
-                user_id: userId ?? '1',
+                user_id: userId,
             };
     
             switch (action) {
