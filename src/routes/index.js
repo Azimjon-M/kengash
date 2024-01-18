@@ -29,7 +29,7 @@ export const routes = [
             },
             {
                 element: <Azolar />,
-                path: '/azolar'
+                path: "/a'zolar"
             },
             {
                 element: <AddAzoCom />,

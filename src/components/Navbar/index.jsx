@@ -81,7 +81,7 @@ const Navbar = () => {
                         {isLavozim === superAdmin && (
                             <li>
                                 <NavLink
-                                    to="/azolar"
+                                    to="/a'zolar"
                                     className={({ isActive }) =>
                                         `${isActive ? "underline" : ""} `
                                     }
@@ -167,7 +167,7 @@ const Navbar = () => {
                         <li>
                             <NavLink
                                 onClick={() => setIsOpenMenu(false)}
-                                to="/azolar"
+                                to="/a'zolar"
                                 className={({ isActive }) =>
                                     `${isActive ? "underline" : ""} `
                                 }
