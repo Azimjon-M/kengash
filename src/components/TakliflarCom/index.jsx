@@ -178,6 +178,7 @@ const TakliflarCom = () => {
                 tugash_vaqti: "",
                 vaqt: vaqt,
                 yoqish: false,
+                tugash: false,
             }),
         })
             .then((response) => {

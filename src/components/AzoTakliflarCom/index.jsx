@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Breadcrumb from "../Breadcrumb";
 
 const AzoTakliflarCom = () => {
 
@@ -8,6 +9,7 @@ const AzoTakliflarCom = () => {
 
     const [data, setData] = useState([]);
     const [filtredData, setFiltredData] = useState([data])
+    const [isDisabled, setIsDisabled] = useState(false)
     // console.log(data);
 
     // GET DATA
@@ -45,6 +47,44 @@ const AzoTakliflarCom = () => {
         }, 1000);
         return () => clearInterval(interval);
     }, []);
+
+
+
+
+    // CHECK DATA
+    const GetCardData = () => {
+        const token = localStorage.getItem('token');
+        fetch(`${apiUrlPost}`, {
+            headers: {
+                Authorization: `Token ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((card) => {
+                const isDisable =
+                    card.rozilar ||
+                    card.qarshilar ||
+                    card.betaraflar ||
+                    card.nomzod ||
+                    card.nomzod1 ||
+                    card.nomzod2 ||
+                    card.nomzod3;
+                    if (isDisable){
+                        setIsDisabled(true)
+                    }
+                console.log('Card Data:', card);
+                console.log('Is Disabled:', isDisable);
+            })
+            .catch((error) => console.error('Xatolik:', error));
+    };
+    useEffect(() => {
+        GetCardData();
+    }, []);
+    const isButtonDisabled = (taklif) => {
+        return taklif.tugash || isDisabled;
+    };
+
 
 
 
@@ -202,9 +242,11 @@ const AzoTakliflarCom = () => {
             .catch((error) => console.error("Xatolik:", error));
     };
 
+
     return (
-        <div className='bg-[#F3F7FA] min-h-[calc(100vh-125px)] px-2'>
-            <div className='md:p-8'>
+        <div className='bg-[#F3F7FA] min-h-[calc(100vh-125px)]'>
+            <Breadcrumb locationPage="Takliflar" />
+            <div className='px-2 md:p-8'>
                 <h2 className='text-center text-2xl xl:text-3xl font-semibold mb-5'>Takliflar</h2>
                 <div>
                     {
@@ -238,7 +280,7 @@ const AzoTakliflarCom = () => {
                                                                 onClick={() => handleVote(taklif, '1')}
                                                                 className={`btn btn-sm md:btn md:text-white rounded ${taklif.tugash ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-500 md:bg-green-600'
                                                                     } w-[100px] md:w-[120px] lg:text-lg text-white`}
-                                                                disabled={taklif.tugash}
+                                                                disabled={isButtonDisabled(taklif)}
                                                             >
                                                                 Roziman
                                                             </button>
@@ -246,7 +288,7 @@ const AzoTakliflarCom = () => {
                                                                 onClick={() => handleVote(taklif, '2')}
                                                                 className={`btn btn-sm md:btn md:text-white rounded ${taklif.tugash ? 'bg-gray-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 md:bg-red-600'
                                                                     } w-[100px] md:w-[120px] lg:text-lg text-white`}
-                                                                disabled={taklif.tugash}
+                                                                disabled={isButtonDisabled(taklif)}
                                                             >
                                                                 Qarshiman
                                                             </button>
@@ -254,7 +296,7 @@ const AzoTakliflarCom = () => {
                                                                 onClick={() => handleVote(taklif, '3')}
                                                                 className={`btn btn-sm md:btn md:text-white rounded ${taklif.tugash ? 'bg-gray-300 cursor-not-allowed' : 'bg-yellow-600 hover:bg-yellow-500 md:bg-yellow-600'
                                                                     } w-[100px] md:w-[120px] lg:text-lg text-white`}
-                                                                disabled={taklif.tugash}
+                                                                disabled={isButtonDisabled(taklif)}
                                                             >
                                                                 Betarafman
                                                             </button>
@@ -280,10 +322,10 @@ const AzoTakliflarCom = () => {
                                                         <div className='mb-5 md:text-lg xl:text-xl'><b>Taklif: </b>{taklif.name}</div>
                                                         {/* NOMZODLAR */}
                                                         <div className='text-center md:flex md:items-center md:justify-end gap-3 md:flex-wrap'>
-                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '1')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.tugash}>{taklif.nomzod}</button></div>
-                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '2')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.tugash}>{taklif.nomzod1}</button></div>
-                                                            <div className={`${taklif.nomzod2 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '3')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.tugash}>{taklif.nomzod2}</button></div>
-                                                            <div className={`${taklif.nomzod3 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '4')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.tugash}>{taklif.nomzod3}</button></div>
+                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '1')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={isButtonDisabled(taklif)}>{taklif.nomzod}</button></div>
+                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '2')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={isButtonDisabled(taklif)}>{taklif.nomzod1}</button></div>
+                                                            <div className={`${taklif.nomzod2 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '3')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={isButtonDisabled(taklif)}>{taklif.nomzod2}</button></div>
+                                                            <div className={`${taklif.nomzod3 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '4')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={isButtonDisabled(taklif)}>{taklif.nomzod3}</button></div>
                                                         </div>
                                                     </div>
                                                 )
