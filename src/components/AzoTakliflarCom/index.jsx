@@ -7,6 +7,8 @@ const AzoTakliflarCom = () => {
     const token = localStorage.getItem('token');
 
     const [data, setData] = useState([]);
+    const [filtredData, setFiltredData] = useState([data])
+    // console.log(data);
 
     // GET DATA
     const GetDataFromAPI = () => {
@@ -18,7 +20,10 @@ const AzoTakliflarCom = () => {
             },
         })
             .then((response) => response.json())
-            .then((data) => setData(data))
+            .then((data) => {
+                setData(data);
+                setFiltredData(data.filter(item => item.tugash === false));
+            })
             .catch((error) => console.error("Xatolik:", error));
     };
 
@@ -28,7 +33,7 @@ const AzoTakliflarCom = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setData(data => data.map(item => {
+            setFiltredData(filtredData => filtredData.map(item => {
                 let vaqt = item.tugash_vaqti.split(":").map(Number);
                 let now = new Date();
                 let qolganVaqt = (vaqt[0] * 60 * 60 + vaqt[1] * 60) - (now.getHours() * 60 * 60 + now.getMinutes() * 60 + now.getSeconds());
@@ -39,12 +44,13 @@ const AzoTakliflarCom = () => {
             }));
         }, 1000);
         return () => clearInterval(interval);
-    }, [data]);
+    }, []);
 
 
 
     // POST DATA
     const handleVote = ({ id, name, bitalik_taklif }, action) => {
+        console.log(id);
         const user_id = localStorage.getItem('user_id');
         let postData = {
             taklif_id: id,
@@ -149,6 +155,52 @@ const AzoTakliflarCom = () => {
             .catch(error => console.error('Xatolik:', error));
     };
 
+    // FAOLLASHTIRISH
+    useEffect(() => {
+        filtredData.forEach((taklif) => {
+            if (taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0 && !taklif.tugash) {
+                handleChangeActive(taklif);
+            }
+        });
+    }, [filtredData]);
+
+    const handleChangeActive = ({
+        id,
+        name,
+        bitalik_taklif,
+        nomzod,
+        nomzod1,
+        nomzod2,
+        nomzod3,
+        yoqish,
+    }) => {
+        fetch(`${apiUrlDefault}${id}/`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: id,
+                name: name,
+                bitalik_taklif: bitalik_taklif,
+                nomzod: nomzod,
+                nomzod1: nomzod1,
+                nomzod2: nomzod2,
+                nomzod3: nomzod3,
+                yoqish: yoqish,
+                tugash: true,
+            }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    GetDataFromAPI();
+                } else {
+                    console.error("Error updating item:", response.statusText);
+                }
+            })
+            .catch((error) => console.error("Xatolik:", error));
+    };
 
     return (
         <div className='bg-[#F3F7FA] min-h-[calc(100vh-125px)] px-2'>
@@ -156,18 +208,18 @@ const AzoTakliflarCom = () => {
                 <h2 className='text-center text-2xl xl:text-3xl font-semibold mb-5'>Takliflar</h2>
                 <div>
                     {
-                        data.map((taklif, idx) => {
+                        filtredData.map((taklif, idx) => {
                             return (
                                 <div key={idx}>
                                     {(taklif.yoqish) &&
                                         (
                                             (taklif.bitalik_taklif) ?
-                                                (taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0) ? null : (
+                                                (taklif.tugash) ? null : (
                                                     <div className='border-2 rounded p-2 lg:px-8 mb-5 shadow-md'>
                                                         {/* VAQT */}
                                                         <div className='flex items-center justify-between mb-5'>
                                                             <h2 className='text-2xl font-semibold'>Berilgan vaqt</h2>
-                                                            {taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0 ? (
+                                                            {taklif.tugash ? (
                                                                 <span className="countdown font-mono text-2xl font-bold text-red-500">00:00</span>
                                                             ) : (
                                                                 <span className="countdown font-mono text-2xl font-bold">
@@ -184,25 +236,25 @@ const AzoTakliflarCom = () => {
                                                         <div className='flex items-center justify-between md:justify-end md:gap-3'>
                                                             <button
                                                                 onClick={() => handleVote(taklif, '1')}
-                                                                className={`btn btn-sm md:btn md:text-white rounded ${taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-500 md:bg-green-600'
+                                                                className={`btn btn-sm md:btn md:text-white rounded ${taklif.tugash ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-500 md:bg-green-600'
                                                                     } w-[100px] md:w-[120px] lg:text-lg text-white`}
-                                                                disabled={taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0}
+                                                                disabled={taklif.tugash}
                                                             >
                                                                 Roziman
                                                             </button>
                                                             <button
                                                                 onClick={() => handleVote(taklif, '2')}
-                                                                className={`btn btn-sm md:btn md:text-white rounded ${taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 md:bg-red-600'
+                                                                className={`btn btn-sm md:btn md:text-white rounded ${taklif.tugash ? 'bg-gray-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 md:bg-red-600'
                                                                     } w-[100px] md:w-[120px] lg:text-lg text-white`}
-                                                                disabled={taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0}
+                                                                disabled={taklif.tugash}
                                                             >
                                                                 Qarshiman
                                                             </button>
                                                             <button
                                                                 onClick={() => handleVote(taklif, '3')}
-                                                                className={`btn btn-sm md:btn md:text-white rounded ${taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-yellow-600 hover:bg-yellow-500 md:bg-yellow-600'
+                                                                className={`btn btn-sm md:btn md:text-white rounded ${taklif.tugash ? 'bg-gray-300 cursor-not-allowed' : 'bg-yellow-600 hover:bg-yellow-500 md:bg-yellow-600'
                                                                     } w-[100px] md:w-[120px] lg:text-lg text-white`}
-                                                                disabled={taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0}
+                                                                disabled={taklif.tugash}
                                                             >
                                                                 Betarafman
                                                             </button>
@@ -210,12 +262,12 @@ const AzoTakliflarCom = () => {
                                                     </div>
                                                 )
                                                 :
-                                                (taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0) ? null : (
+                                                (taklif.tugash) ? null : (
                                                     <div className='border-2 rounded p-2 lg:px-8 mb-5 shadow-md'>
                                                         {/* VAQT */}
                                                         <div className='flex items-center justify-between mb-5'>
                                                             <h2 className='text-2xl font-semibold'>Berilgan vaqt</h2>
-                                                            {taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0 ? (
+                                                            {taklif.tugash ? (
                                                                 <span className="countdown font-mono text-2xl font-bold text-red-500">00:00</span>
                                                             ) : (
                                                                 <span className="countdown font-mono text-2xl font-bold">
@@ -228,10 +280,10 @@ const AzoTakliflarCom = () => {
                                                         <div className='mb-5 md:text-lg xl:text-xl'><b>Taklif: </b>{taklif.name}</div>
                                                         {/* NOMZODLAR */}
                                                         <div className='text-center md:flex md:items-center md:justify-end gap-3 md:flex-wrap'>
-                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '1')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0}>{taklif.nomzod}</button></div>
-                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '2')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0}>{taklif.nomzod1}</button></div>
-                                                            <div className={`${taklif.nomzod2 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '3')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0}>{taklif.nomzod2}</button></div>
-                                                            <div className={`${taklif.nomzod3 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '4')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.qolganMinut <= 0 && taklif.qolganSeconds <= 0}>{taklif.nomzod3}</button></div>
+                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '1')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.tugash}>{taklif.nomzod}</button></div>
+                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '2')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.tugash}>{taklif.nomzod1}</button></div>
+                                                            <div className={`${taklif.nomzod2 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '3')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.tugash}>{taklif.nomzod2}</button></div>
+                                                            <div className={`${taklif.nomzod3 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '4')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={taklif.tugash}>{taklif.nomzod3}</button></div>
                                                         </div>
                                                     </div>
                                                 )
