@@ -4,13 +4,44 @@ import Breadcrumb from "../Breadcrumb";
 const AzoTakliflarCom = () => {
 
     const apiUrlDefault = 'https://kengash.pythonanywhere.com/api/v1/taklif/';
-    const apiUrlPost = 'https://kengash.pythonanywhere.com/api/v1/taklif/baxo/'
+    const apiUrlPost = 'https://kengash.pythonanywhere.com/api/v1/taklif/baxo/';
+    const apiUrlDavomat = 'https://kengash.pythonanywhere.com/api/v1/davomat/';
     const token = localStorage.getItem('token');
 
+    const [activeData, setActiveData] = useState(false)
     const [data, setData] = useState([]);
     const [filtredData, setFiltredData] = useState([data])
-    const [isDisabled, setIsDisabled] = useState(false)
-    // console.log(data);
+    const [isID, setIsID] = useState([])
+    const [taklifId, setTaklifId] = useState([])
+
+    // GET DAVOMAT
+    const GetDataFromDavomat = () => {
+        const token = localStorage.getItem('token');
+        fetch(apiUrlDavomat, {
+            headers: {
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                const isActive = data.map(item => {
+                    if (item.aktiv) {
+                        return true;
+                    }
+                    return false;
+                })
+                setActiveData(isActive);
+                console.log(isActive);
+            })
+            .catch((error) => console.error("Xatolik:", error));
+    };
+
+    useEffect(() => {
+        GetDataFromDavomat();
+    }, []);
+
+
 
     // GET DATA
     const GetDataFromAPI = () => {
@@ -24,7 +55,7 @@ const AzoTakliflarCom = () => {
             .then((response) => response.json())
             .then((data) => {
                 setData(data);
-                setFiltredData(data.filter(item => item.tugash === false));
+                setFiltredData(data.filter(item => item.tugash === false && item.yoqish === true));
             })
             .catch((error) => console.error("Xatolik:", error));
     };
@@ -36,13 +67,16 @@ const AzoTakliflarCom = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setFiltredData(filtredData => filtredData.map(item => {
-                let vaqt = item.tugash_vaqti.split(":").map(Number);
-                let now = new Date();
-                let qolganVaqt = (vaqt[0] * 60 * 60 + vaqt[1] * 60) - (now.getHours() * 60 * 60 + now.getMinutes() * 60 + now.getSeconds());
-                let qolganMinut = Math.floor(qolganVaqt / 60);
-                let qolganSeconds = qolganVaqt % 60;
-
-                return { ...item, qolganMinut, qolganSeconds };
+                if (item.tugash_vaqti) {
+                    let vaqt = item.tugash_vaqti.split(":").map(Number);
+                    let now = new Date();
+                    let qolganVaqt = (vaqt[0] * 60 * 60 + vaqt[1] * 60) - (now.getHours() * 60 * 60 + now.getMinutes() * 60 + now.getSeconds());
+                    let qolganMinut = Math.floor(qolganVaqt / 60);
+                    let qolganSeconds = qolganVaqt % 60;
+                    return { ...item, qolganMinut, qolganSeconds };
+                } else {
+                    return item;
+                }
             }));
         }, 1000);
         return () => clearInterval(interval);
@@ -51,8 +85,9 @@ const AzoTakliflarCom = () => {
 
 
 
+
     // CHECK DATA
-    const GetCardData = () => {
+    useEffect(() => {
         const token = localStorage.getItem('token');
         fetch(`${apiUrlPost}`, {
             headers: {
@@ -62,138 +97,135 @@ const AzoTakliflarCom = () => {
         })
             .then((response) => response.json())
             .then((card) => {
-                const isDisable =
-                    card.rozilar ||
-                    card.qarshilar ||
-                    card.betaraflar ||
-                    card.nomzod ||
-                    card.nomzod1 ||
-                    card.nomzod2 ||
-                    card.nomzod3;
-                    if (isDisable){
-                        setIsDisabled(true)
+                card.forEach(element => {
+                    if (element.rozilar || element.qarshilar || element.betaraflar || element.nomzod || element.nomzod1 || element.nomzod2 || element.nomzod3) {
+                        setIsID(element.taklif_id)
+                        return element.taklif_id
                     }
-                console.log('Card Data:', card);
-                console.log('Is Disabled:', isDisable);
+                });
             })
             .catch((error) => console.error('Xatolik:', error));
-    };
-    useEffect(() => {
-        GetCardData();
     }, []);
-    const isButtonDisabled = (taklif) => {
-        return taklif.tugash || isDisabled;
-    };
-
 
 
 
     // POST DATA
     const handleVote = ({ id, name, bitalik_taklif }, action) => {
-        console.log(id);
         const user_id = localStorage.getItem('user_id');
-        let postData = {
-            taklif_id: id,
-            name: name,
-            bitalik_taklif: bitalik_taklif,
-            user_id: user_id,
-        };
+        if (isID === taklifId) {
+            alert("Siz ovoz berib bo'lgansiz.!")
+        } else {
+            let postData = {
+                taklif_id: id,
+                name: name,
+                bitalik_taklif: bitalik_taklif,
+                user_id: user_id,
+            };
 
-        switch (action) {
-            case "1":
-                postData.rozilar = true;
-                postData.qarshilar = false;
-                postData.betaraflar = false;
-                break;
-            case "2":
-                postData.rozilar = false;
-                postData.qarshilar = true;
-                postData.betaraflar = false;
-                break;
-            case "3":
-                postData.rozilar = false;
-                postData.qarshilar = false;
-                postData.betaraflar = true;
-                break;
-            default:
-                postData.rozilar = false;
-                postData.qarshilar = false;
-                postData.betaraflar = false;
-                break;
-        }
+            switch (action) {
+                case "1":
+                    postData.rozilar = true;
+                    postData.qarshilar = false;
+                    postData.betaraflar = false;
+                    break;
+                case "2":
+                    postData.rozilar = false;
+                    postData.qarshilar = true;
+                    postData.betaraflar = false;
+                    break;
+                case "3":
+                    postData.rozilar = false;
+                    postData.qarshilar = false;
+                    postData.betaraflar = true;
+                    break;
+                default:
+                    postData.rozilar = false;
+                    postData.qarshilar = false;
+                    postData.betaraflar = false;
+                    break;
+            }
 
-        fetch(`${apiUrlPost}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`,
-            },
-            body: JSON.stringify(postData),
-        })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Post Result:', result);
+            fetch(`${apiUrlPost}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                },
+                body: JSON.stringify(postData),
             })
-            .catch(error => console.error('Xatolik:', error));
-    };
+                .then(response => response.json())
+                .then(result => {
+                    setTaklifId(result => result.taklif_id)
+                    console.log('Post Result:', result);
+                    alert("Ovozingiz muvaffaqiyatli qo'shildi.!")
+                })
+                .catch(error => console.error('Xatolik:', error));
+        };
+    }
 
 
     // POST DATA FOR ALL TAKLIFLAR
     const handleNomzodVote = ({ id, name, bitalik_taklif }, action) => {
         const userId = localStorage.getItem("user_id");
-        let postData = {
-            taklif_id: id,
-            name: name,
-            bitalik_taklif: bitalik_taklif,
-            user_id: userId,
-        };
+        if (isID === taklifId) {
+            alert("Siz ovoz berib bo'lgansiz.!")
+        } else {
+            let postData = {
+                taklif_id: id,
+                name: name,
+                bitalik_taklif: bitalik_taklif,
+                user_id: userId,
+            };
 
-        switch (action) {
-            case "1":
-                postData.nomzod = true;
-                postData.nomzod1 = false;
-                postData.nomzod2 = false;
-                postData.nomzod3 = false;
-                break;
-            case "2":
-                postData.nomzod = false;
-                postData.nomzod1 = true;
-                postData.nomzod2 = false;
-                postData.nomzod3 = false;
-                break;
-            case "3":
-                postData.nomzod = false;
-                postData.nomzod1 = false;
-                postData.nomzod2 = true;
-                postData.nomzod3 = false;
-                break;
-            case "4":
-                postData.nomzod = false;
-                postData.nomzod1 = false;
-                postData.nomzod2 = false;
-                postData.nomzod3 = true;
-                break;
-            default:
-                postData.nomzod = false;
-                postData.nomzod1 = false;
-                postData.nomzod2 = false;
-                postData.nomzod3 = false;
-                break;
-        }
-        fetch(`${apiUrlPost}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`,
-            },
-            body: JSON.stringify(postData),
-        })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Post Result:', result);
+            switch (action) {
+                case "1":
+                    postData.nomzod = true;
+                    postData.nomzod1 = false;
+                    postData.nomzod2 = false;
+                    postData.nomzod3 = false;
+                    break;
+                case "2":
+                    postData.nomzod = false;
+                    postData.nomzod1 = true;
+                    postData.nomzod2 = false;
+                    postData.nomzod3 = false;
+                    break;
+                case "3":
+                    postData.nomzod = false;
+                    postData.nomzod1 = false;
+                    postData.nomzod2 = true;
+                    postData.nomzod3 = false;
+                    break;
+                case "4":
+                    postData.nomzod = false;
+                    postData.nomzod1 = false;
+                    postData.nomzod2 = false;
+                    postData.nomzod3 = true;
+                    break;
+                default:
+                    postData.nomzod = false;
+                    postData.nomzod1 = false;
+                    postData.nomzod2 = false;
+                    postData.nomzod3 = false;
+                    break;
+            }
+            fetch(`${apiUrlPost}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                },
+                body: JSON.stringify(postData),
             })
-            .catch(error => console.error('Xatolik:', error));
-    };
+                .then(response => response.json())
+                .then(result => {
+                    setTaklifId(result => result.taklif_id)
+                    console.log('Post Result:', result);
+                    alert("Ovozingiz muvaffaqiyatli qo'shildi.!")
+                })
+                .catch(error => console.error('Xatolik:', error));
+        };
+    }
 
     // FAOLLASHTIRISH
     useEffect(() => {
@@ -241,7 +273,7 @@ const AzoTakliflarCom = () => {
             })
             .catch((error) => console.error("Xatolik:", error));
     };
-
+    console.log(activeData);
 
     return (
         <div className='bg-[#F3F7FA] min-h-[calc(100vh-125px)]'>
@@ -253,7 +285,7 @@ const AzoTakliflarCom = () => {
                         filtredData.map((taklif, idx) => {
                             return (
                                 <div key={idx}>
-                                    {(taklif.yoqish) &&
+                                    {(taklif.yoqish && activeData) &&
                                         (
                                             (taklif.bitalik_taklif) ?
                                                 (taklif.tugash) ? null : (
@@ -280,7 +312,7 @@ const AzoTakliflarCom = () => {
                                                                 onClick={() => handleVote(taklif, '1')}
                                                                 className={`btn btn-sm md:btn md:text-white rounded ${taklif.tugash ? 'bg-gray-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-500 md:bg-green-600'
                                                                     } w-[100px] md:w-[120px] lg:text-lg text-white`}
-                                                                disabled={isButtonDisabled(taklif)}
+
                                                             >
                                                                 Roziman
                                                             </button>
@@ -288,7 +320,7 @@ const AzoTakliflarCom = () => {
                                                                 onClick={() => handleVote(taklif, '2')}
                                                                 className={`btn btn-sm md:btn md:text-white rounded ${taklif.tugash ? 'bg-gray-300 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 md:bg-red-600'
                                                                     } w-[100px] md:w-[120px] lg:text-lg text-white`}
-                                                                disabled={isButtonDisabled(taklif)}
+
                                                             >
                                                                 Qarshiman
                                                             </button>
@@ -296,7 +328,7 @@ const AzoTakliflarCom = () => {
                                                                 onClick={() => handleVote(taklif, '3')}
                                                                 className={`btn btn-sm md:btn md:text-white rounded ${taklif.tugash ? 'bg-gray-300 cursor-not-allowed' : 'bg-yellow-600 hover:bg-yellow-500 md:bg-yellow-600'
                                                                     } w-[100px] md:w-[120px] lg:text-lg text-white`}
-                                                                disabled={isButtonDisabled(taklif)}
+
                                                             >
                                                                 Betarafman
                                                             </button>
@@ -322,10 +354,10 @@ const AzoTakliflarCom = () => {
                                                         <div className='mb-5 md:text-lg xl:text-xl'><b>Taklif: </b>{taklif.name}</div>
                                                         {/* NOMZODLAR */}
                                                         <div className='text-center md:flex md:items-center md:justify-end gap-3 md:flex-wrap'>
-                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '1')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={isButtonDisabled(taklif)}>{taklif.nomzod}</button></div>
-                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '2')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={isButtonDisabled(taklif)}>{taklif.nomzod1}</button></div>
-                                                            <div className={`${taklif.nomzod2 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '3')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={isButtonDisabled(taklif)}>{taklif.nomzod2}</button></div>
-                                                            <div className={`${taklif.nomzod3 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '4')} className='btn bg-blue-600 hover:bg-blue-500 text-white' disabled={isButtonDisabled(taklif)}>{taklif.nomzod3}</button></div>
+                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '1')} className='btn bg-blue-600 hover:bg-blue-500 text-white'>{taklif.nomzod}</button></div>
+                                                            <div className='mb-5 md:text-lg xl:text-xl'><button onClick={() => handleNomzodVote(taklif, '2')} className='btn bg-blue-600 hover:bg-blue-500 text-white'>{taklif.nomzod1}</button></div>
+                                                            <div className={`${taklif.nomzod2 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '3')} className='btn bg-blue-600 hover:bg-blue-500 text-white'>{taklif.nomzod2}</button></div>
+                                                            <div className={`${taklif.nomzod3 ? "" : "hidden"} mb-5 md:text-lg xl:text-xl`}><button onClick={() => handleNomzodVote(taklif, '4')} className='btn bg-blue-600 hover:bg-blue-500 text-white'>{taklif.nomzod3}</button></div>
                                                         </div>
                                                     </div>
                                                 )
