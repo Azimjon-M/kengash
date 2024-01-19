@@ -10,16 +10,6 @@ const AddTaklifCom = () => {
     const apiURL = "https://kengash.pythonanywhere.com/api/v1/taklif/";
     const token = localStorage.getItem('token');
 
-    // Get Data Time .log
-    // const currentDateTime = new Date(); 
-
-    // const year = currentDateTime.getFullYear();
-    // const month = currentDateTime.getMonth() + 1; // 0 dan boshlab sanani olib, +1 qo'shib hisoblash
-    // const day = currentDateTime.getDate();
-    // const hours = currentDateTime.getHours();
-    // const minutes = currentDateTime.getMinutes();
-    // const seconds = currentDateTime.getSeconds();
-
     const formik = useFormik({
         initialValues: {
             name: "",

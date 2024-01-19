@@ -3,17 +3,14 @@ import Breadcrumb from "../Breadcrumb";
 import axios from "axios";
 import Chart from "../Chart";
 // import Charts from "../Charts";
-import uuid from "react-uuid";
 
 const StatistikaCom = () => {
     const apiUrlDefault =
         "https://kengash.pythonanywhere.com/api/v1/statistika/";
     const token = localStorage.getItem("token");
 
-    let unikalID = uuid();
 
     const [isDataOne, setIsDataOne] = useState([]);
-    console.log(isDataOne);
     // const [isDataTwoo, setIsDataTwoo] = useState();
 
     useEffect(() => {
@@ -24,7 +21,6 @@ const StatistikaCom = () => {
                 Authorization: `Token ${token}`,
             },
         })
-            // .then((res) => console.log(res.data))
             .then((res) => {
                 setIsDataOne(
                     res.data.filter((item) => item.bitalik_taklif === true)
@@ -45,8 +41,8 @@ const StatistikaCom = () => {
                 </h1>
                 <div className="flex flex-col mt-10 px-5">
                     {isDataOne &&
-                        isDataOne.map((item) => (
-                            <Chart key={unikalID} dataes={item} />
+                        isDataOne.map((item, idx) => (
+                            <Chart key={`Chart-${idx}`} dataes={item} />
                         ))}
 
 
