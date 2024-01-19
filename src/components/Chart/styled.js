@@ -5,5 +5,6 @@ export const ChartBox = styled.div `
     height: auto;
     background-color: ${props => props.color};
     text-align: center;
-    color: white;
+    color: black;
+    font-weight: 600;
 `
