@@ -2,13 +2,19 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "../Breadcrumb";
 import axios from "axios";
 import Chart from "../Chart";
+// import Charts from "../Charts";
+import uuid from "react-uuid";
 
 const StatistikaCom = () => {
     const apiUrlDefault =
         "https://kengash.pythonanywhere.com/api/v1/statistika/";
     const token = localStorage.getItem("token");
 
-    const [isData, setIsData] = useState();
+    let unikalID = uuid();
+
+    const [isDataOne, setIsDataOne] = useState([]);
+    console.log(isDataOne);
+    // const [isDataTwoo, setIsDataTwoo] = useState();
 
     useEffect(() => {
         axios({
@@ -18,10 +24,17 @@ const StatistikaCom = () => {
                 Authorization: `Token ${token}`,
             },
         })
-            .then((res) => setIsData(res.data))
+            // .then((res) => console.log(res.data))
+            .then((res) => {
+                setIsDataOne(
+                    res.data.filter((item) => item.bitalik_taklif === true)
+                );
+                // setIsDataTwoo(
+                //     res.data.filter((item) => item.bitalik_taklif === false)
+                // );
+            })
             .catch((err) => console.error(err));
     }, [token]);
-
 
     return (
         <div className="min-h-[calc(100vh-125px)] bg-[#F3F7FA]">
@@ -31,11 +44,16 @@ const StatistikaCom = () => {
                     Statistika bo'limi
                 </h1>
                 <div className="flex flex-col mt-10 px-5">
-                    {
-                        isData && isData.map((item, idx) => (
-                            <Chart key={idx} dataes={item} />
-                        ))
-                    }
+                    {isDataOne &&
+                        isDataOne.map((item) => (
+                            <Chart key={unikalID} dataes={item} />
+                        ))}
+
+
+                    {/* {isDataTwoo &&
+                        isDataTwoo.map((item, idx) => (
+                            <Charts key={idx} dataes={item} />
+                        ))} */}
                 </div>
             </div>
         </div>

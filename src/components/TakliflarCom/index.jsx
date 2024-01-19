@@ -7,6 +7,7 @@ import { MdDeleteOutline } from "react-icons/md";
 const TakliflarCom = () => {
     const apiUrlDefault = "https://kengash.pythonanywhere.com/api/v1/taklif/";
     const [data, setData] = useState([]);
+    console.log(data);
     const [isPendingDel, setIsPendingDel] = useState(false);
 
     // GET DATA
