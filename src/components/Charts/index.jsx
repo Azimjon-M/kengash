@@ -1,26 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Sector, ResponsiveContainer } from "recharts";
 import uuid from "react-uuid";
+import axios from "axios";
 
-const Chart = ({ dataes }) => {
-    console.log(dataes);
+const Charts = ({ dataes }) => {
+    const apiUrlTaklif = "https://kengash.pythonanywhere.com/api/v1/taklif/";
+    const token = localStorage.getItem("token");
+
+    const [getNomzodData, setGetNomzodData] = useState();
 
     let unikalkId = uuid();
 
-    const data = [
-        { name: "Rozilar", value: dataes.rozilar },
-        { name: "Qarshilar", value: dataes.qarshilar },
-        { name: "Betaraflar", value: dataes.betaraflar },
-        { name: "Qatnashmaganlar", value: dataes.qatnashmaganlar },
-    ];
-    // console.log(data);
+    const [data, setData] = useState([
+        { name: "Rozilar", value: 0 },
+        { name: "Qarshilar", value: 0 },
+        { name: "Betaraflar", value: 0 },
+        { name: "Qatnashmaganlar", value: 0 },
+    ]);
 
-    // useEffect(() => {
-    //     setData([
-    //     ]);
-    // }, [dataes]);
+    const [COLORS, setCOLORS] = useState([
+        "#00BC6E",
+        "#FF4242",
+        "#FFBB28",
+        "#9A9A9A",
+    ]);
 
-    const COLORS = ["#00BC6E", "#FF4242", "#FFBB28", "#9A9A9A"];
+    useEffect(() => {
+        setData([
+            { name: "Nomzod 1", value: dataes.nomzod },
+            { name: "Nomzod 2", value: dataes.nomzod1 },
+            { name: "Nomzod 3", value: dataes.nomzod2 },
+            { name: "Nomzod 4", value: dataes.nomzod3 },
+            { name: "Qatnashmaganlar", value: dataes.qatnashmaganlar },
+        ]);
+        setCOLORS(["#00BC6E", "#00d9ff", "#2c28ff", "#8502ff", "#9A9A9A"]);
+        axios({
+            url: `${apiUrlTaklif}`,
+            method: "GET",
+            headers: {
+                Authorization: `Token ${token}`,
+            },
+        })
+            .then((res) => setGetNomzodData(res.data))
+            .catch((err) => console.error(err));
+    }, [dataes, token]);
 
     // CHART FUNCTIN // label-360-360
     const renderActiveShape = (props) => {
@@ -49,7 +72,7 @@ const Chart = ({ dataes }) => {
         const textAnchor = cos >= 0 ? "start" : "end";
 
         return (
-            <g key={`${index}${unikalkId}`}>
+            <g key={index}>
                 <Sector
                     cx={cx}
                     cy={cy}
@@ -96,6 +119,7 @@ const Chart = ({ dataes }) => {
 
     return (
         <div
+            // key={`${unikalkId}`}
             className="flex flex-col xl:flex-row-reverse shadow-lg rounded-xl border p-4 bg-white"
         >
             <ResponsiveContainer width="100%" height={350}>
@@ -118,18 +142,26 @@ const Chart = ({ dataes }) => {
                     </Pie>
                 </PieChart>
             </ResponsiveContainer>
-            <div className="p-2 shadow-md rounded-md text-sm md:text-lg text-gray-500 bg-slate-100 xl:w-[50%]">
+            <div className="xl:w-[50%] xl:h-full p-2 shadow-md rounded-md text-sm md:text-lg text-gray-500 bg-slate-100">
                 <h2>
-                    <span className="font-bold text-green-700">Taklif: </span>
-                    {dataes.name}
+                    <span className="font-bold text-green-700">Nomzod 1:</span>
+                    {getNomzodData && getNomzodData.nomzod}
                 </h2>
                 <h2>
-                    <span className="font-bold text-green-700">Nomzod: </span>
-                    {dataes.nomzod}
+                    <span className="font-bold text-green-700">Nomzod 2:</span>
+                    {getNomzodData && getNomzodData.nomzod1}
+                </h2>
+                <h2>
+                    <span className="font-bold text-green-700">Nomzod 3:</span>
+                    {getNomzodData && getNomzodData.nomzod2}
+                </h2>
+                <h2>
+                    <span className="font-bold text-green-700">Nomzod 4:</span>
+                    {getNomzodData && getNomzodData.nomzod3}
                 </h2>
             </div>
         </div>
     );
 };
 
-export default Chart;
+export default Charts;
