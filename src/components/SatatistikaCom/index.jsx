@@ -35,7 +35,7 @@ const StatistikaCom = () => {
     return (
         <div className="min-h-[calc(100vh-125px)] bg-[#F3F7FA]">
             <Breadcrumb locationPage="Statistika" />
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-7xl mx-auto pb-10">
                 <h1 className="md:text-4xl font-bold text-green-700 text-center mt-10 md:my-16">
                     Statistika bo'limi
                 </h1>

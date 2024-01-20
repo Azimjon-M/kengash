@@ -75,7 +75,7 @@ const Charts = ({ dataes }) => {
     }, [dataes]);
 
     return (
-        <div className="flex flex-col gap-y-4 xl:flex-row-reverse shadow-lg rounded-xl border p-4 bg-white">
+        <div className="flex flex-col gap-y-4 xl:flex-row-reverse shadow-lg rounded-xl border p-4 bg-white ">
             <div className="w-full flex justify-center lg:py-4">
                 <div className="w-[400px] lg:w-[500px] max-h-[200px] p-2 flex flex-col gap-y-1 shadow-md rounded-md text-sm md:text-lg text-gray-500 bg-slate-100 border">
                     {data &&
