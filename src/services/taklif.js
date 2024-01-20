@@ -1,6 +1,7 @@
 import axiosInstance from "./api";
 
 const ep = "taklif/";
+const davomat = "davomat/";
 // GET TAKLI
 const get = () => axiosInstance.get(ep);
 
@@ -19,11 +20,15 @@ const vote = (body) => {
 // GET BAXO
 const voteCheckGet = () => axiosInstance.get(ep + "baxo/");
 
+// GET DAVOMAT
+const getDav = () => axiosInstance.get(davomat);
+
 const taklifApi = {
   get,
   end,
   vote,
   voteCheckGet,
+  getDav,
 };
 
 export default taklifApi;
