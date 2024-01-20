@@ -1,23 +1,29 @@
 import axiosInstance from "./api";
 
-const ep = 'taklif/'
+const ep = "taklif/";
+// GET TAKLI
+const get = () => axiosInstance.get(ep);
 
-const get = () => axiosInstance.get(ep)
+// PUT TAKLIF
+const end = (taklif) => {
+  const { id } = taklif;
+  return axiosInstance.put(`${ep}${id}/`, { ...taklif, tugash: true });
+};
 
-const end = (taklif) => axiosInstance.put(ep, {...taklif, tugash: true})
-
+// POST BAXO
 const vote = (body) => {
-    const user_id = localStorage.getItem("user_id");
-    return axiosInstance.post(ep + 'baxo/', {...body, user_id})
-}
+  const user_id = localStorage.getItem("user_id");
+  return axiosInstance.post(ep + "baxo/", { ...body, user_id });
+};
 
-const voteCheck = () =>  axiosInstance.get(ep + 'baxo/')
+// GET BAXO
+const voteCheckGet = () => axiosInstance.get(ep + "baxo/");
 
 const taklifApi = {
-    get,
-    end,
-    vote,
-    voteCheck
-}
+  get,
+  end,
+  vote,
+  voteCheckGet,
+};
 
-export default  taklifApi
+export default taklifApi;

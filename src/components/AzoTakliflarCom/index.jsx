@@ -39,7 +39,6 @@ const AzoTakliflarCom = () => {
   //         })
   //         .catch((error) => console.error("Xatolik:", error));
   // };
-
   // useEffect(() => {
   //     GetDataFromDavomat();
   // }, []);
@@ -56,16 +55,6 @@ const AzoTakliflarCom = () => {
   };
   useEffect(() => {
     getTakliflar();
-  }, []);
-
-  // GET OVOZLAR
-  const getOvozlar = async () => {
-    const { data: responseData } = await taklifApi.voteCheck();
-    const userId = localStorage.getItem("user_id");
-    setVoteData(responseData.filter((item) => item.user_id === userId));
-  };
-  useEffect(() => {
-    getOvozlar();
   }, []);
 
   // COUNTDOWN
@@ -94,26 +83,36 @@ const AzoTakliflarCom = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // GET OVOZLAR
+  const getOvozlar = async () => {
+    const { data: responseData } = await taklifApi.voteCheckGet();
+    const userId = localStorage.getItem("user_id");
+    setVoteData(responseData.filter((item) => item.user_id === userId));
+  };
+  useEffect(() => {
+    getOvozlar();
+  }, []);
+
   // POST DATA
   const handleVote = async (taklif) => {
     const allItemsHaveDifferentId = voteData.every((item) => item.taklif_id !== taklif.id);
-    voteData.map((item) => console.log(item.taklif_id))
+    voteData.map((item) => console.log(item.taklif_id));
     console.log(taklif.id);
     console.log(allItemsHaveDifferentId);
-    if (!allItemsHaveDifferentId) {
-      alert("Siz ovoz berib bo'lgansiz.!");
-    } else {
-      const reqBody = {
-        ...taklif,
-        ...allNomzodFalse,
-        nomzod: true,
-        taklif_id: taklif.id,
-      };
+    // if (!allItemsHaveDifferentId) {
+    //   alert("Siz ovoz berib bo'lgansiz.!");
+    // } else {
+    //   const reqBody = {
+    //     ...taklif,
+    //     ...allNomzodFalse,
+    //     nomzod: true,
+    //     taklif_id: taklif.id,
+    //   };
 
-      const { data: response } = await taklifApi.vote(reqBody);
-      console.log("Post Result:", response);
-      alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
-    }
+    //   const { data: response } = await taklifApi.vote(reqBody);
+    //   console.log("Post Result:", response);
+    //   alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
+    // }
   };
 
   // POST DATA FOR ALL Nomzdolar
@@ -133,27 +132,27 @@ const AzoTakliflarCom = () => {
   };
 
   // FAOLLASHTIRISH Qayta korish kerak
-  // useEffect(() => {
-  //   filtredData.forEach((taklif) => {
-  //     if (
-  //       taklif.qolganMinut <= 0 &&
-  //       taklif.qolganSeconds <= 0 &&
-  //       !taklif.tugash
-  //     ) {
-  //       handleEndTaklif(taklif);
-  //     }
-  //   });
-  // }, [filtredData]);
+  useEffect(() => {
+    filtredData.forEach((taklif) => {
+      if (
+        taklif.qolganMinut <= 0 &&
+        taklif.qolganSeconds <= 0 &&
+        !taklif.tugash
+      ) {
+        handleEndTaklif(taklif);
+      }
+    });
+  }, [filtredData]);
 
   // tugash: true Method:PUT
-  // const handleEndTaklif = async (taklif) => {
-  //   const { data: response } = await taklifApi.end(taklif);
-  //   if (response.ok) {
-  //     getTakliflar();
-  //   } else {
-  //     console.error("Error updating item:", response.statusText);
-  //   }
-  // };
+  const handleEndTaklif = async (taklif) => {
+    const { data: response } = await taklifApi.end(taklif);
+    if (response.ok) {
+      getTakliflar();
+    } else {
+      console.error("Error updating item:", response.statusText);
+    }
+  };
 
   return (
     <div className="bg-[#F3F7FA] min-h-[calc(100vh-125px)]">
