@@ -3,6 +3,7 @@ import Breadcrumb from "../Breadcrumb";
 import axios from "axios";
 import axiosInstance from "../../services/api";
 import taklifApi from "../../services/taklif";
+import davomatApi from "../../services/davomat";
 
 const allNomzodFalse = {
   nomzod: false,
@@ -12,41 +13,28 @@ const allNomzodFalse = {
 };
 
 const AzoTakliflarCom = () => {
-  // const [activeData, setActiveData] = useState(false)
+
   const [data, setData] = useState([]);
+  const [filtredDavomat, setFiltredDavomat] = useState([]);
   const [filtredData, setFiltredData] = useState([data]);
   const [voteData, setVoteData] = useState([data]);
 
+
   // GET DAVOMAT
-  // const GetDataFromDavomat = () => {
-  //     const token = localStorage.getItem('token');
-  //     fetch(apiUrlDavomat, {
-  //         headers: {
-  //             Authorization: `Token ${token}`,
-  //             "Content-Type": "application/json",
-  //         },
-  //     })
-  //         .then((response) => response.json())
-  //         .then((data) => {
-  //             const isActive = data.map(item => {
-  //                 if (item.aktiv) {
-  //                     return true;
-  //                 }
-  //                 return false;
-  //             })
-  //             setActiveData(isActive);
-  //             console.log(isActive);
-  //         })
-  //         .catch((error) => console.error("Xatolik:", error));
-  // };
-  // useEffect(() => {
-  //     GetDataFromDavomat();
-  // }, []);
+  const GetDavomat = async () => {
+    const { data: davomatData } = await davomatApi.get();
+    setFiltredDavomat(davomatData.filter(user => user.aktiv === true)
+    );
+  };
+  useEffect(() => {
+      GetDavomat();
+  }, []);
+
 
   //GET DATA
   const getTakliflar = async () => {
     const { data: responseData } = await taklifApi.get();
-    setData(responseData);
+    setData(responseData) 
     setFiltredData(
       responseData.filter(
         (item) => item.tugash === false && item.yoqish === true
@@ -56,6 +44,7 @@ const AzoTakliflarCom = () => {
   useEffect(() => {
     getTakliflar();
   }, []);
+
 
   // COUNTDOWN
   useEffect(() => {
@@ -83,6 +72,7 @@ const AzoTakliflarCom = () => {
     return () => clearInterval(interval);
   }, []);
 
+
   // GET OVOZLAR
   const getOvozlar = async () => {
     const { data: responseData } = await taklifApi.voteCheckGet();
@@ -92,6 +82,7 @@ const AzoTakliflarCom = () => {
   useEffect(() => {
     getOvozlar();
   }, []);
+
 
   // POST DATA
   const handleVote = async (taklif) => {
@@ -131,6 +122,7 @@ const AzoTakliflarCom = () => {
     alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
   };
 
+
   // FAOLLASHTIRISH Qayta korish kerak
   useEffect(() => {
     filtredData.forEach((taklif) => {
@@ -143,6 +135,7 @@ const AzoTakliflarCom = () => {
       }
     });
   }, [filtredData]);
+
 
   // tugash: true Method:PUT
   const handleEndTaklif = async (taklif) => {
