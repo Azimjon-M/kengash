@@ -1,8 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { ChartBox } from "./styled";
+import axios from "axios";
 
 const Chart = ({ dataes }) => {
+    const apiLink = "https://kengash.pythonanywhere.com/api/v1/taklif/";
+    const token = localStorage.getItem("token");
+
+    const [allNomzodData, setAllNomzodData] = useState();
     const [data, setData] = useState([]);
+
+    useEffect(() => {
+        axios({
+            url: `${apiLink}${dataes.taklif_id}/`,
+            method: "GET",
+            headers: {
+                Authorization: `Token ${token}`,
+            },
+        })
+            .then((res) => setAllNomzodData(res.data))
+            .catch((err) => console.error(err));
+    }, [token, dataes]);
 
     useEffect(() => {
         const COLOR = { a1: "#00BC6E", a2: "red", a3: "yellow", a4: "gray" };
@@ -85,8 +102,8 @@ const Chart = ({ dataes }) => {
                         <span className="font-bold text-green-700">
                             Nomzod:{" "}
                         </span>
-                        {dataes && dataes.nomzod ? (
-                            dataes.nomzod
+                        {allNomzodData && allNomzodData.nomzod ? (
+                            allNomzodData.nomzod
                         ) : (
                             <span className="text-[red]">
                                 Nomzod kiritilmagan
