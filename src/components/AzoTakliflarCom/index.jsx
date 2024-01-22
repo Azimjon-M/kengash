@@ -96,6 +96,7 @@ const AzoTakliflarCom = () => {
       const { data: response } = await taklifApi.vote(reqBody);
       console.log("Post Result:", response);
       alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
+      window.location.reload();
     }
   };
 
@@ -116,6 +117,7 @@ const AzoTakliflarCom = () => {
       const { data: result } = await taklifApi.vote(reqBody);
       console.log("Post Result:", result);
       alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
+      window.location.reload();
     }
   };
 
