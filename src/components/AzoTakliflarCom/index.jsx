@@ -15,9 +15,7 @@ const AzoTakliflarCom = () => {
   const [filtredDavomat, setFiltredDavomat] = useState([]);
   const [filtredData, setFiltredData] = useState([data]);
   const [voteData, setVoteData] = useState([data]);
-  const [isId, setIsId] = useState();
   const userId = localStorage.getItem("user_id");
-
 
   // GET DAVOMAT
   const GetDavomat = async () => {
@@ -27,7 +25,6 @@ const AzoTakliflarCom = () => {
   useEffect(() => {
     GetDavomat();
   }, []);
-
 
   //GET DATA
   useEffect(() => {
@@ -45,7 +42,6 @@ const AzoTakliflarCom = () => {
     };
     getTakliflar();
   }, [userId, filtredDavomat]);
-
 
   // COUNTDOWN
   useEffect(() => {
@@ -73,10 +69,9 @@ const AzoTakliflarCom = () => {
     return () => clearInterval(interval);
   }, []);
 
-
   // GET OVOZLAR
   const getOvozlar = async () => {
-  const userId = localStorage.getItem("user_id");
+    const userId = localStorage.getItem("user_id");
     const { data: responseData } = await taklifApi.voteCheckGet();
     setVoteData(responseData.filter((item) => item.user_id === userId));
   };
@@ -84,42 +79,45 @@ const AzoTakliflarCom = () => {
     getOvozlar();
   }, []);
 
-
   // POST DATA
   const handleVote = async (taklif) => {
-    setIsId(taklif.id)
     const allItemsHaveDifferentId = voteData.some(
-      item => Number(item.taklif_id) === isId
-      );
-      if (allItemsHaveDifferentId) {
-        alert("Siz ovoz berib bo'lgansiz.!");
-      } else {
-        const reqBody = {
-          ...taklif,
-          ...allNomzodFalse,
-          nomzod: true,
-          taklif_id: taklif.id,
-        };
+      (item) => Number(item.taklif_id) === taklif.id
+    );
+    if (allItemsHaveDifferentId) {
+      alert("Siz ovoz berib bo'lgansiz.!");
+    } else {
+      const reqBody = {
+        ...taklif,
+        ...allNomzodFalse,
+        nomzod: true,
+        taklif_id: taklif.id,
+      };
       const { data: response } = await taklifApi.vote(reqBody);
       console.log("Post Result:", response);
       alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
     }
   };
 
-
   // POST DATA FOR ALL Nomzdolar
   const handleNomzodVote = async (taklif, trueNomzod) => {
-    const reqBody = {
-      ...taklif,
-      ...allNomzodFalse,
-      [trueNomzod]: true,
-      taklif_id: taklif.id,
-    };
-    const { data: result } = await taklifApi.vote(reqBody);
-    console.log("Post Result:", result);
-    alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
+    const allItemsHaveDifferentId = voteData.some(
+      (item) => Number(item.taklif_id) === taklif.id
+    );
+    if (allItemsHaveDifferentId) {
+      alert("Siz ovoz berib bo'lgansiz.!");
+    } else {
+      const reqBody = {
+        ...taklif,
+        ...allNomzodFalse,
+        [trueNomzod]: true,
+        taklif_id: taklif.id,
+      };
+      const { data: result } = await taklifApi.vote(reqBody);
+      console.log("Post Result:", result);
+      alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
+    }
   };
-
 
   return (
     <div className="bg-[#F3F7FA] min-h-[calc(100vh-125px)]">
