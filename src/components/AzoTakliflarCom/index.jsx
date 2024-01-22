@@ -90,20 +90,20 @@ const AzoTakliflarCom = () => {
     voteData.map((item) => console.log(item.taklif_id));
     console.log(taklif.id);
     console.log(allItemsHaveDifferentId);
-    // if (!allItemsHaveDifferentId) {
-    //   alert("Siz ovoz berib bo'lgansiz.!");
-    // } else {
-    //   const reqBody = {
-    //     ...taklif,
-    //     ...allNomzodFalse,
-    //     nomzod: true,
-    //     taklif_id: taklif.id,
-    //   };
+    if (!allItemsHaveDifferentId) {
+      alert("Siz ovoz berib bo'lgansiz.!");
+    } else {
+      const reqBody = {
+        ...taklif,
+        ...allNomzodFalse,
+        nomzod: true,
+        taklif_id: taklif.id,
+      };
 
-    //   const { data: response } = await taklifApi.vote(reqBody);
-    //   console.log("Post Result:", response);
-    //   alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
-    // }
+      const { data: response } = await taklifApi.vote(reqBody);
+      console.log("Post Result:", response);
+      alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
+    }
   };
 
   // POST DATA FOR ALL Nomzdolar
@@ -115,9 +115,6 @@ const AzoTakliflarCom = () => {
       taklif_id: taklif.id,
     };
     const { data: result } = await taklifApi.vote(reqBody);
-    // setFiltredData(
-    //   data.map((d) => (d.id === taklif.id ? { ...d, responded: true } : d))
-    // );
     console.log("Post Result:", result);
     alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
   };
@@ -172,7 +169,6 @@ const AzoTakliflarCom = () => {
                         {/* BUTTONS */}
                         <div className="flex items-center justify-between md:justify-end md:gap-3">
                           <button
-                            disabled={taklif.responded}
                             onClick={() =>
                               handleVote({ ...taklif, rozilar: true })
                             }
@@ -185,7 +181,6 @@ const AzoTakliflarCom = () => {
                             Roziman
                           </button>
                           <button
-                            disabled={taklif.responded}
                             onClick={() =>
                               handleVote({ ...taklif, qarshilar: true })
                             }
@@ -198,7 +193,6 @@ const AzoTakliflarCom = () => {
                             Qarshiman
                           </button>
                           <button
-                            disabled={taklif.responded}
                             onClick={() =>
                               handleVote({ ...taklif, betaraflar: true })
                             }
