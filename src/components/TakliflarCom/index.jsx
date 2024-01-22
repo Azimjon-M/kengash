@@ -3,60 +3,75 @@ import Breadcrumb from "../Breadcrumb";
 import { NavLink } from "react-router-dom";
 import { FaXmark, FaPlus } from "react-icons/fa6";
 import { MdDeleteOutline } from "react-icons/md";
+import adminTaklif from "../../services/adminTaklif";
 
 const TakliflarCom = () => {
-    const apiUrlDefault = "https://kengash.pythonanywhere.com/api/v1/taklif/";
     const [data, setData] = useState([]);
-    console.log(data);
-    const [isPendingDel, setIsPendingDel] = useState(false);
 
-    // GET DATA
-    const GetDataFromAPI = () => {
-        
-        const token = localStorage.getItem('token');
-        fetch(apiUrlDefault, {
-            headers: {
-                Authorization: `Token ${token}`,
-                "Content-Type": "application/json",
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => setData(data))
-            .catch((error) => console.error("Xatolik:", error));
-    };
+    const [activeData, setActiveData] = useState([]);
+    const [noActiveData, setNoActiveData] = useState([]);
+
     useEffect(() => {
-        GetDataFromAPI();
-    }, []);
-
-    // DELETE ONE BY ONE DATA
-    const handleDelete = (id) => {
-        setIsPendingDel(true);            
-        
-        const token = localStorage.getItem('token');
-
-        if (isPendingDel) {
-            fetch(`${apiUrlDefault}${id}/`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Token ${token}`,
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        setData((prevData) =>
-                            prevData.filter((item) => item.id !== id)
-                        );
+        const interval = setInterval(() => {
+            setActiveData((filtredData) =>
+                filtredData.map((item) => {
+                    if (item.tugash_vaqti) {
+                        let vaqt = item.tugash_vaqti.split(":").map(Number);
+                        let now = new Date();
+                        let qolganVaqt =
+                            vaqt[0] * 60 * 60 +
+                            vaqt[1] * 60 -
+                            (now.getHours() * 60 * 60 +
+                                now.getMinutes() * 60 +
+                                now.getSeconds());
+                        let qolganMinut = Math.floor(qolganVaqt / 60);
+                        let qolganSeconds = qolganVaqt % 60;
+                        return { ...item, qolganMinut, qolganSeconds };
                     } else {
-                        console.error(
-                            "Error deleting item:",
-                            response.statusText
-                        );
+                        return item;
                     }
                 })
-                .catch((error) => console.error("Xatolik:", error));
-        } else {
-        }
+            );
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
+    // FAOLLSHGAN VAQTI TUGAGANDA tugash: true
+    useEffect(() => {
+        activeData.forEach((item) => {
+            if (item.qolganMinut <= 0 && item.qolganSeconds <= 0) {
+                // tugash: true Method:PUT
+                adminTaklif.put(item.id, { ...item, tugash: true });
+                getData();
+            }
+        });
+    }, [activeData]);
+
+    // GET DATA,
+    const getData = async () => {
+        const { data: resData } = await adminTaklif.get();
+        console.log(resData);
+        setData(resData);
+        setActiveData(
+            resData.filter(
+                (item) => item.tugash === false && item.yoqish === true
+            )
+        );
+        setNoActiveData(
+            resData.filter(
+                (item) => item.tugash === false && item.yoqish === false
+            )
+        );
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    // DELETE ONE DATA
+    const handleDelete = async (id) => {
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+        await adminTaklif.del(id);
     };
 
     // DELETE ALL DATA
@@ -66,29 +81,9 @@ const TakliflarCom = () => {
         );
 
         if (isConfirmed) {
-            
-            const token = localStorage.getItem('token');
-
             Promise.all(
-                data.map((item) => {
-                    const itemUrl = `${apiUrlDefault}${item.id}/`;
-
-                    return fetch(itemUrl, {
-                        method: "DELETE",
-                        headers: {
-                            Authorization: `Token ${token}`,
-                            "Content-Type": "application/json",
-                        },
-                    })
-                        .then((response) => {
-                            if (!response.ok) {
-                                console.error(
-                                    `Error deleting item with ID ${item.id}:`,
-                                    response.statusText
-                                );
-                            }
-                        })
-                        .catch((error) => console.error("Xatolik:", error));
+                data.map(async (item) => {
+                    await adminTaklif.del(item.id);
                 })
             ).then(() => {
                 setData([]);
@@ -96,100 +91,38 @@ const TakliflarCom = () => {
         }
     };
 
-    // FAOLLASHTIRISH
-    const handleChangeActive = ({
-        id,
-        name,
-        nomzod,
-        bitalik_taklif,
-        vaqt,
-        nomzod1,
-        nomzod2,
-        nomzod3,
-    }) => {
-        
-        const token = localStorage.getItem('token');
-
+    // Activate
+    const handleChangeActive = async ({ id, name, nomzod, vaqt }) => {
         const nowDataTime = new Date();
         const nowHover = nowDataTime.getHours();
         const nowMinutes = nowDataTime.getMinutes();
 
         const convertToMinute = nowHover * 60 + nowMinutes + vaqt;
-        const newVaqt = `${Math.floor(convertToMinute / 60)}:${
+        const newTime = `${Math.floor(convertToMinute / 60)}:${
             convertToMinute % 60
         }`;
+        const body = {
+            name: name,
+            nomzod: nomzod,
+            tugash_vaqti: newTime,
+            yoqish: true,
+        };
 
-        fetch(`${apiUrlDefault}${id}/`, {
-            method: "PUT",
-            headers: {
-                Authorization: `Token ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                bitalik_taklif: bitalik_taklif,
-                id: id,
-                name: name,
-                nomzod: nomzod,
-                nomzod1: nomzod1,
-                nomzod2: nomzod2,
-                nomzod3: nomzod3,
-                tugash_vaqti: newVaqt,
-                vaqt: vaqt,
-                yoqish: true,
-            }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    GetDataFromAPI();
-                } else {
-                    console.error("Error updating item:", response.statusText);
-                }
-            })
-            .catch((error) => console.error("Xatolik:", error));
+        await adminTaklif.put(id, body);
+        getData();
     };
 
-    // FAOLSIZLASHTIRISH
-    const handleChangeNoActive = ({
-        id,
-        name,
-        nomzod,
-        bitalik_taklif,
-        vaqt,
-        nomzod1,
-        nomzod2,
-        nomzod3,
-    }) => {
-        
-        const token = localStorage.getItem('token');
+    // NoActivate
+    const handleChangeNoActive = async ({ id, name, nomzod }) => {
+        const body = {
+            name: name,
+            nomzod: nomzod,
+            tugash_vaqti: "",
+            yoqish: false,
+        };
 
-        fetch(`${apiUrlDefault}${id}/`, {
-            method: "PUT",
-            headers: {
-                Authorization: `Token ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                bitalik_taklif: bitalik_taklif,
-                id: id,
-                name: name,
-                nomzod: nomzod,
-                nomzod1: nomzod1,
-                nomzod2: nomzod2,
-                nomzod3: nomzod3,
-                tugash_vaqti: "",
-                vaqt: vaqt,
-                yoqish: false,
-                tugash: false,
-            }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    GetDataFromAPI();
-                } else {
-                    console.error("Error updating item:", response.statusText);
-                }
-            })
-            .catch((error) => console.error("Xatolik:", error));
+        await adminTaklif.put(id, body);
+        getData();
     };
 
     return (
@@ -219,109 +152,122 @@ const TakliflarCom = () => {
                     Kengashga qo'yilmagan takliflar:
                 </div>
                 <div className="flex flex-col-reverse items-center gap-y-4 px-3 overflow-hidden">
-                    {data.map(
-                        (item) =>
-                            !item.yoqish && (
-                                <div
-                                    data-aos="fade-left"
-                                    key={item.id}
-                                    className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-gray-50 to-gray-400 p-2"
-                                >
-                                    <div className="line-clamp-1">
-                                        <b>Taklif nomi:</b> {item.name}
-                                    </div>
-                                    {item.bitalik_taklif ? (
-                                        <div>
-                                            <b>Nomzod:</b> {item.nomzod}
+                    {noActiveData &&
+                        noActiveData.map(
+                            (item) =>
+                                !item.yoqish && (
+                                    <div
+                                        data-aos="fade-left"
+                                        key={item.id}
+                                        className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-gray-50 to-gray-400 p-2"
+                                    >
+                                        <div className="line-clamp-1">
+                                            <b>Taklif nomi:</b> {item.name}
                                         </div>
-                                    ) : (
-                                        <>
+                                        {item.bitalik_taklif ? (
                                             <div>
-                                                <b>Nomzod 1:</b> {item.nomzod}
+                                                <b>Nomzod:</b> {item.nomzod}
                                             </div>
-                                            <div>
-                                                <b>Nomzod 2:</b> {item.nomzod1}
-                                            </div>
-                                            <div
-                                                className={` ${
-                                                    item.nomzod2 ? "" : "hidden"
-                                                }`}
+                                        ) : (
+                                            <>
+                                                <div>
+                                                    <b>Nomzod 1:</b>{" "}
+                                                    {item.nomzod}
+                                                </div>
+                                                <div>
+                                                    <b>Nomzod 2:</b>{" "}
+                                                    {item.nomzod1}
+                                                </div>
+                                                <div
+                                                    className={` ${
+                                                        item.nomzod2
+                                                            ? ""
+                                                            : "hidden"
+                                                    }`}
+                                                >
+                                                    <b>Nomzod 3:</b>{" "}
+                                                    {item.nomzod2}
+                                                </div>
+                                                <div
+                                                    className={` ${
+                                                        item.nomzod3
+                                                            ? ""
+                                                            : "hidden"
+                                                    }`}
+                                                >
+                                                    <b>Nomzod 4:</b>{" "}
+                                                    {item.nomzod3}
+                                                </div>
+                                                <div>{item.yoqish}</div>
+                                            </>
+                                        )}
+                                        <div>
+                                            <b>Berilgan vaqt:</b> {item.vaqt}{" "}
+                                            daqiqa
+                                        </div>
+                                        <div className="flex justify-end">
+                                            <button
+                                                className="btn btn-sm btn-success bg-[#05B967] font-medium text-white mb-4"
+                                                onClick={() =>
+                                                    handleChangeActive(item)
+                                                }
                                             >
-                                                <b>Nomzod 3:</b> {item.nomzod2}
-                                            </div>
-                                            <div
-                                                className={` ${
-                                                    item.nomzod3 ? "" : "hidden"
-                                                }`}
-                                            >
-                                                <b>Nomzod 4:</b> {item.nomzod3}
-                                            </div>
-                                            <div>{item.yoqish}</div>
-                                        </>
-                                    )}
-                                    <div>
-                                        <b>Berilgan vaqt:</b> {item.vaqt} daqiqa
+                                                Faollashtirish
+                                            </button>
+                                        </div>
+                                        <div className="flex justify-end items-center gap-x-2">
+                                            <MdDeleteOutline
+                                                onClick={() =>
+                                                    handleDelete(item.id)
+                                                }
+                                                className="cursor-pointer text-[24px] text-red-600"
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="flex justify-end">
-                                        <button
-                                            className="btn btn-sm btn-success bg-[#05B967] font-medium text-white mb-4"
-                                            onClick={() =>
-                                                handleChangeActive(item)
-                                            }
-                                        >
-                                            Faollashtirish
-                                        </button>
-                                    </div>
-                                    <div className="flex justify-end items-center gap-x-2">
-                                        <MdDeleteOutline
-                                            onClick={() =>
-                                                handleDelete(item.id)
-                                            }
-                                            className="cursor-pointer text-[24px] text-red-600"
-                                        />
-                                    </div>
-                                </div>
-                            )
-                    )}
+                                )
+                        )}
                 </div>
 
                 <div className="text-xl font-semibold text-center mt-8">
                     Kengashga qo'yilgan takliflar:
                 </div>
                 <div className="flex flex-col items-center gap-y-4 px-3 mb-6 overflow-hidden">
-                    {data.map(
-                        (item) =>
-                            item.yoqish && (
-                                <div
-                                    data-aos="fade-right"
-                                    key={item.id}
-                                    className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-green-500 to-green-200 p-2"
-                                >
-                                    <div className="line-clamp-1">
-                                        <b>Taklif nomi:</b> {item.name}
+                    {activeData &&
+                        activeData.map(
+                            (item) =>
+                                item.yoqish && (
+                                    <div
+                                        data-aos="fade-right"
+                                        key={item.id}
+                                        className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-green-500 to-green-200 p-2"
+                                    >
+                                        <div className="line-clamp-1">
+                                            <b>Taklif nomi:</b> {item.name}
+                                        </div>
+                                        <div>
+                                            <b>Nomzod:</b> {item.nomzod}
+                                        </div>
+                                        <div>
+                                            <b>Berilgan vaqt:</b> {item.vaqt}{" "}
+                                            daqiqa
+                                        </div>
+                                        <div>
+                                            <b>Tugash vaqti:</b>{" "}
+                                            {item.tugash_vaqti}
+                                        </div>
+                                        <div className="flex justify-end">
+                                            <button
+                                                onClick={() =>
+                                                    handleChangeNoActive(item)
+                                                }
+                                                className="btn btn-sm btn-error bg-red-600 font-medium text-white"
+                                            >
+                                                Faolsizlashtirish
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <b>Nomzod:</b> {item.nomzod}
-                                    </div>
-                                    <div>
-                                        <b>Berilgan vaqt:</b> {item.vaqt} daqiqa
-                                    </div>
-                                    <div>
-                                        <b>Tugash vaqti:</b> {item.tugash_vaqti}
-                                    </div>
-                                    <div className="flex justify-end">
-                                        <button
-                                            onClick={() =>
-                                                handleChangeNoActive(item)
-                                            }
-                                            className="btn btn-sm btn-error bg-red-600 font-medium text-white"
-                                        >
-                                            Faolsizlashtirish
-                                        </button>
-                                    </div>
-                                </div>
-                            )
-                    )}
+                                )
+                        )}
                 </div>
             </div>
         </div>

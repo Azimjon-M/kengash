@@ -1,13 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { ChartBox } from "./styled";
 import axios from "axios";
+import jsPDF from "jspdf";
 
 const Chart = ({ dataes }) => {
     const apiLink = "https://kengash.pythonanywhere.com/api/v1/taklif/";
     const token = localStorage.getItem("token");
 
     const [allNomzodData, setAllNomzodData] = useState();
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(null);
+    const [isWinner, setIsWinner] = useState(null);
+
+    // Download in pdf
+    const handleClickDownload = () => {
+        const headerTitle = "Kengashga qo'yilgan taklif:";
+        const header = "Salom dunyo ko'rsatuvini qanday qilib bo'lmasin telvidinyalardan \n yo'qotish va o'rniga o'z vakilimiz tomonidan yaratilgan loyhamarni tadbiq etish";
+        const statistics = [
+            "Rozilar: 5%.",
+            "Qarshilar: 10%.",
+            "Betaraflar: 22%",
+            "Qatnashmaganlar: 63%.",
+            "G'olib: Betaraflar",
+        ];
+
+        // PDF yaratish
+        const pdf = new jsPDF({
+            unit: "mm", // O'lchov birligi millimetr
+            format: "a4", // A4 format
+        });
+
+        // HeaderTitle
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(16);
+        pdf.text(headerTitle, 15, 20); // header qsimni tepa pastga tushirish
+
+        // Header
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(16);
+        pdf.text(header, 10, 30); // header qsimni tepa pastga tushirish
+        pdf.lineTo(2, 1) // header qsimni tepa pastga tushirish
+
+        // Statistikalarga "normal" (qalin emas) stil qo'shish
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(12);
+        // Statistikalarni qo'shish
+        let yPosition = 30; // body qisim y o'qida tepa pastligi
+
+        statistics.forEach((stat) => {
+            pdf.text(stat, 15, yPosition); //body ma'lumotlari x o'qi  o'nga qochirish
+            yPosition += 10; //body ma'lumotlari y o'qi orasidagi masofa
+        });
+
+        // PDF-ni yuklash
+        pdf.save("statistika.pdf");
+    };
 
     useEffect(() => {
         axios({
@@ -27,6 +73,7 @@ const Chart = ({ dataes }) => {
         let numbb = dataes.qarshilar;
         let numbc = dataes.betaraflar;
         let numbd = dataes.qatnashmaganlar;
+
         let z = numba + numbb + numbc + numbd;
 
         if (numba + numbb + numbc !== 0) {
@@ -36,9 +83,10 @@ const Chart = ({ dataes }) => {
                 let c = Math.floor((numbc * 100) / z);
                 let d = Math.floor((numbd * 100) / z);
 
-                if (a + b + c + d !== 100) {
+                for (let i = 0; a + b + c + d !== 100; i++) {
                     d++;
                 }
+
                 setData([
                     { name: "Rozilar", width: a, color: COLOR.a1 },
                     { name: "Qarshilar", width: b, color: COLOR.a2 },
@@ -63,6 +111,19 @@ const Chart = ({ dataes }) => {
         }
     }, [dataes]);
 
+    useEffect(() => {
+        if (data) {
+            let engKattaObyekt = data.reduce((prev, current) =>
+                current.width > prev.width ? current : prev
+            );
+            if (engKattaObyekt.name !== "Qatnashmaganlar") {
+                setIsWinner(engKattaObyekt.name);
+            } else {
+                setIsWinner(null);
+            }
+        }
+    }, [data]);
+
     return (
         <div className="flex flex-col gap-y-4 xl:flex-row-reverse shadow-lg rounded-xl border p-4 bg-white">
             <div className="w-full flex justify-center lg:py-4">
@@ -82,6 +143,15 @@ const Chart = ({ dataes }) => {
                                 </ChartBox>
                             </div>
                         ))}
+                    {isWinner && (
+                        <ChartBox
+                            width="100"
+                            color="green"
+                            className="whitespace-nowrap p-1 rounded-md"
+                        >
+                            G'olib: {isWinner}
+                        </ChartBox>
+                    )}
                 </div>
             </div>
             <div className="xl:w-full flex flex-col gap-y-4">
@@ -112,7 +182,10 @@ const Chart = ({ dataes }) => {
                     </h2>
                 </div>
                 <div className="flex justify-center">
-                    <button className="btn btn-sm lg:btn-md btn-primary text-white lg:font-bold">
+                    <button
+                        onClick={() => handleClickDownload()}
+                        className="btn btn-sm lg:btn-md btn-primary text-white lg:font-bold"
+                    >
                         YUKLAB OLISH
                     </button>
                 </div>

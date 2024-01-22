@@ -263,7 +263,7 @@ const AddTaklifCom = () => {
                                 <input
                                     onChange={formik2.handleChange}
                                     value={formik2.values.nomzod2}
-                                    className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline'
+                                    className='shadow appearance-none border rounded w-full py-2 px-3 dark:text-white text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline'
                                     id="nomzod2"
                                     type="text"
                                     placeholder="Nomzod"
@@ -292,7 +292,7 @@ const AddTaklifCom = () => {
                                 <input
                                     onChange={formik2.handleChange}
                                     value={formik2.values.nomzod3}
-                                    className={` shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline`}
+                                    className={` shadow appearance-none border rounded w-full py-2 px-3  dark:text-white text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline`}
                                     id="nomzod3"
                                     type="text"
                                     placeholder="Nomzod"
