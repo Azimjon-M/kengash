@@ -123,30 +123,6 @@ const AzoTakliflarCom = () => {
   };
 
 
-  // FAOLLASHTIRISH Qayta korish kerak
-  useEffect(() => {
-    filtredData.forEach((taklif) => {
-      if (
-        taklif.qolganMinut <= 0 &&
-        taklif.qolganSeconds <= 0 &&
-        !taklif.tugash
-      ) {
-        handleEndTaklif(taklif);
-      }
-    });
-  }, [filtredData]);
-
-
-  // tugash: true Method:PUT
-  const handleEndTaklif = async (taklif) => {
-    const { data: response } = await taklifApi.end(taklif);
-    if (response.ok) {
-      getTakliflar();
-    } else {
-      console.error("Error updating item:", response.statusText);
-    }
-  };
-
   return (
     <div className="bg-[#F3F7FA] min-h-[calc(100vh-125px)]">
       <Breadcrumb locationPage="Takliflar" />
