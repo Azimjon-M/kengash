@@ -3,10 +3,12 @@ import { ChartBox } from "../Chart/styled";
 import axios from "axios";
 
 const Charts = ({ dataes }) => {
+    // console.log(dataes);
     const apiLink = "https://kengash.pythonanywhere.com/api/v1/taklif/";
     const token = localStorage.getItem("token");
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(null);
+    const [isWinner, setIsWinner] = useState(null);
     const [allNomzodData, setAllNomzodData] = useState();
 
     useEffect(() => {
@@ -24,16 +26,18 @@ const Charts = ({ dataes }) => {
     useEffect(() => {
         const COLOR = {
             b1: "blue",
-            b2: "green",
+            b2: "purple",
             b3: "yellow",
             b4: "red",
             b5: "gray",
+            b6: "green",
         };
         let numba = dataes.nomzod;
         let numbb = dataes.nomzod1;
         let numbc = dataes.nomzod2;
         let numbd = dataes.nomzod3;
         let numbx = dataes.qatnashmaganlar;
+
         let z = numba + numbb + numbc + numbd + numbx;
 
         if (numba + numbb + numbc + numbd !== 0) {
@@ -44,9 +48,10 @@ const Charts = ({ dataes }) => {
                 let d = Math.floor((numbd * 100) / z);
                 let x = Math.floor((numbd * 100) / z);
 
-                if (a + b + c + d !== 100) {
+                for (let i = 0; a + b + c + d !== 100; i++) {
                     d++;
                 }
+
                 setData([
                     { name: "Nomzod 1", width: a, color: COLOR.b1 },
                     { name: "Nomzod 2", width: b, color: COLOR.b2 },
@@ -74,10 +79,23 @@ const Charts = ({ dataes }) => {
         }
     }, [dataes]);
 
+    useEffect(() => {
+        if (data) {
+            let engKattaObyekt = data.reduce((prev, current) =>
+                current.width > prev.width ? current : prev
+            );
+            if (engKattaObyekt.name !== "Qatnashmaganlar") {
+                setIsWinner(engKattaObyekt.name);
+            } else {
+                setIsWinner(null);
+            }
+        }
+    }, [data]);
+
     return (
         <div className="flex flex-col gap-y-4 xl:flex-row-reverse shadow-lg rounded-xl border p-4 bg-white ">
             <div className="w-full flex justify-center lg:py-4">
-                <div className="w-[400px] lg:w-[500px] max-h-[200px] p-2 flex flex-col gap-y-1 shadow-md rounded-md text-sm md:text-lg text-gray-500 bg-slate-100 border">
+                <div className="w-[400px] lg:w-[500px] max-h-[270px] p-2 flex flex-col gap-y-1 shadow-md rounded-md text-sm md:text-lg text-gray-500 bg-slate-100 border">
                     {data &&
                         data.map((item, idx) => (
                             <div
@@ -93,10 +111,31 @@ const Charts = ({ dataes }) => {
                                 </ChartBox>
                             </div>
                         ))}
+                    {isWinner && (
+                        <ChartBox
+                            width="100"
+                            color="green"
+                            className="whitespace-nowrap p-1 rounded-md"
+                        >
+                            G'olib: {isWinner}
+                        </ChartBox>
+                    )}
                 </div>
             </div>
             <div className="xl:w-full flex flex-col gap-y-4">
                 <div className="flex flex-col gap-y-4 p-2 shadow-md rounded-md text-sm md:text-lg text-black bg-slate-100">
+                    <h2>
+                        <span className="font-bold text-green-700">
+                            Taklif:{" "}
+                        </span>
+                        {dataes && dataes.name ? (
+                            dataes.name
+                        ) : (
+                            <span className="text-[red]">
+                                Nomzod kiritilmagan
+                            </span>
+                        )}
+                    </h2>
                     <h2>
                         <span className="font-bold text-green-700">
                             Nomzod 1:{" "}
