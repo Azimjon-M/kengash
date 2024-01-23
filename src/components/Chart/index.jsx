@@ -13,46 +13,77 @@ const Chart = ({ dataes }) => {
 
     // Download in pdf
     const handleClickDownload = () => {
-        const headerTitle = "Kengashga qo'yilgan taklif:";
-        const header = "Salom dunyo ko'rsatuvini qanday qilib bo'lmasin telvidinyalardan \n yo'qotish va o'rniga o'z vakilimiz tomonidan yaratilgan loyhamarni tadbiq etish";
-        const statistics = [
-            "Rozilar: 5%.",
-            "Qarshilar: 10%.",
-            "Betaraflar: 22%",
-            "Qatnashmaganlar: 63%.",
-            "G'olib: Betaraflar",
-        ];
+        const nowData = new Date();
+        const nowDay =
+            nowData.getDate() <= 9
+                ? "0" + nowData.getDate()
+                : nowData.getDate();
+        const nowMonth =
+            nowData.getMonth() + 1 <= 9
+                ? "0" + (nowData.getMonth() + 1)
+                : nowData.getMonth() + 1;
+        const nowYear = nowData.getFullYear();
+        const fullData = `${nowDay}/${nowMonth}/${nowYear}`;
 
-        // PDF yaratish
-        const pdf = new jsPDF({
-            unit: "mm", // O'lchov birligi millimetr
-            format: "a4", // A4 format
+        const pdf = new jsPDF("p", "in", "a4");
+        pdf.setDrawColor("white");
+
+        const Title = `${
+            dataes && dataes.id + 1
+        } - sonli Kengashga qo'yilgan masala:`;
+        const TitleContent = `${dataes.name}`;
+        const NomzodTitle = "Nomzod: ";
+        const Nomzod = `${allNomzodData.nomzod}`;
+        console.log(data);
+        let newData = [data.map((item) => `${item.name}: ${item.width}%`)];
+        const WinnerTitle = `Nomzod ${allNomzodData.nomzod}: ${isWinner === "Rozilar" ? 'Tasdiqlandi' : "Tasdiqlanmadi"}`;
+        // const Winner = `${isWinner === "Rozilar" ? 'Tasdiqlandi' : "Tasdiqlanmadi"}`;
+
+        pdf.setFont("helvetica", "bold").text(Title, 0.5, 0.5);
+
+        pdf.setDrawColor("white");
+        pdf.setLineWidth(1 / 72);
+        pdf.line(0.5, 0.5, 0.5, 11.25);
+        pdf.line(7.75, 0.5, 7.75, 11.25);
+
+        let textlines = pdf
+            .setFont("helvetica", "normal")
+            .setFontSize("16")
+            .splitTextToSize(TitleContent, 7.25);
+        let verticalOffeset = 0.7;
+        pdf.text(0.5, verticalOffeset + 12 / 72, textlines);
+        verticalOffeset += ((textlines.length + 0.5) * 12) / 72;
+
+        // NomzodTitle va Nomzod ma'lumotlarini qo'shish
+        pdf.setFont("helvetica", "bold").text(
+            NomzodTitle,
+            0.5,
+            verticalOffeset + 40 / 72
+        );
+        pdf.setFont("helvetica", "normal").text(
+            Nomzod,
+            1.5,
+            verticalOffeset + 40 / 72,
+            0,
+            5
+        );
+
+        // Qolgan ma'lumotlarni joylash
+        let yPosition = 60;
+
+        newData.forEach((item) => {
+            yPosition += 30;
+            pdf.text(item, 0.5, verticalOffeset + yPosition / 72);
         });
-
-        // HeaderTitle
-        pdf.setFont("helvetica", "bold");
-        pdf.setFontSize(16);
-        pdf.text(headerTitle, 15, 20); // header qsimni tepa pastga tushirish
-
-        // Header
-        pdf.setFont("helvetica", "bold");
-        pdf.setFontSize(16);
-        pdf.text(header, 10, 30); // header qsimni tepa pastga tushirish
-        pdf.lineTo(2, 1) // header qsimni tepa pastga tushirish
-
-        // Statistikalarga "normal" (qalin emas) stil qo'shish
-        pdf.setFont("helvetica", "normal");
-        pdf.setFontSize(12);
-        // Statistikalarni qo'shish
-        let yPosition = 30; // body qisim y o'qida tepa pastligi
-
-        statistics.forEach((stat) => {
-            pdf.text(stat, 15, yPosition); //body ma'lumotlari x o'qi  o'nga qochirish
-            yPosition += 10; //body ma'lumotlari y o'qi orasidagi masofa
-        });
+        pdf.setFont("helvetica", "bold").text(
+            WinnerTitle,
+            0.5,
+            verticalOffeset + 200 / 72
+        );
+        pdf.text(fullData, 0.5, verticalOffeset + 400 / 72);
 
         // PDF-ni yuklash
-        pdf.save("statistika.pdf");
+        pdf.save(`${dataes.id+1}-statistika.pdf`);
     };
 
     useEffect(() => {
