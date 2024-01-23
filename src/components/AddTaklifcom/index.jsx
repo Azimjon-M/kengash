@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import Breadcrumb from "../Breadcrumb";
+import addTaklif from "../../services/addTaklif";
 import { useFormik } from "formik";
 
 const AddTaklifCom = () => {
     const [isActiveTwoo, setIsActiveTwoo] = useState(false);
     const [isActiveThree, setIsActiveThree] = useState(false);
     const [isNomzodOne, setIsNomzodOne] = useState(true);
-
-    const apiURL = "https://kengash.pythonanywhere.com/api/v1/taklif/";
-    const token = localStorage.getItem('token');
 
     const formik = useFormik({
         initialValues: {
@@ -19,15 +17,9 @@ const AddTaklifCom = () => {
             yoqish: false
         },
         onSubmit: (values) => {
-            fetch(apiURL, {
-                method: "POST",
-                headers: {
-                    Authorization: `Token ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values),
-            })
-            formik.resetForm();
+            addTaklif.post(values)
+                .then(() => formik.resetForm())
+                .catch((error) => console.error("Error adding taklif:", error));
         },
     });
 
@@ -42,15 +34,9 @@ const AddTaklifCom = () => {
             bitalik_taklif: false
         },
         onSubmit: (values) => {
-            fetch(apiURL, {
-                method: "POST",
-                headers: {
-                    Authorization: `Token ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values),
-            })
-            formik2.resetForm();
+            addTaklif.post(values)
+                .then(() => formik2.resetForm())
+                .catch((error) => console.error("Error adding taklif:", error));
         },
     });
 

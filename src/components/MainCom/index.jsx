@@ -1,29 +1,18 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import mainApi from '../../services/main'; 
 
 const MainCom = () => {
-    const apiUrlDefault =
-        "https://kengash.pythonanywhere.com/api/v1/taklif/menyu/";
-    //Values
     const [isAzo, setIsAzo] = useState(false);
     const [isData, setIsData] = useState([]);
-    const token = localStorage.getItem("token");
 
     useEffect(() => {
-        axios({
-            url: apiUrlDefault,
-            method: "GET",
-            headers: {
-                Authorization: `Token ${token}`,
-                "Content-Type": "application/json",
-            },
-        })
+        mainApi.get()
             .then((res) => setIsData(res.data))
             .catch((err) => console.error(err));
 
         const lavozim = localStorage.getItem("lavozim");
         lavozim === "superadmin" && setIsAzo(true);
-    }, [token]);
+    }, []);
 
     return (
         <>

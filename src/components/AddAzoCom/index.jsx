@@ -1,11 +1,9 @@
 import React from 'react';
 import Breadcrumb from '../Breadcrumb';
 import { useFormik } from "formik";
+import addAzo from '../../services/addAzo';
 
 const AddAzoCom = () => {
-
-    const apiUrl = 'https://kengash.pythonanywhere.com/api/v1/users/qoshish/';
-    const token = window.localStorage.getItem('token');
 
     const formik = useFormik({
         initialValues: {
@@ -17,15 +15,9 @@ const AddAzoCom = () => {
             email: '',
         },
         onSubmit: (values) => {
-            fetch(apiUrl, {
-                method: "POST",
-                headers: {
-                    Authorization: `Token ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values),
-            })
-            formik.resetForm();
+            addAzo.post(values)
+            .then(() => formik.resetForm())
+            .catch((error) => console.error("Error adding azo: ", error))
         },
     });
 

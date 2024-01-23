@@ -1,128 +1,51 @@
 import React, { useEffect, useState } from "react";
+import davomatApi from "../../services/davomat";
 import Breadcrumb from "../Breadcrumb";
 import { FaCheck } from "react-icons/fa6";
 import { FaXmark } from "react-icons/fa6";
 import { RxUpdate } from "react-icons/rx";
 
 const DavomatCom = () => {
-  const apiUrlDefault = "https://kengash.pythonanywhere.com/api/v1/davomat/";
   const [data, setData] = useState([]);
 
-  // GET DATA
-  const GetDataFromAPI = () => {
-    const token = localStorage.getItem('token');
-    fetch(apiUrlDefault, {
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setData(data))
-      .catch((error) => console.error("Xatolik:", error));
-  };
-  useEffect(() => {
-    GetDataFromAPI();
-  }, []);
+    // GET DAVOMAT
+    const GetDavomat = async () => {
+      const { data: davomatData } = await davomatApi.get();
+      setData(davomatData);
+    };
+    useEffect(() => {
+      GetDavomat();
+    }, []);
 
   // UPDATE ALL DATA
-  const handleUpdateData = () => {
-    const token = localStorage.getItem('token')
-
-    Promise.all(
-      data.map((item) => {
-        return fetch(`${apiUrlDefault}${item.id}/`, {
-          method: "PUT",
-          headers: {
-            Authorization: `Token ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: item.id,
-            user_id: item.user_id,
-            familya: item.familya,
-            ism: item.ism,
-            aktiv: false,
-          }),
-        })
-          .then((response) => {
-            if (response.ok) {
-              GetDataFromAPI();
-            } else {
-              console.error("Error updating item:", response.statusText);
-            }
-          })
-          .catch((error) => console.error("Xatolik:", error));
-      })
-    );
+  const handleUpdateData = async ({ id, user_id, familya, ism, aktiv }) => {
+    const body = {
+      id,
+      user_id,
+      familya,
+      ism,
+      aktiv: false,
+    };
+  
+    await davomatApi.updateDavomat(body);
+    GetDavomat();
   };
 
+// ACTIVE
+const handleChangeActive = (item) => {
+  const updatedItem = { ...item, aktiv: true };
+  davomatApi.updateDavomat(item.id, updatedItem)
+    .then(() => GetDavomat())
+    .catch((error) => console.error('Error updating item:', error));
+};
 
-  // ACTIVE
-  const handleChangeActive = ({
-    id,
-    user_id,
-    familya,
-    ism,
-  }) => {
-    const token = localStorage.getItem('token');
-
-    fetch(`${apiUrlDefault}${id}/`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-        user_id: user_id,
-        familya: familya,
-        ism: ism,
-        aktiv: true,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          GetDataFromAPI();
-        } else {
-          console.error("Error updating item:", response.statusText);
-        }
-      })
-      .catch((error) => console.error("Xatolik:", error));
-  };
-
-  // NoActive
-  const handleChangeNoActive = ({
-    id,
-    user_id,
-    familya,
-    ism,
-  }) => {
-    const token = localStorage.getItem('token');
-
-    fetch(`${apiUrlDefault}${id}/`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-        user_id: user_id,
-        familya: familya,
-        ism: ism,
-        aktiv: false,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          GetDataFromAPI();
-        } else {
-          console.error("Error updating item:", response.statusText);
-        }
-      })
-      .catch((error) => console.error("Xatolik:", error));
-  };
+// NoActive
+const handleChangeNoActive = (item) => {
+  const updatedItem = { ...item, aktiv: false };
+  davomatApi.updateDavomat(item.id, updatedItem)
+    .then(() => GetDavomat())
+    .catch((error) => console.error('Error updating item:', error));
+};
 
   return (
     <div className="min-h-[calc(100vh-125px)] bg-[#F3F7FA]">
