@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ChartBox } from "../Chart/styled";
 import axios from "axios";
+import jsPDF from "jspdf";
 
 const Charts = ({ dataes }) => {
-    // console.log(dataes);
     const apiLink = "https://kengash.pythonanywhere.com/api/v1/taklif/";
     const token = localStorage.getItem("token");
 
@@ -92,6 +92,137 @@ const Charts = ({ dataes }) => {
         }
     }, [data]);
 
+    // Download in pdf
+    const handleClickDownload = () => {
+        const nowData = new Date();
+        const nowDay =
+            nowData.getDate() <= 9
+                ? "0" + nowData.getDate()
+                : nowData.getDate();
+        const nowMonth =
+            nowData.getMonth() + 1 <= 9
+                ? "0" + (nowData.getMonth() + 1)
+                : nowData.getMonth() + 1;
+        const nowYear = nowData.getFullYear();
+        const fullData = `${nowDay}/${nowMonth}/${nowYear}`;
+
+        const pdf = new jsPDF("p", "in", "a4");
+        pdf.setDrawColor("white");
+
+        const Title = `${dataes.id + 1} - sonli Kengashga qo'yilgan masala:`;
+        const TitleContent = `${dataes.name}`;
+
+        const NomzodTitle1 = `Nomzod 1: `;
+        const Nomzod1 = `${allNomzodData.nomzod}`;
+
+        const NomzodTitle2 = `Nomzod 2: `;
+        const Nomzod2 = `${allNomzodData.nomzod1}`;
+
+        const NomzodTitle3 = `Nomzod 3: `;
+        const Nomzod3 = `${allNomzodData.nomzod2}`;
+
+        const NomzodTitle4 = `Nomzod 4: `;
+        const Nomzod4 = `${allNomzodData.nomzod3}`;
+
+        let newData = [data.map((item) => `${item.name}: ${item.width}%`)];
+
+        const WinnerTitle = "Eng ko'p to'plangan ovoz: ";
+        const Winner = isWinner;
+
+        pdf.setFont("helvetica", "bold").text(Title, 0.5, 0.5);
+
+        pdf.setDrawColor("white");
+        pdf.setLineWidth(1 / 72);
+        pdf.line(0.5, 0.5, 0.5, 11.25);
+        pdf.line(7.75, 0.5, 7.75, 11.25);
+
+        let textlines = pdf
+            .setFont("helvetica", "normal")
+            .setFontSize("16")
+            .splitTextToSize(TitleContent, 7.25);
+        let verticalOffeset = 0.7;
+        pdf.text(0.5, verticalOffeset + 12 / 72, textlines);
+        verticalOffeset += ((textlines.length + 0.5) * 12) / 72;
+
+        // NomzodTitle 1 va Nomzod ma'lumotlarini qo'shish
+        pdf.setFont("helvetica", "bold").text(
+            `${NomzodTitle1}`,
+            0.5,
+            verticalOffeset + 40 / 72
+        );
+        pdf.setFont("helvetica", "normal").text(
+            `${Nomzod1}`,
+            1.7,
+            verticalOffeset + 40 / 72,
+            0,
+            5
+        );
+
+        // NomzodTitle 2 va Nomzod ma'lumotlarini qo'shish
+        pdf.setFont("helvetica", "bold").text(
+            `${NomzodTitle2}`,
+            0.5,
+            verticalOffeset + 60 / 72
+        );
+        pdf.setFont("helvetica", "normal").text(
+            `${Nomzod2}`,
+            1.7,
+            verticalOffeset + 60 / 72,
+            0,
+            5
+        );
+
+        // NomzodTitle 3 va Nomzod ma'lumotlarini qo'shish
+        pdf.setFont("helvetica", "bold").text(
+            `${NomzodTitle3}`,
+            0.5,
+            verticalOffeset + 80 / 72
+        );
+        pdf.setFont("helvetica", "normal").text(
+            `${Nomzod3 ? `${Nomzod3}` : "Nomzod kiritilmagan"}`,
+            1.7,
+            verticalOffeset + 80 / 72,
+            0,
+            5
+        );
+
+        // NomzodTitle 4 va Nomzod ma'lumotlarini qo'shish
+        pdf.setFont("helvetica", "bold").text(
+            NomzodTitle4,
+            0.5,
+            verticalOffeset + 100 / 72
+        );
+        pdf.setFont("helvetica", "normal").text(
+            `${Nomzod4 ? `${Nomzod4}` : "Nomzod kiritilmagan"}`,
+            1.7,
+            verticalOffeset + 100 / 72,
+            0,
+            5
+        );
+
+        // Qolgan ma'lumotlarni joylash
+        let yPosition = 110;
+
+        newData.forEach((item) => {
+            yPosition += 30;
+            pdf.text(item, 0.5, verticalOffeset + yPosition / 72);
+        });
+        pdf.setFont("helvetica", "bold").text(
+            WinnerTitle,
+            0.5,
+            verticalOffeset + 250 / 72
+        );
+        pdf.setFont("helvetica", "normal").text(
+            `${Winner ? Winner : 'Nomzodlar tasdiqlanmagan'}`,
+            3.3,
+            verticalOffeset + 250 / 72
+        );
+        pdf.text(fullData, 0.5, verticalOffeset + 400 / 72);
+
+        // PDF-ni yuklash
+        pdf.save(`${dataes.id}-statistika.pdf`);
+    };
+
     return (
         <div className="flex flex-col gap-y-4 xl:flex-row-reverse shadow-lg rounded-xl border p-4 bg-white ">
             <div className="w-full flex justify-center lg:py-4">
@@ -111,15 +242,6 @@ const Charts = ({ dataes }) => {
                                 </ChartBox>
                             </div>
                         ))}
-                    {isWinner && (
-                        <ChartBox
-                            width="100"
-                            color="green"
-                            className="whitespace-nowrap p-1 rounded-md"
-                        >
-                            G'olib: {isWinner}
-                        </ChartBox>
-                    )}
                 </div>
             </div>
             <div className="xl:w-full flex flex-col gap-y-4">
@@ -186,7 +308,10 @@ const Charts = ({ dataes }) => {
                     </h2>
                 </div>
                 <div className="flex justify-center">
-                    <button className="btn btn-sm lg:btn-md btn-primary text-white lg:font-bold">
+                    <button
+                        onClick={() => handleClickDownload()}
+                        className="btn btn-sm lg:btn-md btn-primary text-white lg:font-bold"
+                    >
                         YUKLAB OLISH
                     </button>
                 </div>
