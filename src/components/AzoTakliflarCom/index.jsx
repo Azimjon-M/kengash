@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Breadcrumb from "../Breadcrumb";
-import axios from "axios";
-import axiosInstance from "../../services/api";
 import taklifApi from "../../services/taklif";
 import davomatApi from "../../services/davomat";
 
@@ -13,38 +11,37 @@ const allNomzodFalse = {
 };
 
 const AzoTakliflarCom = () => {
-
   const [data, setData] = useState([]);
   const [filtredDavomat, setFiltredDavomat] = useState([]);
   const [filtredData, setFiltredData] = useState([data]);
   const [voteData, setVoteData] = useState([data]);
-
+  const userId = localStorage.getItem("user_id");
 
   // GET DAVOMAT
   const GetDavomat = async () => {
     const { data: davomatData } = await davomatApi.get();
-    setFiltredDavomat(davomatData.filter(user => user.aktiv === true)
-    );
+    setFiltredDavomat(davomatData.filter((user) => user.aktiv === true));
   };
   useEffect(() => {
-      GetDavomat();
+    GetDavomat();
   }, []);
-
 
   //GET DATA
-  const getTakliflar = async () => {
-    const { data: responseData } = await taklifApi.get();
-    setData(responseData) 
-    setFiltredData(
-      responseData.filter(
-        (item) => item.tugash === false && item.yoqish === true
-      )
-    );
-  };
   useEffect(() => {
+    const getTakliflar = async () => {
+      const { data: responseData } = await taklifApi.get();
+      setData(responseData);
+      setFiltredData(
+        responseData.filter(
+          (item) =>
+            item.tugash === false &&
+            item.yoqish === true &&
+            filtredDavomat.some((user) => user.user_id === userId)
+        )
+      );
+    };
     getTakliflar();
-  }, []);
-
+  }, [userId, filtredDavomat]);
 
   // COUNTDOWN
   useEffect(() => {
@@ -72,78 +69,55 @@ const AzoTakliflarCom = () => {
     return () => clearInterval(interval);
   }, []);
 
-
   // GET OVOZLAR
   const getOvozlar = async () => {
-    const { data: responseData } = await taklifApi.voteCheckGet();
     const userId = localStorage.getItem("user_id");
+    const { data: responseData } = await taklifApi.voteCheckGet();
     setVoteData(responseData.filter((item) => item.user_id === userId));
   };
   useEffect(() => {
     getOvozlar();
   }, []);
 
-
   // POST DATA
   const handleVote = async (taklif) => {
-    const allItemsHaveDifferentId = voteData.every((item) => item.taklif_id !== taklif.id);
-    voteData.map((item) => console.log(item.taklif_id));
-    console.log(taklif.id);
-    console.log(allItemsHaveDifferentId);
-    // if (!allItemsHaveDifferentId) {
-    //   alert("Siz ovoz berib bo'lgansiz.!");
-    // } else {
-    //   const reqBody = {
-    //     ...taklif,
-    //     ...allNomzodFalse,
-    //     nomzod: true,
-    //     taklif_id: taklif.id,
-    //   };
-
-    //   const { data: response } = await taklifApi.vote(reqBody);
-    //   console.log("Post Result:", response);
-    //   alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
-    // }
+    const allItemsHaveDifferentId = voteData.some(
+      (item) => Number(item.taklif_id) === taklif.id
+    );
+    if (allItemsHaveDifferentId) {
+      alert("Siz ovoz berib bo'lgansiz.!");
+    } else {
+      const reqBody = {
+        ...taklif,
+        ...allNomzodFalse,
+        nomzod: true,
+        taklif_id: taklif.id,
+      };
+      const { data: response } = await taklifApi.vote(reqBody);
+      console.log("Post Result:", response);
+      alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
+      window.location.reload();
+    }
   };
 
   // POST DATA FOR ALL Nomzdolar
   const handleNomzodVote = async (taklif, trueNomzod) => {
-    const reqBody = {
-      ...taklif,
-      ...allNomzodFalse,
-      [trueNomzod]: true,
-      taklif_id: taklif.id,
-    };
-    const { data: result } = await taklifApi.vote(reqBody);
-    // setFiltredData(
-    //   data.map((d) => (d.id === taklif.id ? { ...d, responded: true } : d))
-    // );
-    console.log("Post Result:", result);
-    alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
-  };
-
-
-  // FAOLLASHTIRISH Qayta korish kerak
-  useEffect(() => {
-    filtredData.forEach((taklif) => {
-      if (
-        taklif.qolganMinut <= 0 &&
-        taklif.qolganSeconds <= 0 &&
-        !taklif.tugash
-      ) {
-        handleEndTaklif(taklif);
-      }
-    });
-  }, [filtredData]);
-
-
-  // tugash: true Method:PUT
-  const handleEndTaklif = async (taklif) => {
-    const { data: response } = await taklifApi.end(taklif);
-    if (response.ok) {
-      getTakliflar();
+    const allItemsHaveDifferentId = voteData.some(
+      (item) => Number(item.taklif_id) === taklif.id
+    );
+    if (allItemsHaveDifferentId) {
+      alert("Siz ovoz berib bo'lgansiz.!");
     } else {
-      console.error("Error updating item:", response.statusText);
+      const reqBody = {
+        ...taklif,
+        ...allNomzodFalse,
+        [trueNomzod]: true,
+        taklif_id: taklif.id,
+      };
+      const { data: result } = await taklifApi.vote(reqBody);
+      console.log("Post Result:", result);
+      alert("Ovozingiz muvaffaqiyatli qo'shildi.!");
+      window.location.reload();
     }
   };
 
@@ -167,7 +141,8 @@ const AzoTakliflarCom = () => {
                           <h2 className="text-2xl font-semibold">
                             Berilgan vaqt
                           </h2>
-                          {taklif.tugash ? (
+                          {taklif.qolganMinut <= 0 &&
+                          taklif.qolganSeconds <= 0 ? (
                             <span className="countdown font-mono text-2xl font-bold text-red-500">
                               00:00
                             </span>
@@ -196,7 +171,10 @@ const AzoTakliflarCom = () => {
                         {/* BUTTONS */}
                         <div className="flex items-center justify-between md:justify-end md:gap-3">
                           <button
-                            disabled={taklif.responded}
+                            disabled={
+                              taklif.qolganMinut <= 0 &&
+                              taklif.qolganSeconds <= 0
+                            }
                             onClick={() =>
                               handleVote({ ...taklif, rozilar: true })
                             }
@@ -209,7 +187,10 @@ const AzoTakliflarCom = () => {
                             Roziman
                           </button>
                           <button
-                            disabled={taklif.responded}
+                            disabled={
+                              taklif.qolganMinut <= 0 &&
+                              taklif.qolganSeconds <= 0
+                            }
                             onClick={() =>
                               handleVote({ ...taklif, qarshilar: true })
                             }
@@ -222,7 +203,10 @@ const AzoTakliflarCom = () => {
                             Qarshiman
                           </button>
                           <button
-                            disabled={taklif.responded}
+                            disabled={
+                              taklif.qolganMinut <= 0 &&
+                              taklif.qolganSeconds <= 0
+                            }
                             onClick={() =>
                               handleVote({ ...taklif, betaraflar: true })
                             }
@@ -246,7 +230,8 @@ const AzoTakliflarCom = () => {
                         <h2 className="text-2xl font-semibold">
                           Berilgan vaqt
                         </h2>
-                        {taklif.tugash ? (
+                        {taklif.qolganMinut <= 0 &&
+                        taklif.qolganSeconds <= 0 ? (
                           <span className="countdown font-mono text-2xl font-bold text-red-500">
                             00:00
                           </span>
@@ -271,6 +256,10 @@ const AzoTakliflarCom = () => {
                       <div className="text-center md:flex md:items-center md:justify-end gap-3 md:flex-wrap">
                         <div className="mb-5 md:text-lg xl:text-xl">
                           <button
+                            disabled={
+                              taklif.qolganMinut <= 0 &&
+                              taklif.qolganSeconds <= 0
+                            }
                             onClick={() => handleNomzodVote(taklif, "nomzod")}
                             className="btn bg-blue-600 hover:bg-blue-500 text-white"
                           >
@@ -279,6 +268,10 @@ const AzoTakliflarCom = () => {
                         </div>
                         <div className="mb-5 md:text-lg xl:text-xl">
                           <button
+                            disabled={
+                              taklif.qolganMinut <= 0 &&
+                              taklif.qolganSeconds <= 0
+                            }
                             onClick={() => handleNomzodVote(taklif, "nomzod1")}
                             className="btn bg-blue-600 hover:bg-blue-500 text-white"
                           >
@@ -291,6 +284,10 @@ const AzoTakliflarCom = () => {
                           } mb-5 md:text-lg xl:text-xl`}
                         >
                           <button
+                            disabled={
+                              taklif.qolganMinut <= 0 &&
+                              taklif.qolganSeconds <= 0
+                            }
                             onClick={() => handleNomzodVote(taklif, "nomzod2")}
                             className="btn bg-blue-600 hover:bg-blue-500 text-white"
                           >
@@ -303,6 +300,10 @@ const AzoTakliflarCom = () => {
                           } mb-5 md:text-lg xl:text-xl`}
                         >
                           <button
+                            disabled={
+                              taklif.qolganMinut <= 0 &&
+                              taklif.qolganSeconds <= 0
+                            }
                             onClick={() => handleNomzodVote(taklif, "nomzod3")}
                             className="btn bg-blue-600 hover:bg-blue-500 text-white"
                           >
