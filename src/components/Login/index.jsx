@@ -2,15 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/img/logo_kspi.png";
 import { useFormik } from "formik";
-import axios from "axios";
+import loginAPI from "../../services/login";
+import * as Yup from "yup";
 
 const Login = () => {
     const navigate = useNavigate();
     const [errContent, setErrContent] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const URLlogin =
-        "https://kengash.pythonanywhere.com/api/v1/dj-rest-auth/login/";
-    const URLusers = "https://kengash.pythonanywhere.com/api/v1/users/";
+
+    const SignupSchema = Yup.object().shape({
+        username: Yup.string()
+            .min(3, "Juda kam!")
+            .max(50, "Juda ko'p!")
+            .required("Required"),
+        password: Yup.string()
+            .min(3, "Juda kam!")
+            .max(50, "Juda ko'p!")
+            .required("Required"),
+    });
 
     const formik = useFormik({
         initialValues: {
@@ -18,66 +26,74 @@ const Login = () => {
             email: "",
             password: "",
         },
+        validationSchema: SignupSchema,
         onSubmit: async (values) => {
             try {
-                if (!isLoading) {
-                    setIsLoading(true);
-                    await axios({
-                        method: "POST",
-                        url: URLlogin,
-                        data: values,
-                    })
-                        .then((res) => {
-                            if (res.status === 200 && res.statusText === "OK") {
-                                axios(URLusers, {
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: `Token ${res.data.key}`,
-                                    },
-                                })
-                                    .then((response) => {
-                                        const user = response.data.find(
-                                            (item) =>
-                                            item.username ===
-                                            values.username
-                                            );
-                                        localStorage.setItem(
-                                            "token",
-                                            res.data.key
-                                        );
-                                        localStorage.setItem(
-                                            "lavozim",
-                                            user.lavozim
-                                        );
-                                        localStorage.setItem(
-                                            "user_id",
-                                            user.id
-                                        );
-                                        navigate(`/asosiy`);
-                                    })
-                                    .catch((err) => console.error(err));
-                            } else {
-                                errContent ||
-                                    setErrContent(
-                                        "Bunday klyuch mavjud emas !"
-                                    );
-                                setTimeout(() => {
-                                    setErrContent("");
-                                }, 4000);
-                            }
-                        })
-                        .catch((err) => {
-                            errContent ||
-                                setErrContent("Bunday ma'lumotlar topilmadi !");
-                            setTimeout(() => {
-                                setErrContent("");
-                            }, 4000);
-                        });
-                    setIsLoading(false);
-                } else {
-                }
+                console.log(values);
+                const { data: resData } = loginAPI.post(values);
+                // console.log("Bosilmoqda");
+                console.log(resData);
+                // if (resData) {
+                // }
+                // if (!isLoading) {
+                //     setIsLoading(true);
+                //     await axios({
+                //         method: "POST",
+                //         url: URLlogin,
+                //         data: values,
+                //     })
+                //         .then((res) => {
+                //             if (res.status === 200 && res.statusText === "OK") {
+                //                 axios(URLusers, {
+                //                     headers: {
+                //                         "Content-Type": "application/json",
+                //                         Authorization: `Token ${res.data.key}`,
+                //                     },
+                //                 })
+                //                     .then((response) => {
+                //                         const user = response.data.find(
+                //                             (item) =>
+                //                             item.username ===
+                //                             values.username
+                //                             );
+                //                         localStorage.setItem(
+                //                             "token",
+                //                             res.data.key
+                //                         );
+                //                         localStorage.setItem(
+                //                             "lavozim",
+                //                             user.lavozim
+                //                         );
+                //                         localStorage.setItem(
+                //                             "user_id",
+                //                             user.id
+                //                         );
+                //                         navigate(`/asosiy`);
+                //                     })
+                //                     .catch((err) => console.error(err));
+                //             } else {
+                //                 errContent ||
+                //                     setErrContent(
+                //                         "Bunday klyuch mavjud emas !"
+                //                     );
+                //                 setTimeout(() => {
+                //                     setErrContent("");
+                //                 }, 4000);
+                //             }
+                //         })
+                //         .catch((err) => {
+                //             errContent ||
+                //                 setErrContent("Bunday ma'lumotlar topilmadi !");
+                //             setTimeout(() => {
+                //                 setErrContent("");
+                //             }, 4000);
+                //         });
+                //     setIsLoading(false);
+                // } else {
+                // }
             } catch (err) {
-                errContent || setErrContent("Bunday ma'lumotlar topilmadi !");
+                console.log(err);
+                err || setErrContent("Bunday ma'lumotlar topilmadi !");
                 setTimeout(() => {
                     setErrContent("");
                 }, 4000);
@@ -86,11 +102,11 @@ const Login = () => {
     });
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const user_id = localStorage.getItem('user_id');
-        const lavozim = localStorage.getItem('lavozim');
+        const token = localStorage.getItem("token");
+        const user_id = localStorage.getItem("user_id");
+        const lavozim = localStorage.getItem("lavozim");
         if (token && user_id && lavozim) {
-            navigate('/asosiy')
+            navigate("/asosiy");
         }
     }, [navigate]);
 
@@ -126,7 +142,7 @@ const Login = () => {
                             value={formik.values.username}
                             placeholder="Foydalanuvchi nomi"
                             className={`${
-                                errContent && "border-red-600"
+                                (errContent || formik.errors.username) && "border-red-600"
                             } block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
                         />
                     </div>
@@ -145,7 +161,7 @@ const Login = () => {
                             value={formik.values.password}
                             placeholder="Parol"
                             className={`${
-                                errContent && "border-red-600"
+                                (errContent || formik.errors.password) && "border-red-600"
                             } block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
                         />
                     </div>
