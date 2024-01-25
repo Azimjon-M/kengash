@@ -49,7 +49,6 @@ const TakliflarCom = () => {
     // GET DATA,
     const getData = async () => {
         const { data: resData } = await adminTaklif.get();
-        setData(resData);
         setActiveData(
             resData.filter(
                 (item) => item.tugash === false && item.yoqish === true
