@@ -43,11 +43,10 @@ const Login = () => {
                     }
                 }
             } catch (err) {
-                console.log(err);
-                err || setErrContent("Bunday ma'lumotlar topilmadi !");
+                err && setErrContent("Bunday ma'lumotlar topilmadi !");
                 setTimeout(() => {
                     setErrContent("");
-                }, 4000);
+                }, 3000);
             }
         },
     });
