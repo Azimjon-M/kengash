@@ -29,68 +29,19 @@ const Login = () => {
         validationSchema: SignupSchema,
         onSubmit: async (values) => {
             try {
-                console.log(values);
-                const { data: resData } = loginAPI.post(values);
-                // console.log("Bosilmoqda");
-                console.log(resData);
-                // if (resData) {
-                // }
-                // if (!isLoading) {
-                //     setIsLoading(true);
-                //     await axios({
-                //         method: "POST",
-                //         url: URLlogin,
-                //         data: values,
-                //     })
-                //         .then((res) => {
-                //             if (res.status === 200 && res.statusText === "OK") {
-                //                 axios(URLusers, {
-                //                     headers: {
-                //                         "Content-Type": "application/json",
-                //                         Authorization: `Token ${res.data.key}`,
-                //                     },
-                //                 })
-                //                     .then((response) => {
-                //                         const user = response.data.find(
-                //                             (item) =>
-                //                             item.username ===
-                //                             values.username
-                //                             );
-                //                         localStorage.setItem(
-                //                             "token",
-                //                             res.data.key
-                //                         );
-                //                         localStorage.setItem(
-                //                             "lavozim",
-                //                             user.lavozim
-                //                         );
-                //                         localStorage.setItem(
-                //                             "user_id",
-                //                             user.id
-                //                         );
-                //                         navigate(`/asosiy`);
-                //                     })
-                //                     .catch((err) => console.error(err));
-                //             } else {
-                //                 errContent ||
-                //                     setErrContent(
-                //                         "Bunday klyuch mavjud emas !"
-                //                     );
-                //                 setTimeout(() => {
-                //                     setErrContent("");
-                //                 }, 4000);
-                //             }
-                //         })
-                //         .catch((err) => {
-                //             errContent ||
-                //                 setErrContent("Bunday ma'lumotlar topilmadi !");
-                //             setTimeout(() => {
-                //                 setErrContent("");
-                //             }, 4000);
-                //         });
-                //     setIsLoading(false);
-                // } else {
-                // }
+                const { data: resData } = await loginAPI.post(values);
+                if (resData) {
+                    localStorage.setItem("token", resData.key);
+                    const { data: newData } = await loginAPI.get();
+                    if (newData) {
+                        const user = newData.find(
+                            (item) => item.username === values.username
+                        );
+                        localStorage.setItem("lavozim", user.lavozim);
+                        localStorage.setItem("user_id", user.id);
+                        navigate(`/asosiy`);
+                    }
+                }
             } catch (err) {
                 console.log(err);
                 err || setErrContent("Bunday ma'lumotlar topilmadi !");
@@ -142,7 +93,8 @@ const Login = () => {
                             value={formik.values.username}
                             placeholder="Foydalanuvchi nomi"
                             className={`${
-                                (errContent || formik.errors.username) && "border-red-600"
+                                (errContent || formik.errors.username) &&
+                                "border-red-600"
                             } block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
                         />
                     </div>
@@ -161,7 +113,8 @@ const Login = () => {
                             value={formik.values.password}
                             placeholder="Parol"
                             className={`${
-                                (errContent || formik.errors.password) && "border-red-600"
+                                (errContent || formik.errors.password) &&
+                                "border-red-600"
                             } block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-[#28a745] focus:ring-[#25a620] focus:outline-none focus:ring focus:ring-opacity-40`}
                         />
                     </div>
