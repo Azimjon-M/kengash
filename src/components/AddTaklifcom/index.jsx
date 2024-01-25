@@ -2,11 +2,17 @@ import React, { useState } from "react";
 import Breadcrumb from "../Breadcrumb";
 import addTaklif from "../../services/addTaklif";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const AddTaklifCom = () => {
     const [isActiveTwoo, setIsActiveTwoo] = useState(false);
     const [isActiveThree, setIsActiveThree] = useState(false);
     const [isNomzodOne, setIsNomzodOne] = useState(true);
+
+    const SignupSchema = Yup.object().shape({
+        vaqt: Yup.number()
+        .required("Required"),
+    });
 
     const formik = useFormik({
         initialValues: {
@@ -14,10 +20,12 @@ const AddTaklifCom = () => {
             nomzod: "",
             vaqt: "",
             bitalik_taklif: true,
-            yoqish: false
+            yoqish: false,
         },
+        validationSchema: SignupSchema,
         onSubmit: (values) => {
-            addTaklif.post(values)
+            addTaklif
+                .post(values)
                 .then(() => formik.resetForm())
                 .catch((error) => console.error("Error adding taklif:", error));
         },
@@ -31,10 +39,12 @@ const AddTaklifCom = () => {
             nomzod1: "",
             nomzod2: "",
             nomzod3: "",
-            bitalik_taklif: false
+            bitalik_taklif: false,
         },
+        validationSchema: SignupSchema,
         onSubmit: (values) => {
-            addTaklif.post(values)
+            addTaklif
+                .post(values)
                 .then(() => formik2.resetForm())
                 .catch((error) => console.error("Error adding taklif:", error));
         },
@@ -90,9 +100,7 @@ const AddTaklifCom = () => {
                     </div>
                 </form>
 
-                {isNomzodOne === null ? (
-                    <></>
-                ) : isNomzodOne === true ? (
+                {isNomzodOne ? (
                     <form
                         className="bg-white shadow-md rounded px-4 md:px-8 pt-6 pb-8 mb-4"
                         onSubmit={formik.handleSubmit}
@@ -249,7 +257,7 @@ const AddTaklifCom = () => {
                                 <input
                                     onChange={formik2.handleChange}
                                     value={formik2.values.nomzod2}
-                                    className='shadow appearance-none border rounded w-full py-2 px-3 dark:text-white text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline'
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 dark:text-white text-gray-700 mb-3 leading-tight focus:outline-[#05b967] focus:ring-[#05b967] focus:shadow-outline"
                                     id="nomzod2"
                                     type="text"
                                     placeholder="Nomzod"

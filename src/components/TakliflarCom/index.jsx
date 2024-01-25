@@ -7,7 +7,6 @@ import adminTaklif from "../../services/adminTaklif";
 
 const TakliflarCom = () => {
     const [data, setData] = useState([]);
-
     const [activeData, setActiveData] = useState([]);
     const [noActiveData, setNoActiveData] = useState([]);
 
@@ -50,7 +49,6 @@ const TakliflarCom = () => {
     // GET DATA,
     const getData = async () => {
         const { data: resData } = await adminTaklif.get();
-        console.log(resData);
         setData(resData);
         setActiveData(
             resData.filter(
@@ -72,6 +70,7 @@ const TakliflarCom = () => {
     const handleDelete = async (id) => {
         setData((prevData) => prevData.filter((item) => item.id !== id));
         await adminTaklif.del(id);
+        getData();
     };
 
     // DELETE ALL DATA
@@ -79,16 +78,16 @@ const TakliflarCom = () => {
         const isConfirmed = window.confirm(
             "Barcha ma'lumotlarni o'chirishni hohlaysizmi?"
         );
-
         if (isConfirmed) {
+            setActiveData([]);
+            setNoActiveData([]);
             Promise.all(
                 data.map(async (item) => {
                     await adminTaklif.del(item.id);
                 })
-            ).then(() => {
-                setData([]);
-            });
+            );
         }
+        getData();
     };
 
     // Activate
@@ -152,7 +151,7 @@ const TakliflarCom = () => {
                     Kengashga qo'yilmagan takliflar:
                 </div>
                 <div className="flex flex-col-reverse items-center gap-y-4 px-3 overflow-hidden">
-                    {noActiveData &&
+                    {noActiveData.length ? (
                         noActiveData.map(
                             (item) =>
                                 !item.yoqish && (
@@ -225,14 +224,19 @@ const TakliflarCom = () => {
                                         </div>
                                     </div>
                                 )
-                        )}
+                        )
+                    ) : (
+                        <div className="text-red-500">
+                            Ma'lumotlar joylanamagan!
+                        </div>
+                    )}
                 </div>
 
                 <div className="text-xl font-semibold text-center mt-8">
                     Kengashga qo'yilgan takliflar:
                 </div>
                 <div className="flex flex-col items-center gap-y-4 px-3 mb-6 overflow-hidden">
-                    {activeData &&
+                    {activeData.length ? (
                         activeData.map(
                             (item) =>
                                 item.yoqish && (
@@ -267,7 +271,12 @@ const TakliflarCom = () => {
                                         </div>
                                     </div>
                                 )
-                        )}
+                        )
+                    ) : (
+                        <div className="text-red-500">
+                            Ma'lumotlar joylanmagan!
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

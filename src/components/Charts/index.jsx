@@ -1,27 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { ChartBox } from "../Chart/styled";
-import axios from "axios";
 import jsPDF from "jspdf";
+import chartsAPI from "../../services/charts";
 
 const Charts = ({ dataes }) => {
-    const apiLink = "https://kengash.pythonanywhere.com/api/v1/taklif/";
-    const token = localStorage.getItem("token");
 
     const [data, setData] = useState(null);
     const [isWinner, setIsWinner] = useState(null);
     const [allNomzodData, setAllNomzodData] = useState();
 
     useEffect(() => {
-        axios({
-            url: `${apiLink}${dataes.taklif_id}/`,
-            method: "GET",
-            headers: {
-                Authorization: `Token ${token}`,
-            },
-        })
-            .then((res) => setAllNomzodData(res.data))
-            .catch((err) => console.error(err));
-    }, [token, dataes]);
+        const getData = async () => {
+            const {data: newData} = await chartsAPI.get(dataes.taklif_id);
+            if (newData) {
+                setAllNomzodData(newData);
+            }
+        }
+        getData()
+    }, [dataes.taklif_id]);
 
     useEffect(() => {
         const COLOR = {

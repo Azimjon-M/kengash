@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ChartBox } from "./styled";
-import axios from "axios";
 import jsPDF from "jspdf";
+import chartAPI from "../../services/chart";
 
 const Chart = ({ dataes }) => {
-    const apiLink = "https://kengash.pythonanywhere.com/api/v1/taklif/";
-    const token = localStorage.getItem("token");
-
     const [allNomzodData, setAllNomzodData] = useState();
     const [data, setData] = useState(null);
     const [isWinner, setIsWinner] = useState(null);
@@ -34,10 +31,10 @@ const Chart = ({ dataes }) => {
         const TitleContent = `${dataes.name}`;
         const NomzodTitle = "Nomzod: ";
         const Nomzod = `${allNomzodData.nomzod}`;
-        console.log(data);
         let newData = [data.map((item) => `${item.name}: ${item.width}%`)];
-        const WinnerTitle = `Nomzod ${allNomzodData.nomzod}: ${isWinner === "Rozilar" ? 'Tasdiqlandi' : "Tasdiqlanmadi"}`;
-        // const Winner = `${isWinner === "Rozilar" ? 'Tasdiqlandi' : "Tasdiqlanmadi"}`;
+        const WinnerTitle = `Nomzod ${allNomzodData.nomzod}: ${
+            isWinner === "Rozilar" ? "Tasdiqlandi" : "Tasdiqlanmadi"
+        }`;
 
         pdf.setFont("helvetica", "bold").text(Title, 0.5, 0.5);
 
@@ -83,20 +80,18 @@ const Chart = ({ dataes }) => {
         pdf.text(fullData, 0.5, verticalOffeset + 400 / 72);
 
         // PDF-ni yuklash
-        pdf.save(`${dataes.id+1}-statistika.pdf`);
+        pdf.save(`${dataes.id + 1}-statistika.pdf`);
     };
 
     useEffect(() => {
-        axios({
-            url: `${apiLink}${dataes.taklif_id}/`,
-            method: "GET",
-            headers: {
-                Authorization: `Token ${token}`,
-            },
-        })
-            .then((res) => setAllNomzodData(res.data))
-            .catch((err) => console.error(err));
-    }, [token, dataes]);
+        const getData = async () => {
+            const { data: newData } = await chartAPI.get(dataes.taklif_id);
+            if (newData) {
+                setAllNomzodData(newData);
+            }
+        };
+        getData();
+    }, [dataes.taklif_id]);
 
     useEffect(() => {
         const COLOR = { a1: "#00BC6E", a2: "red", a3: "yellow", a4: "gray" };

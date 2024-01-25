@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Breadcrumb from "../Breadcrumb";
-import axios from "axios";
+// import axios from "axios";
 import Chart from "../Chart";
 import Charts from "../Charts";
+import statistikaAPI from "../../services/statistika";
 
 const StatistikaCom = () => {
-    const apiUrlStatistika =
-        "https://kengash.pythonanywhere.com/api/v1/statistika/";
-    const apiUrlTaklif = "https://kengash.pythonanywhere.com/api/v1/taklif/";
-    const token = localStorage.getItem("token");
+    // const apiUrlStatistika =
+    //     "https://kengash.pythonanywhere.com/api/v1/statistika/";
+    // const apiUrlTaklif = "https://kengash.pythonanywhere.com/api/v1/taklif/";
+    // const token = localStorage.getItem("token");
 
     const [dataTaklif, setDataTaklif] = useState([]);
     const [dataStatistiak, setDataStatistiak] = useState([]);
@@ -16,31 +17,43 @@ const StatistikaCom = () => {
     const [isDataOne, setIsDataOne] = useState([]);
     const [isDataTwoo, setIsDataTwoo] = useState();
 
-    useEffect(() => {
-        axios({
-            url: apiUrlTaklif,
-            method: "GET",
-            headers: {
-                Authorization: `Token ${token}`,
-            },
-        })
-            .then((res) =>
-                setDataTaklif(res.data.filter((item) => item.tugash === true))
-            )
-            .catch((err) => console.error(err));
+    const getData = async () => {
+        const {data: dataT} = await statistikaAPI.getT();
+        const {data: dataS} = await statistikaAPI.getS();
+        if (dataT) {
+            setDataTaklif(dataT.filter((item) => item.tugash === true))
+        }
+        if (dataS) {
+            setDataStatistiak(dataS)
+        }
+    }
 
-        axios({
-            url: apiUrlStatistika,
-            method: "GET",
-            headers: {
-                Authorization: `Token ${token}`,
-            },
-        })
-            .then((res) => {
-                setDataStatistiak(res.data);
-            })
-            .catch((err) => console.error(err));
-    }, [token]);
+    useEffect(() => {
+        getData()
+        // axios({
+        //     url: apiUrlTaklif,
+        //     method: "GET",
+        //     headers: {
+        //         Authorization: `Token ${token}`,
+        //     },
+        // })
+        //     .then((res) =>
+        //         setDataTaklif(res.data.filter((item) => item.tugash === true))
+        //     )
+        //     .catch((err) => console.error(err));
+
+        // axios({
+        //     url: apiUrlStatistika,
+        //     method: "GET",
+        //     headers: {
+        //         Authorization: `Token ${token}`,
+        //     },
+        // })
+        //     .then((res) => {
+        //         setDataStatistiak(res.data);
+        //     })
+        //     .catch((err) => console.error(err));
+    }, []);
 
     useEffect(() => {
         const filtered = dataStatistiak.filter((statistika) =>
