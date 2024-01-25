@@ -6,9 +6,8 @@ const ep = "davomat/";
 const get = () => axiosInstance.get(ep);
 
 // PUT Davomat
-const updateDavomat = (davomat) => {
-  const { id } = davomat;
-  return axiosInstance.put(`${ep}${id}/`, { ...davomat, aktiv: false });
+const updateDavomat = (id, davomat) => {
+  return axiosInstance.put(`${ep}${id}/`, davomat);
 };
 
 const davomatApi = {
