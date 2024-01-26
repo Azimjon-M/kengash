@@ -12,8 +12,9 @@ const TakliflarCom = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setActiveData((filtredData) =>
-                filtredData.map((item) => {
+            console.log("Hello")
+            setActiveData((filtredActiveData) =>
+                filtredActiveData.map((item) => {
                     if (item.tugash_vaqti) {
                         let vaqt = item.tugash_vaqti.split(":").map(Number);
                         let now = new Date();
@@ -25,6 +26,11 @@ const TakliflarCom = () => {
                                 now.getSeconds());
                         let qolganMinut = Math.floor(qolganVaqt / 60);
                         let qolganSeconds = qolganVaqt % 60;
+                        console.log("Ishlamoqdaman", qolganMinut," : ", qolganSeconds);
+                        if (qolganMinut <=0 && qolganSeconds <= 0) {
+                            adminTaklif.put(item.id, { ...item, tugash: true });
+                            getData();
+                        }
                         return { ...item, qolganMinut, qolganSeconds };
                     } else {
                         return item;
@@ -34,17 +40,6 @@ const TakliflarCom = () => {
         }, 1000);
         return () => clearInterval(interval);
     }, []);
-
-    // FAOLLSHGAN VAQTI TUGAGANDA tugash: true
-    useEffect(() => {
-        activeData.forEach((item) => {
-            if (item.qolganMinut <= 0 && item.qolganSeconds <= 0) {
-                // tugash: true Method:PUT
-                adminTaklif.put(item.id, { ...item, tugash: true });
-                getData();
-            }
-        });
-    }, [activeData]);
 
     // GET DATA,
     const getData = async () => {
