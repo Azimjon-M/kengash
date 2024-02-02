@@ -101,10 +101,6 @@ const Charts = ({ dataes }) => {
                 : nowData.getMonth() + 1;
         const nowYear = nowData.getFullYear();
         const fullData = `${nowDay}/${nowMonth}/${nowYear}`;
-
-        const pdf = new jsPDF("p", "in", "a4");
-        pdf.setDrawColor("white");
-
         const Title = `${dataes.id + 1} - sonli Kengashga qo'yilgan masala:`;
         const TitleContent = `${dataes.name}`;
 
@@ -125,7 +121,13 @@ const Charts = ({ dataes }) => {
         const WinnerTitle = "Eng ko'p to'plangan ovoz: ";
         const Winner = isWinner;
 
-        pdf.setFont("helvetica", "bold").text(Title, 0.5, 0.5);
+        const pdf = new jsPDF("p", "in", "a4");
+        pdf.setDrawColor("white");
+
+        // vaqt
+        pdf.text(fullData, 6.6, 0.5);
+
+        pdf.setFont("helvetica", "bold").text(Title, 0.5, 1);
 
         pdf.setDrawColor("white");
         pdf.setLineWidth(1 / 72);
@@ -136,7 +138,7 @@ const Charts = ({ dataes }) => {
             .setFont("helvetica", "normal")
             .setFontSize("16")
             .splitTextToSize(TitleContent, 7.25);
-        let verticalOffeset = 0.7;
+        let verticalOffeset = 1.2;
         pdf.text(0.5, verticalOffeset + 12 / 72, textlines);
         verticalOffeset += ((textlines.length + 0.5) * 12) / 72;
 
@@ -213,8 +215,6 @@ const Charts = ({ dataes }) => {
             3.3,
             verticalOffeset + 250 / 72
         );
-        pdf.text(fullData, 0.5, verticalOffeset + 400 / 72);
-
         // PDF-ni yuklash
         pdf.save(`${dataes.id}-statistika.pdf`);
     };

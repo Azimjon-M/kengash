@@ -25,8 +25,10 @@ const Chart = ({ dataes }) => {
         const pdf = new jsPDF("p", "in", "a4");
         pdf.setDrawColor("white");
 
+        pdf.text(fullData, 6.6, 0.5);
+
         const Title = `${
-            dataes && dataes.id + 1
+            dataes && dataes.id
         } - sonli Kengashga qo'yilgan masala:`;
         const TitleContent = `${dataes.name}`;
         const NomzodTitle = "Nomzod: ";
@@ -36,7 +38,7 @@ const Chart = ({ dataes }) => {
             isWinner === "Rozilar" ? "Tasdiqlandi" : "Tasdiqlanmadi"
         }`;
 
-        pdf.setFont("helvetica", "bold").text(Title, 0.5, 0.5);
+        pdf.setFont("helvetica", "bold").text(Title, 0.5, 1);
 
         pdf.setDrawColor("white");
         pdf.setLineWidth(1 / 72);
@@ -47,7 +49,7 @@ const Chart = ({ dataes }) => {
             .setFont("helvetica", "normal")
             .setFontSize("16")
             .splitTextToSize(TitleContent, 7.25);
-        let verticalOffeset = 0.7;
+        let verticalOffeset = 1.2;
         pdf.text(0.5, verticalOffeset + 12 / 72, textlines);
         verticalOffeset += ((textlines.length + 0.5) * 12) / 72;
 
@@ -77,10 +79,9 @@ const Chart = ({ dataes }) => {
             0.5,
             verticalOffeset + 200 / 72
         );
-        pdf.text(fullData, 0.5, verticalOffeset + 400 / 72);
 
         // PDF-ni yuklash
-        pdf.save(`${dataes.id + 1}-statistika.pdf`);
+        pdf.save(`${dataes.id}-statistika.pdf`);
     };
 
     useEffect(() => {
