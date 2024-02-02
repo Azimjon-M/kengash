@@ -173,6 +173,7 @@ const Chart = ({ dataes }) => {
                         <ChartBox
                             width="100"
                             color="green"
+                            txtColor="white"
                             className="whitespace-nowrap p-1 rounded-md"
                         >
                             G'olib: {isWinner}
