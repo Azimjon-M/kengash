@@ -95,7 +95,7 @@ const Chart = ({ dataes }) => {
     }, [dataes.taklif_id]);
 
     useEffect(() => {
-        const COLOR = { a1: "#00BC6E", a2: "red", a3: "yellow", a4: "gray" };
+        const COLOR = { a1: "#00BC6E", a2: "#ff6060", a3: "yellow", a4: "gray" };
         let numba = dataes.rozilar;
         let numbb = dataes.qarshilar;
         let numbc = dataes.betaraflar;
@@ -171,14 +171,14 @@ const Chart = ({ dataes }) => {
                             </div>
                         ))}
                     {isWinner && (
-                        <ChartBox
+                        <div
                             width="100"
                             color="green"
-                            txtColor="white"
-                            className="whitespace-nowrap p-1 rounded-md"
+                            // txtColor="white"
+                            className="whitespace-nowrap p-1 rounded-md text-black"
                         >
-                            G'olib: {isWinner}
-                        </ChartBox>
+                            G'olib: <b>{isWinner}</b> 
+                        </div>
                     )}
                 </div>
             </div>

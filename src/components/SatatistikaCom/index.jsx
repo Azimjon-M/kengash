@@ -4,13 +4,10 @@ import Breadcrumb from "../Breadcrumb";
 import Chart from "../Chart";
 import Charts from "../Charts";
 import statistikaAPI from "../../services/statistika";
+import { FaXmark } from "react-icons/fa6";
+import taklifApi from "../../services/taklif";
 
 const StatistikaCom = () => {
-    // const apiUrlStatistika =
-    //     "https://kengash.pythonanywhere.com/api/v1/statistika/";
-    // const apiUrlTaklif = "https://kengash.pythonanywhere.com/api/v1/taklif/";
-    // const token = localStorage.getItem("token");
-
     const [dataTaklif, setDataTaklif] = useState([]);
     const [dataStatistiak, setDataStatistiak] = useState([]);
 
@@ -28,31 +25,25 @@ const StatistikaCom = () => {
         }
     }
 
+        // DELETE ALL DATA
+        const handleClearData = async () => {
+            console.log(dataStatistiak)
+            const isConfirmed = window.confirm(
+                "Barcha ma'lumotlarni o'chirishni hohlaysizmi?"
+            );
+            if (isConfirmed) {
+                Promise.all(
+                    dataTaklif.map(async (item) => {
+                        await taklifApi.del(item.id);
+                    })
+                );
+            }
+            getData();
+        };
+    
+
     useEffect(() => {
         getData()
-        // axios({
-        //     url: apiUrlTaklif,
-        //     method: "GET",
-        //     headers: {
-        //         Authorization: `Token ${token}`,
-        //     },
-        // })
-        //     .then((res) =>
-        //         setDataTaklif(res.data.filter((item) => item.tugash === true))
-        //     )
-        //     .catch((err) => console.error(err));
-
-        // axios({
-        //     url: apiUrlStatistika,
-        //     method: "GET",
-        //     headers: {
-        //         Authorization: `Token ${token}`,
-        //     },
-        // })
-        //     .then((res) => {
-        //         setDataStatistiak(res.data);
-        //     })
-        //     .catch((err) => console.error(err));
     }, []);
 
     useEffect(() => {
@@ -72,6 +63,14 @@ const StatistikaCom = () => {
                 <h1 className="md:text-4xl font-bold text-green-700 text-center mt-10 md:my-16">
                     Statistika bo'limi
                 </h1>
+                <div className="flex flex-col sm:flex-row sm:justify-end items-center gap-y-4 sm:gap-x-4 py-4 sm:px-4">
+                    <button
+                        onClick={() => handleClearData()}
+                        className="text-[16px] btn btn-error font-medium text-white"
+                    >
+                        Barcha statistikani o'chirish <FaXmark />
+                    </button>
+                </div>
                 <div className="flex flex-col gap-y-4 mt-5 px-5">
                     {isDataOne &&
                         isDataOne.map((item, idx) => (

@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Breadcrumb from "../Breadcrumb";
 import { NavLink } from "react-router-dom";
-import { FaXmark, FaPlus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa6";
 import { MdDeleteOutline } from "react-icons/md";
 import adminTaklif from "../../services/adminTaklif";
 
 const TakliflarCom = () => {
-    const [data, setData] = useState([]);
+    // const [data, setData] = useState([]);
     const [activeData, setActiveData] = useState([]);
     const [noActiveData, setNoActiveData] = useState([]);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            console.log("Hello")
             setActiveData((filtredActiveData) =>
                 filtredActiveData.map((item) => {
                     if (item.tugash_vaqti) {
@@ -62,25 +61,8 @@ const TakliflarCom = () => {
 
     // DELETE ONE DATA
     const handleDelete = async (id) => {
-        setData((prevData) => prevData.filter((item) => item.id !== id));
+        // setData((prevData) => prevData.filter((item) => item.id !== id));
         await adminTaklif.del(id);
-        getData();
-    };
-
-    // DELETE ALL DATA
-    const handleClearData = () => {
-        const isConfirmed = window.confirm(
-            "Barcha ma'lumotlarni o'chirishni hohlaysizmi?"
-        );
-        if (isConfirmed) {
-            setActiveData([]);
-            setNoActiveData([]);
-            Promise.all(
-                data.map(async (item) => {
-                    await adminTaklif.del(item.id);
-                })
-            );
-        }
         getData();
     };
 
@@ -132,14 +114,6 @@ const TakliflarCom = () => {
                     >
                         Taklif kiritish <FaPlus />
                     </NavLink>
-
-                    <button
-                        onClick={() => handleClearData()}
-                        to="/"
-                        className="text-[16px] btn btn-error font-medium text-white"
-                    >
-                        Barcha takliflarni o'chirish <FaXmark />
-                    </button>
                 </div>
                 <div className="text-xl font-semibold text-center mt-4">
                     Kengashga qo'yilmagan takliflar:
@@ -155,7 +129,7 @@ const TakliflarCom = () => {
                                         className="w-full border bg-white border-gray-500 rounded-md bg-gradient-to-r from-gray-50 to-gray-400 p-2"
                                     >
                                         <div className="line-clamp-1">
-                                            <b>Taklif nomi:</b> {item.name}
+                                            <b>Masala:</b> {item.name}
                                         </div>
                                         {item.bitalik_taklif ? (
                                             <div>

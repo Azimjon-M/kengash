@@ -21,10 +21,10 @@ const Charts = ({ dataes }) => {
 
     useEffect(() => {
         const COLOR = {
-            b1: "blue",
-            b2: "purple",
+            b1: "#5b65ff",
+            b2: "#3affef",
             b3: "yellow",
-            b4: "red",
+            b4: "#ff6060",
             b5: "gray",
             b6: "green",
         };
